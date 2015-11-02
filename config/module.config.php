@@ -2,21 +2,23 @@
 return array(
     'controllers' => array(
         'invokables' => array(
-            'ZendSkeletonModule\Controller\Skeleton' => 'ZendSkeletonModule\Controller\SkeletonController',
+            'Pms\Controller\Index' => 'Pms\Controller\IndexController',
+            'Pms\Controller\Login' => 'Pms\Controller\LoginController',
+            'Pms\Controller\Register' => 'Pms\Controller\RegisterController',
         ),
     ),
     'router' => array(
         'routes' => array(
-            'module-name-here' => array(
+            'pms' => array(
                 'type'    => 'Literal',
                 'options' => array(
                     // Change this to something specific to your module
-                    'route'    => '/module-specific-root',
+                    'route'    => '/pms',
                     'defaults' => array(
                         // Change this value to reflect the namespace in which
                         // the controllers for your module are found
-                        '__NAMESPACE__' => 'ZendSkeletonModule\Controller',
-                        'controller'    => 'Skeleton',
+                        '__NAMESPACE__' => 'Pms\Controller',
+                        'controller'    => 'Index',
                         'action'        => 'index',
                     ),
                 ),
@@ -44,7 +46,7 @@ return array(
     ),
     'view_manager' => array(
         'template_path_stack' => array(
-            'ZendSkeletonModule' => __DIR__ . '/../view',
+            'Pms' => __DIR__ . '/../view',
         ),
     ),
 );

@@ -1,0 +1,7 @@
+<section class="login-confirm">
+    <h2>Login Successful</h2>
+    <p> Welcome! <?php echo $this->user_email; ?> </p>
+    <p> Do something...
+    <p>Maybe try as <a href="/pms/login">another user</a>?</p>    
+</section>
+

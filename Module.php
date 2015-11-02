@@ -7,11 +7,21 @@
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  */
 
-namespace ZendSkeletonModule;
+namespace Pms;
 
+use Pms\Model\User;
+use Pms\Model\UserTable;
+use Pms\Form\LoginForm;
+use Pms\Form\RegisterForm;
+use Pms\Form\LoginFilter;
+use Pms\Form\RegisterFilter;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
+use Zend\Db\ResultSet\ResultSet;
+use Zend\Db\TableGateway\TableGateway;
+use Zend\Authentication\AuthenticationService;
+use Zend\Authentication\Adapter\DbTable as DbTableAuthAdapter;
 
 class Module implements AutoloaderProviderInterface
 {
@@ -42,5 +52,62 @@ class Module implements AutoloaderProviderInterface
         $eventManager        = $e->getApplication()->getEventManager();
         $moduleRouteListener = new ModuleRouteListener();
         $moduleRouteListener->attach($eventManager);
+    }
+    
+    public function getServiceConfig()
+    {
+         return [
+            'abstract_factories' => [],
+            'aliases' => [],
+            'factories' => [
+                "UserTable" => function($sm) {
+                    $tableGateway = $sm->get('UserTableGateway');
+                    $table = new UserTable($tableGateway);
+                    return $table;
+                },
+                'UserTableGateway' => function($sm) {
+                    $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new User());
+                    return new TableGateway('user', $dbAdapter, null, $resultSetPrototype);
+                },
+                'Adapter' => function($sm) {
+                    $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
+                    return $dbAdapter;
+                },
+                //Forms
+                'LoginForm' => function($sm) {
+                    $loginForm = new LoginForm();
+                    $loginForm->setInputFilter($sm->get('LoginFilter'));
+                    return $loginForm;
+                },
+                'RegisterForm' => function($sm) {
+                    $dbAdapter = $sm->get("Adapter");
+                    $registerForm = new RegisterForm('', ['adapter' => $dbAdapter]);
+                    $registerForm->setInputFilter($sm->get('RegisterFilter'));
+                    return $registerForm;
+                }, 
+                // Filters
+                'LoginFilter' => function($sm) {
+                    $loginFilter = new LoginFilter();
+                    return $loginFilter;
+                },
+                'RegisterFilter' => function($sm) {
+                    $registerFilter = new RegisterFilter();
+                    return $registerFilter;
+                },
+                // Authentication Services
+                'AuthenticationService' => function($sm) {
+                    $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
+                    $dbTableAuthAdapter = new DbTableAuthAdapter($dbAdapter, 'user', 'email', 'password', 'MD5(?)');
+                    $authservice = new AuthenticationService();
+                    $authservice->setAdapter($dbTableAuthAdapter);
+                    return $authservice;
+                },
+            ],
+            'invokables' => [],
+            'services' => [],
+            'shared' => [],  
+        ];
     }
 }
