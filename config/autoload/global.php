@@ -12,5 +12,15 @@
  */
 
 return array(
-    // ...
+    'db' => [
+        'driver' => 'Pdo',
+        'dsn' => 'pgsql:dbname=hotel;host=192.168.0.14',
+        'username' => 'hotel',
+        'password' => 'BiloKoji12',            
+    ],
+    'service_manager' => [
+        'factories' => [
+            'Zend\Db\Adapter\Adapter' => 'Zend\Db\Adapter\AdapterServiceFactory'
+        ]
+    ]    
 );
