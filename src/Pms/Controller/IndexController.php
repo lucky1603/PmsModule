@@ -25,10 +25,12 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-//        $conn = pg_connect('dbname=hotel host=192.168.0.14 user=hotel password=BiloKoji12');
-//        
+        $conn = pg_connect('dbname=hotel host=192.168.0.14 user=hotel password=BiloKoji12');
+        
 //        $result = pg_prepare($conn, "myquery1", 'select * from user');
-//        $result = pg_execute($conn, 'myquery1', []);
+//        $result = pg_exec($conn, 'select * from role');
+//        $result = pg_query($conn, "select * from user");
+//        var_dump(pg_fetch_all($result));
 //        var_dump(pg_fetch_all($result));
 //        die();
         

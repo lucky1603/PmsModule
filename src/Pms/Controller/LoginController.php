@@ -37,15 +37,16 @@ class LoginController extends AbstractActionController
      * @return ViewModel
      */
     public function processAction()
-    {
+    {               
         $authService = $this->getAuthService();
-        $adapter = $authService->getAdapter();
+        $adapter = $authService->getAdapter();        
         $adapter->setIdentity($this->request->getPost('email'));
-        $adapter->setCredential($this->request->getPost('password'));
+        $adapter->setCredential($this->request->getPost('password'));               
         $result = $authService->authenticate();
+        
         if($result->isValid()) {
             $authService->getStorage()->write($this->request->getPost('email'));
-            $this->redirect()->toRoute(NULL, ['controller' => 'login', 'action' => 'confirm']);
+            return $this->redirect()->toRoute(NULL, ['controller' => 'login', 'action' => 'confirm']);
         }
         
         return new ViewModel([
@@ -60,7 +61,9 @@ class LoginController extends AbstractActionController
     public function confirmAction()
     {
         $user_email = $this->getAuthService()->getStorage()->read();
-        $viewModel = new ViewModel(['user_email' => $user_email]);
+        $userTable = $this->getServiceLocator()->get('UserTable');
+        $user = $userTable->getUserByEMail($user_email);
+        $viewModel = new ViewModel(['user' => $user]);
         return $viewModel;
     }
     

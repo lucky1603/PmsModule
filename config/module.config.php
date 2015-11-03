@@ -5,6 +5,7 @@ return array(
             'Pms\Controller\Index' => 'Pms\Controller\IndexController',
             'Pms\Controller\Login' => 'Pms\Controller\LoginController',
             'Pms\Controller\Register' => 'Pms\Controller\RegisterController',
+            'Pms\Controller\EntityType' => 'Pms\Controller\EntityTypeController',
         ),
     ),
     'router' => array(
@@ -37,6 +38,20 @@ return array(
                                 'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
                             ),
                             'defaults' => array(
+                            ),
+                        ),
+                    ),
+                    'entity-type' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/entity-type[/:action[/:id]]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id' => '[a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Pms\Controller\EntityType',
+                                'action' => 'index',
                             ),
                         ),
                     ),

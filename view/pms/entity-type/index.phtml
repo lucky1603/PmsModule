@@ -1,0 +1,41 @@
+<section class="entity-type">
+    <?php
+        $types = $this->types;
+    ?>
+    <?php if($types == null || count($types) == 0):?>
+        <h2>Error</h2>
+        <p class="error">There are currently no defined types.</p>
+    <?php else:?>
+        <h2>Entity types</h2>
+        <p>
+        <p>
+        <table class="table">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        <?php foreach($types as $type):?>
+            <tr>
+                <td>
+                    <?php echo $type['id'] ?>
+                </td>
+                <td>
+                    <?php echo $type['name'] ?>
+                </td>
+                <td>
+                    <?php echo $type['description'] ?>
+                </td>
+                <td>
+                    <a href="">Edit</a> | <a href="">Delete</a>
+                </td>
+            </tr>
+        <?php endforeach;?>
+        </table>
+    <?php endif; ?>
+    <a href="">Add new entity type</a>
+</section>
+
+
+

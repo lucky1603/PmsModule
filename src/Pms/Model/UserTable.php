@@ -2,8 +2,6 @@
 
 namespace Pms\Model;
 
-use Zend\Db\Adapter\Adapter;
-use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Exception;
 

@@ -10,7 +10,9 @@
 namespace Pms;
 
 use Pms\Model\User;
+use Pms\Model\EntityType;
 use Pms\Model\UserTable;
+use Pms\Model\EntityTypeTable;
 use Pms\Form\LoginForm;
 use Pms\Form\RegisterForm;
 use Pms\Form\LoginFilter;
@@ -60,17 +62,31 @@ class Module implements AutoloaderProviderInterface
             'abstract_factories' => [],
             'aliases' => [],
             'factories' => [
+                // Tables
                 "UserTable" => function($sm) {
                     $tableGateway = $sm->get('UserTableGateway');
                     $table = new UserTable($tableGateway);
                     return $table;
                 },
+                'EntityTypeTable' => function($sm) {
+                    $tableGateway = $sm->get('EntityTypeTableGateway');
+                    $table = new EntityTypeTable($tableGateway);
+                    return $table;
+                },
+                //Gateways
                 'UserTableGateway' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new User());
                     return new TableGateway('user', $dbAdapter, null, $resultSetPrototype);
                 },
+                'EntityTypeTableGateway' => function($sm) {
+                    $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new EntityType());
+                    return new TableGateway('entity_type', $dbAdapter, null, $resultSetPrototype);
+                }, 
+                // Adapters
                 'Adapter' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
                     return $dbAdapter;
@@ -99,7 +115,7 @@ class Module implements AutoloaderProviderInterface
                 // Authentication Services
                 'AuthenticationService' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
-                    $dbTableAuthAdapter = new DbTableAuthAdapter($dbAdapter, 'user', 'email', 'password', 'MD5(?)');
+                    $dbTableAuthAdapter = new DbTableAuthAdapter($dbAdapter, 'user', 'email', 'password', 'md5(?)');                    
                     $authservice = new AuthenticationService();
                     $authservice->setAdapter($dbTableAuthAdapter);
                     return $authservice;
