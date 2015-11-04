@@ -102,7 +102,11 @@ class EntityTypeTable
         return $row;
     }
     
-    public function deleteUser($id)
+    /**
+     * Deletes the user
+     * @param type $id
+     */
+    public function deleteEntity($id)
     {
         $this->tableGateway->delete(['id' => $id]);
     }

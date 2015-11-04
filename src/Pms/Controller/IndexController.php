@@ -48,22 +48,17 @@ class IndexController extends AbstractActionController
 //        return new ViewModel([
 //            'users' => $users,
 //        ]);
+     
+//        \Zend\Debug\Debug::dump("And not the others...");
+//   
+//        $table = $this->getServiceLocator()->get("UserTable");
+//        $results1 = $table->fetchAll();
+//        \Zend\Debug\Debug::dump("Ima ih ... " . $results1->count());
+//        \Zend\Debug\Debug::dump($results1->toArray());     
         
-        $dbAdapter = $this->getServiceLocator()->get('Adapter');
-        $this->tableGateway = new TableGateway('user', $dbAdapter);
-        $statement = $dbAdapter->query('SELECT u.id, u.username, u.email, r.name, r.name FROM "user" as u, "role" as r WHERE u.role_id = r.id');
-        $results = $statement->execute();
-        //$results->rewind();
-        do {
-            var_dump($results->current());
-        } while($results->next());
-            
-        \Zend\Debug\Debug::dump("And not the others...");
-   
-        $table = $this->getServiceLocator()->get("UserTable");
-        $results1 = $table->fetchAll();
-        \Zend\Debug\Debug::dump("Ima ih ... " . $results1->count());
-        \Zend\Debug\Debug::dump($results1->toArray());        
+//        $userTable = $this->getServiceLocator()->get('UserTable');
+//        $rows = $userTable->fetchView();
+//        \Zend\Debug\Debug::dump($rows);
         
         return new ViewModel();
     }

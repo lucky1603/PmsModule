@@ -1,7 +1,16 @@
 <?php
+/**
+ * @name User.php
+ * @description Object model of the User object.
+ * @author Sinisa Ristic <sinisa.ristic@gmail.com>
+ * @date 02.11.2015.
+ */
 
 namespace Pms\Model;
 
+/**
+ * User class.
+ */
 class User 
 {
     public $id;
@@ -10,11 +19,19 @@ class User
     public $password;   
     public $role_id;
     
+    /**
+     * Sets the password using the md5 algorithm.
+     * @param type $clear_password
+     */
     public function setPassword($clear_password)
     {
         $this->password = md5($clear_password);
     }
     
+    /**
+     * Setting of user data.
+     * @param type $data
+     */
     public function exchangeArray($data)
     {                
         if(isset($data['id']))
@@ -35,6 +52,10 @@ class User
         $this->role_id = (isset($data['role_id'])) ? $data['role_id'] : null;
     }
     
+    /**
+     * Getting of user data.
+     * @return type
+     */
     public function getArrayCopy()
     {                        
         return [

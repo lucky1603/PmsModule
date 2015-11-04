@@ -9,15 +9,9 @@ use Zend\Db\Sql\Select;
 class UserTable
 {
     protected $tableGateway;
-    protected $newStatement;
-    protected $updateStatement;
-    protected $deleteStatement;
     
     public function __construct(TableGateway $tableGateway) {        
         $this->tableGateway = $tableGateway;
-        $adapter = $this->tableGateway->getAdapter();
-        
-        
     }
     
     public function saveUser(User $user)
@@ -65,6 +59,18 @@ class UserTable
         return $resultSet;
     }
     
+    public function fetchView()
+    {
+        $dbAdapter = $this->tableGateway->getAdapter();
+        $statement = $dbAdapter->query('SELECT u.id, u.username, u.email, r.name, r.name FROM "user" as u, "role" as r WHERE u.role_id = r.id');
+        $results = $statement->execute();
+        $rows = array();
+        do {
+            $rows[] = $results->current();
+        } while($results->next());
+        return $rows;
+    }
+    
     public function getUserByEmail($userMail)
     {
         // Daj user-a po mail-u
@@ -74,6 +80,16 @@ class UserTable
             throw new Exception("Couldn't find row with " . $userMail . " mail.");
         }
         return $row;
+    }
+    
+    public function getUserByRole($role_id)
+    {
+        $resultSet = $this->tableGateway->select(['role_id' => $role_id]);
+        if($resultSet->count() == 0)
+        {
+            throw new Exception("Couldn't find user with role " . $role_id . ".");
+        }
+        return $resultSet->toArray();
     }
     
     public function deleteUser($id)
