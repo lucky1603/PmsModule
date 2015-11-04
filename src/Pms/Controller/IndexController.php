@@ -12,6 +12,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Select;
+use Zend\Db\Sql\Sql;
 use Zend\Db\TableGateway\TableGateway;
 
 /**
@@ -25,7 +26,7 @@ class IndexController extends AbstractActionController
      */
     public function indexAction()
     {
-        $conn = pg_connect('dbname=hotel host=192.168.0.14 user=hotel password=BiloKoji12');
+//        $conn = pg_connect('dbname=hotel host=192.168.0.14 user=hotel password=BiloKoji12');
         
 //        $result = pg_prepare($conn, "myquery1", 'select * from user');
 //        $result = pg_exec($conn, 'select * from role');
@@ -47,6 +48,24 @@ class IndexController extends AbstractActionController
 //        return new ViewModel([
 //            'users' => $users,
 //        ]);
+        
+        $dbAdapter = $this->getServiceLocator()->get('Adapter');
+        $this->tableGateway = new TableGateway('user', $dbAdapter);
+        $statement = $dbAdapter->query('SELECT u.id, u.username, u.email, r.name, r.name FROM "user" as u, "role" as r WHERE u.role_id = r.id');
+        $results = $statement->execute();
+        //$results->rewind();
+        do {
+            var_dump($results->current());
+        } while($results->next());
+                
+        
+
+        \Zend\Debug\Debug::dump("And not the others...");
+   
+        $table = $this->getServiceLocator()->get("UserTable");
+        $results1 = $table->fetchAll();
+        \Zend\Debug\Debug::dump("Ima ih ... " . $results1->count());
+        \Zend\Debug\Debug::dump($results1->toArray());        
         
         return new ViewModel();
     }

@@ -4,13 +4,20 @@ namespace Pms\Model;
 
 use Zend\Db\TableGateway\TableGateway;
 use Zend\Db\Exception;
+use Zend\Db\Sql\Select;
 
 class UserTable
 {
     protected $tableGateway;
+    protected $newStatement;
+    protected $updateStatement;
+    protected $deleteStatement;
     
-    public function __construct(TableGateway $tableGateway) {
+    public function __construct(TableGateway $tableGateway) {        
         $this->tableGateway = $tableGateway;
+        $adapter = $this->tableGateway->getAdapter();
+        
+        
     }
     
     public function saveUser(User $user)
@@ -23,11 +30,13 @@ class UserTable
         );
         $id = (int) $user->id;
         if($id == 0) {
-            $this->tableGateway->insert($data);
+            // upisi user-a
+            //$this->tableGateway->insert($data);
         }
         else {
             if($this->getUser($id))
             {
+                // Update-uj user-a
                 $this->tableGateway->update($data, ['id' => $id]);
             }
             else 
@@ -39,6 +48,7 @@ class UserTable
     
     public function getUser($id)
     {
+        // Daj user-a po id-u
         $id = (int) $id;
         $rowset = $this->tableGateway->select(['id' => $id]);
         $row = $rowset->current();
@@ -50,12 +60,14 @@ class UserTable
     
     public function fetchAll()
     {
+        // Daj sve user-e
         $resultSet = $this->tableGateway->select();
         return $resultSet;
     }
     
     public function getUserByEmail($userMail)
     {
+        // Daj user-a po mail-u
         $resultSet = $this->tableGateway->select(['email' => $userMail]);
         $row = $resultSet->current();
         if(! $row) {
@@ -66,6 +78,7 @@ class UserTable
     
     public function deleteUser($id)
     {
+        // izbrisi user-a
         $this->tableGateway->delete(['id' => $id]);
     }
 }
