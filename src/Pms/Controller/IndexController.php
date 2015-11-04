@@ -57,9 +57,7 @@ class IndexController extends AbstractActionController
         do {
             var_dump($results->current());
         } while($results->next());
-                
-        
-
+            
         \Zend\Debug\Debug::dump("And not the others...");
    
         $table = $this->getServiceLocator()->get("UserTable");
@@ -75,7 +73,9 @@ class IndexController extends AbstractActionController
      */
     public function loginAction()
     {
-        
+        $viewModel = new ViewModel();
+        $viewModel->setTemplate('pms/index/index');
+        return $viewModel;
     }
     
     /**
@@ -83,7 +83,9 @@ class IndexController extends AbstractActionController
      */
     public function registerAction()
     {
-        
+        $viewModel = new ViewModel();
+        $viewModel->setTemplate('pms/index/index');
+        return $viewModel;
     }
 }
 
