@@ -63,7 +63,8 @@ class LoginController extends AbstractActionController
         $user_email = $this->getAuthService()->getStorage()->read();
         $userTable = $this->getServiceLocator()->get('UserTable');
         $user = $userTable->getUserByEMail($user_email);
-        $viewModel = new ViewModel(['user' => $user]);
+        $results = $userTable->fetchView($user->id);
+        $viewModel = new ViewModel(['user' => $results[0]]);
         return $viewModel;
     }
     

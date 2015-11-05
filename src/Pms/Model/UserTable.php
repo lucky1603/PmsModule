@@ -59,15 +59,29 @@ class UserTable
         return $resultSet;
     }
     
-    public function fetchView()
+    public function fetchView($id=NULL)
     {
-        $dbAdapter = $this->tableGateway->getAdapter();
-        $statement = $dbAdapter->query('SELECT u.id, u.username, u.email, r.name, r.name FROM "user" as u, "role" as r WHERE u.role_id = r.id');
-        $results = $statement->execute();
+        // Approach 1
+        $dbAdapter = $this->tableGateway->getAdapter();        
+        // Approach 2
+        $sql = new \Zend\Db\Sql\Sql($dbAdapter);
+        $select = $sql->select();
+        $select->from(array('u'  => 'user'))
+                ->columns(['username', 'email'])
+                ->join(array('r' => 'role'), 'u.role_id = r.id', ['rolename' => 'name']);
+        if($id != NULL)
+        {
+            $select->where(array('u.id' => $id));
+        }                
+                                        
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results1 = $statement->execute();
+        
         $rows = array();
         do {
-            $rows[] = $results->current();
-        } while($results->next());
+            $rows[] = $results1->current();
+        } while($results1->next());
+        
         return $rows;
     }
     
