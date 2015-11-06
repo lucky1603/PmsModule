@@ -25,7 +25,7 @@ class UserTable
         $id = (int) $user->id;
         if($id == 0) {
             // upisi user-a
-            //$this->tableGateway->insert($data);
+            $this->tableGateway->insert($data);
         }
         else {
             if($this->getUser($id))
@@ -67,7 +67,7 @@ class UserTable
         $sql = new \Zend\Db\Sql\Sql($dbAdapter);
         $select = $sql->select();
         $select->from(array('u'  => 'user'))
-                ->columns(['username', 'email'])
+                ->columns(['id', 'username', 'email'])
                 ->join(array('r' => 'role'), 'u.role_id = r.id', ['rolename' => 'name']);
         if($id != NULL)
         {

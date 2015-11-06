@@ -106,7 +106,7 @@ class EntityTypeTable
      * Deletes the user
      * @param type $id
      */
-    public function deleteEntity($id)
+    public function deleteEntityType($id)
     {
         $this->tableGateway->delete(['id' => $id]);
     }
