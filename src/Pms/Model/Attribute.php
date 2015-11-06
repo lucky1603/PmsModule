@@ -19,6 +19,7 @@ class Attribute
     public $type;
     public $sort_order;
     public $unit;
+    public $value;
     
     /**
      * Feeds attribute params with externla values.

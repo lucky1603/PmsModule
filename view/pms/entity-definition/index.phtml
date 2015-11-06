@@ -1,0 +1,42 @@
+<section class="entity-definition">
+    <?php
+        $entityDefinitions = $this->entityDefinitions;
+    ?>
+    <?php if($entityDefinitions == null || count($entityDefinitions) == 0):?>
+        <h2>Error</h2>
+        <p class="error">There are currently no defined entity definitions.</p>
+    <?php else:?>
+        <h2>Entity Definitions</h2>
+        <p>
+        <p>
+        <table class="table">
+            <tr>
+                <th>Type</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Action</th>
+            </tr>
+        <?php foreach($entityDefinitions as $entityDefinition):?>
+            <tr>
+                <td>
+                    <?php echo $entityDefinition['typename'] ?>
+                </td>
+                <td>
+                    <?php echo $entityDefinition['code'] ?>
+                </td>
+                <td>
+                    <?php echo $entityDefinition['name'] ?>
+                </td>
+                <td>
+                    <?php echo $entityDefinition['description'] ?>
+                </td>
+                <td>
+                    <a href="/pms/entity-definition/edit/<?php echo $entityDefinition['id']?>">Edit</a> | <a href="/pms/entity-definition/delete/<?php echo $entityDefinition['id']?>">Delete</a>
+                </td>
+            </tr>
+        <?php endforeach;?>
+        </table>
+    <?php endif; ?>
+    <a href="/pms/entity-definition/new">Add new entity type</a>
+</section>

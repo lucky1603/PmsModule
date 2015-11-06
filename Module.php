@@ -15,11 +15,14 @@ use Pms\Model\Attribute;
 use Pms\Model\UserTable;
 use Pms\Model\EntityTypeTable;
 use Pms\Model\AttributeTable;
+use Pms\Model\EntityDefinitionTable;
+use Pms\Model\EntityDefinition;
 use Pms\Form\LoginForm;
 use Pms\Form\RegisterForm;
 use Pms\Form\LoginFilter;
 use Pms\Form\RegisterFilter;
 use Pms\Form\AttributeForm;
+use Pms\Form\EntityDefinitionForm;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -81,6 +84,11 @@ class Module implements AutoloaderProviderInterface
                     $table = new AttributeTable($tableGateway);
                     return $table;
                 },
+                'EntityDefinitionTable' => function($sm) {
+                    $tableGateway = $sm->get("EntityDefinitionTableGateway");
+                    $table = new EntityDefinitionTable($tableGateway);
+                    return $table; 
+                },
                 //Gateways
                 'UserTableGateway' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
@@ -100,6 +108,12 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype->setArrayObjectPrototype(new Attribute());
                     return new TableGateway('attribute', $dbAdapter, null, $resultSetPrototype);
                 },
+                'EntityDefinitionTableGateway' => function($sm) {
+                    $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new EntityDefinition());
+                    return new TableGateway('entity_definition', $dbAdapter, null, $resultSetPrototype);
+                },  
                 // Adapters
                 'Adapter' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
@@ -123,6 +137,11 @@ class Module implements AutoloaderProviderInterface
                 },
                 'AttributeForm' => function($sm) {
                     $form = new AttributeForm();
+                    return $form;
+                },
+                'EntityDefinitionForm' => function($sm) {
+                    $dbAdapter = $sm->get("Adapter");
+                    $form = new EntityDefinitionForm('', ['adapter' => $dbAdapter]);
                     return $form;
                 },
                 // Filters

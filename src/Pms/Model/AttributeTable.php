@@ -44,19 +44,15 @@ class AttributeTable
             'sort_order' => $attribute->sort_order,
             'unit' => $attribute->unit,
         ];
-        
-        \Zend\Debug\Debug::dump($data);
-        
+                
         $id = (int)$attribute->id;
         
         if($id == 0) {
-            \Zend\Debug\Debug::dump('Adds ...');
             $this->tableGateway->insert($data);
         }
         else {
             if($this->getAttribute($id))
             {
-                \Zend\Debug\Debug::dump('Updates ...');
                 $this->tableGateway->update($data, ['id' => $id]);
             }
             else {
