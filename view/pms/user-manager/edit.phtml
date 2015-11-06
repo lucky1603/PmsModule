@@ -1,0 +1,61 @@
+<section class='user-manager-edit'>
+    <?php
+        $form = $this->form;
+        $id = $this->user_id;
+
+        $form->prepare();
+        if(isset($id))
+        {
+            $form->setAttribute('action', $this->url('pms/user-manager', array(
+                'action' => 'process',
+                'id' => $id,
+            )));  
+        }
+        else {
+            $form->setAttribute('action', $this->url('pms/user-manager', array(
+                'action' => 'process',
+            ))); 
+        }
+        
+        $form->setAttribute('method', 'post');
+        echo $this->form()->openTag($form);
+    ?>
+    <dl class='zend_form'>
+        <dt><?php echo $this->formLabel($form->get('role_id')); ?></dt>
+        <dd><?php
+            echo $this->formElement($form->get('role_id'));
+            echo $this->formElementErrors($form->get('role_id'));
+        ?></dd>
+        <dt><?php echo $this->formLabel($form->get('username')); ?></dt>
+        <dd><?php
+            echo $this->formElement($form->get('username'));
+            echo $this->formElementErrors($form->get('username'));
+        ?></dd>
+        <dt><?php echo $this->formLabel($form->get('email')); ?></dt>
+        <dd><?php
+            echo $this->formElement($form->get('email'));
+            echo $this->formElementErrors($form->get('email'));
+        ?></dd>
+        <dt><?php echo $this->formLabel($form->get('password'));?></dt>
+        <dd><?php
+            echo $this->formElement($form->get('password'));
+            echo $this->formElementErrors($form->get('password'));
+        ?></dd>
+        <dt><?php echo $this->formLabel($form->get('confirm_password')); ?></dt>
+        <dd><?php
+            echo $this->formElement($form->get('confirm_password'));
+            echo $this->formElementErrors($form->get('confirm_password'));
+        ?></dd>
+        <dd><?php
+            $submit = $form->get('submit');
+            if(isset($id))
+            {
+                $submit->setValue('Save');
+            }                        
+            echo $this->formElement($submit);
+            echo $this->formElementErrors($submit);
+        ?></dd>
+    </dl>
+    <?php echo $this->form()->closeTag() ?>
+</section>
+

@@ -38,14 +38,14 @@ class EntityTypeTable
     public function saveEntityType(EntityType $entityType)
     {
         $data = [
-            'id' => $entityType->id,
             'name' => $entityType->name,
             'description' => $entityType->description,
         ];
         
-        $id = (int)$entityType->id;
-        
+        $id = (int)$entityType->id;        
         if($id == 0) {
+            \Zend\Debug\Debug::dump('insert...');
+            \Zend\Debug\Debug::dump($data);
             $this->tableGateway->insert($data);
         }
         else {

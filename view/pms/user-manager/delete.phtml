@@ -1,0 +1,10 @@
+<section class="user-manager-delete">
+    <?php if($this->error):?>
+    <h2>Error</h2>
+    <p><?php echo $this->error;?>
+    <?php else: ?>
+    <h2>Confirmation</h2>
+    <p>The user <?php echo $this->user->username; ?> was successfully deleted!
+    <p><a href="/pms/user-manager">Return to user manager</a>
+    <?php endif;?>            
+</section>

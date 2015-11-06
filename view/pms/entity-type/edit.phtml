@@ -1,0 +1,42 @@
+<section class="entity-type-edit">
+    <?php 
+        $id = $this->id;
+        $form = $this->form;
+        if($id)
+        {
+            $id = (int)$id;
+            $form->setAttribute('action', $this->url('pms/entity-type', [                
+                'action' => 'process',
+                'id' => $id,
+            ]));
+        }
+        else {
+            $form->setAttribute('action', $this->url('pms/entity-type', [
+                'action' => 'process',
+            ]));
+        }        
+        echo $this->form()->openTag($form);
+    ?>
+    <?php if(!$id):?>
+    <h2>New type</h2>
+    <?php else:?>
+    <h2>Change details</h2>
+    <?php endif;?>
+    <dl>
+        <dt><?php echo $this->formLabel($form->get('name')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('name')) ?>
+            <?php echo $this->formElementErrors($form->get('name'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('description')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('description')) ?>
+            <?php echo $this->formElementErrors($form->get('description'))?>
+        </dd>
+        <dd>
+            <?php echo $this->formElement($form->get('submit')) ?>
+        </dd>
+    </dl>
+    <?php echo $this->form()->closeTag() ?>
+</section>
+

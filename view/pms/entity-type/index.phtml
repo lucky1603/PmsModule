@@ -11,16 +11,16 @@
         <p>
         <table class="table">
             <tr>
-                <th>ID</th>
+<!--                <th>ID</th>-->
                 <th>Name</th>
                 <th>Description</th>
                 <th>Action</th>
             </tr>
         <?php foreach($types as $type):?>
             <tr>
-                <td>
+<!--                <td>
                     <?php echo $type['id'] ?>
-                </td>
+                </td>-->
                 <td>
                     <?php echo $type['name'] ?>
                 </td>
@@ -28,13 +28,13 @@
                     <?php echo $type['description'] ?>
                 </td>
                 <td>
-                    <a href="">Edit</a> | <a href="">Delete</a>
+                    <a href="/pms/entity-type/edit/<?php echo $type['id']?>">Edit</a> | <a href="/pms/entity-type/delete/<?php echo $type['id']?>">Delete</a>
                 </td>
             </tr>
         <?php endforeach;?>
         </table>
     <?php endif; ?>
-    <a href="">Add new entity type</a>
+    <a href="/pms/entity-type/new">Add new entity type</a>
 </section>
 
 

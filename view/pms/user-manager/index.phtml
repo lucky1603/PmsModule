@@ -1,0 +1,30 @@
+<section class="user-manager">
+    <?php
+        $users = $this->users;        
+    ?>
+    <h2>Users</h2>
+    <?php if(count($users) == 0):?>
+    <p class="error">There are no users on the system.</p>
+    <?php else: ?>
+    <table class="table">
+        <tr>
+            <th>Id</th>
+            <th>Username</th>
+            <th>E-Mail</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+        <?php foreach($users as $user):?>
+        <tr>
+            <td><?php echo $user['id']?></td>
+            <td><?php echo $user['username']?></td>
+            <td><?php echo $user['email']?></td>
+            <td><?php echo $user['rolename']?></td>
+            <td><a href="/pms/user-manager/edit/<?php echo $user['id']?>">Edit</a> | <a href="/pms/user-manager/delete/<?php echo $user['id']?>">Delete</a>
+        </tr>
+        <?php endforeach;?>
+    </table>
+    <?php endif;?>        
+    <a href="/pms/user-manager/new">Add new user</a>
+</section>
+

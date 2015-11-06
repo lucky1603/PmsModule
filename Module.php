@@ -11,8 +11,10 @@ namespace Pms;
 
 use Pms\Model\User;
 use Pms\Model\EntityType;
+use Pms\Model\Attribute;
 use Pms\Model\UserTable;
 use Pms\Model\EntityTypeTable;
+use Pms\Model\AttributeTable;
 use Pms\Form\LoginForm;
 use Pms\Form\RegisterForm;
 use Pms\Form\LoginFilter;
@@ -73,6 +75,11 @@ class Module implements AutoloaderProviderInterface
                     $table = new EntityTypeTable($tableGateway);
                     return $table;
                 },
+                'AttributeTable' => function($sm) {
+                    $tableGateway = $sm->get("AttributeTableGateway");
+                    $table = new AttributeTable($tableGateway);
+                    return $table;
+                },
                 //Gateways
                 'UserTableGateway' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
@@ -86,6 +93,12 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype->setArrayObjectPrototype(new EntityType());
                     return new TableGateway('entity_type', $dbAdapter, null, $resultSetPrototype);
                 }, 
+                'AttributeTableGateway' => function($sm) {
+                    $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Attribute());
+                    return new TableGateway('attribute', $dbAdapter, null, $resultSetPrototype);
+                },
                 // Adapters
                 'Adapter' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
@@ -103,6 +116,10 @@ class Module implements AutoloaderProviderInterface
                     $registerForm->setInputFilter($sm->get('RegisterFilter'));
                     return $registerForm;
                 }, 
+                'EntityTypeForm' => function($sm) {
+                    $form = new \Pms\Form\EntityTypeForm();
+                    return $form;
+                },
                 // Filters
                 'LoginFilter' => function($sm) {
                     $loginFilter = new LoginFilter();

@@ -6,6 +6,7 @@ return array(
             'Pms\Controller\Login' => 'Pms\Controller\LoginController',
             'Pms\Controller\Register' => 'Pms\Controller\RegisterController',
             'Pms\Controller\EntityType' => 'Pms\Controller\EntityTypeController',
+            'Pms\Controller\UserManager' => 'Pms\Controller\UserManagerController',
         ),
     ),
     'router' => array(
@@ -51,6 +52,20 @@ return array(
                             ),
                             'defaults' => array(
                                 'controller' => 'Pms\Controller\EntityType',
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
+                    'user-manager' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/user-manager[/:action[/:id]]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id' => '[a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Pms\Controller\UserManager',
                                 'action' => 'index',
                             ),
                         ),

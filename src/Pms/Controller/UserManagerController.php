@@ -1,4 +1,11 @@
 <?php
+/**
+ * User manager controller.
+ * @description Controller which handles the user management.
+ * @name RegisterController.php
+ * @author Sinisa Ristic <sinisa.ristic@gmail.com>
+ * @date 11/2/2015.
+ */
 
 namespace Pms\Controller;
 
@@ -6,8 +13,15 @@ use Pms\Model\User;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
+/**
+ * UserManagerController class.
+ */
 class UserManagerController extends AbstractActionController
 {
+    /**
+     * Main action. Shows the list of registered users.
+     * @return ViewModel
+     */
     public function indexAction() {
         $userTable = $this->getServiceLocator()->get('UserTable');
         $users = $userTable->fetchView();
@@ -17,6 +31,10 @@ class UserManagerController extends AbstractActionController
         return $viewModel;
     }
     
+    /**
+     * Edits the selected user.
+     * @return ViewModel
+     */
     public function editAction()
     {
         $userTable = $this->getServiceLocator()->get('UserTable');
@@ -30,6 +48,10 @@ class UserManagerController extends AbstractActionController
         return $viewModel;
     }
     
+    /**
+     * Processes the user data entered in the form.
+     * @return type
+     */
     public function processAction()
     {
         $post = $this->request->getPost();
@@ -67,6 +89,10 @@ class UserManagerController extends AbstractActionController
         ]);
     }
     
+    /**
+     * Deletes the selected user.
+     * @return ViewModel
+     */
     public function deleteAction()
     {
         $usersTable = $this->getServiceLocator()->get("UserTable");
@@ -86,6 +112,10 @@ class UserManagerController extends AbstractActionController
         ]);
     }
     
+    /**
+     * Adds new user.
+     * @return ViewModel
+     */
     public function newAction()
     {
         $registerForm = $this->getServiceLocator()->get('RegisterForm');
