@@ -18,6 +18,7 @@ class Attribute
     public $label;
     public $type;
     public $sort_order;
+    public $unit;
     
     /**
      * Feeds attribute params with externla values.
@@ -34,6 +35,7 @@ class Attribute
         $this->label = (isset($data['label'])) ? $data['label'] : null;
         $this->type = (isset($data['type'])) ? $data['type'] : null;
         $this->sort_order = (isset($data['sort_order'])) ? $data['sort_order'] : null;
+        $this->unit = (isset($data['unit'])) ? $data['unit'] : null;
     }
     
     /**
@@ -44,10 +46,11 @@ class Attribute
     {
         return [
             'id' => $this->id,
-            'name' => $this->name,
+            'code' => $this->code,
             'label' => $this->label,
             'type' => $this->type,
             'sort_order' => $this->sort_order,
+            'unit' => $this->unit,
         ];
     }
 }

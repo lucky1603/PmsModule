@@ -1,0 +1,58 @@
+<section class="attribute-edit">
+    <?php 
+        $id = $this->id;
+        $form = $this->form;
+        if($id)
+        {
+            $id = (int)$id;
+            $form->setAttribute('action', $this->url('pms/attribute-manager', [                
+                'action' => 'process',
+                'id' => $id,
+            ]));
+        }
+        else {
+            $form->setAttribute('action', $this->url('pms/attribute-manager', [
+                'action' => 'process',
+            ]));
+        }        
+        echo $this->form()->openTag($form);
+    ?>
+    <?php if(!$id):?>
+    <h2>New attribute</h2>
+    <?php else:?>
+    <h2>Change details</h2>
+    <?php endif;?>
+    <dl>
+        <dt><?php echo $this->formLabel($form->get('code')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('code')) ?>
+            <?php echo $this->formElementErrors($form->get('code'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('label')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('label')) ?>
+            <?php echo $this->formElementErrors($form->get('label'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('type')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('type')) ?>
+            <?php echo $this->formElementErrors($form->get('type'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('unit')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('unit')) ?>
+            <?php echo $this->formElementErrors($form->get('unit'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('sort_order')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('sort_order')) ?>
+            <?php echo $this->formElementErrors($form->get('sort_order'))?>
+        </dd>
+        
+        <dd>
+            <?php echo $this->formElement($form->get('submit')) ?>
+        </dd>
+    </dl>
+    <?php echo $this->form()->closeTag() ?>
+</section>
+

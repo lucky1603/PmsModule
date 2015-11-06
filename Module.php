@@ -19,6 +19,7 @@ use Pms\Form\LoginForm;
 use Pms\Form\RegisterForm;
 use Pms\Form\LoginFilter;
 use Pms\Form\RegisterFilter;
+use Pms\Form\AttributeForm;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -118,6 +119,10 @@ class Module implements AutoloaderProviderInterface
                 }, 
                 'EntityTypeForm' => function($sm) {
                     $form = new \Pms\Form\EntityTypeForm();
+                    return $form;
+                },
+                'AttributeForm' => function($sm) {
+                    $form = new AttributeForm();
                     return $form;
                 },
                 // Filters

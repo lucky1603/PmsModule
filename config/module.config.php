@@ -7,6 +7,7 @@ return array(
             'Pms\Controller\Register' => 'Pms\Controller\RegisterController',
             'Pms\Controller\EntityType' => 'Pms\Controller\EntityTypeController',
             'Pms\Controller\UserManager' => 'Pms\Controller\UserManagerController',
+            'Pms\Controller\AttributeManager' => 'Pms\Controller\AttributeManagerController',
         ),
     ),
     'router' => array(
@@ -66,6 +67,20 @@ return array(
                             ),
                             'defaults' => array(
                                 'controller' => 'Pms\Controller\UserManager',
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
+                    'attribute-manager' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/attribute-manager[/:action[/:id]]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id' => '[a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Pms\Controller\AttributeManager',
                                 'action' => 'index',
                             ),
                         ),

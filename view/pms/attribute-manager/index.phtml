@@ -1,0 +1,46 @@
+<section class="attribute">
+    <?php
+        $attributes = $this->attributes;
+    ?>
+    <?php if($attributes == null || count($attributes) == 0):?>
+        <h2>Error</h2>
+        <p class="error">There are currently no defined attributes.</p>
+    <?php else:?>
+        <h2>Attributes</h2>
+        <p>
+        <p>
+        <table class="table">
+            <tr>
+                <th>Code</th>
+                <th>Label</th>
+                <th>Type</th>
+                <th>Unit</th>
+                <th>Sort order</th>
+                <th>Action</th>
+            </tr>
+        <?php foreach($attributes as $attribute):?>
+            <tr>
+                <td>
+                    <?php echo $attribute['code'] ?>
+                </td>
+                <td>
+                    <?php echo $attribute['label'] ?>
+                </td>
+                <td>
+                    <?php echo $attribute['type'] ?>
+                </td>
+                <td>
+                    <?php echo $attribute['unit'] ?>
+                </td>
+                <td>
+                    <?php echo $attribute['sort_order'] ?>
+                </td>
+                <td>
+                    <a href="/pms/attribute-manager/edit/<?php echo $attribute['id']?>">Edit</a> | <a href="/pms/attribute-manager/delete/<?php echo $attribute['id']?>">Delete</a>
+                </td>
+            </tr>
+        <?php endforeach;?>
+        </table>
+    <?php endif; ?>
+    <a href="/pms/attribute-manager/new">Add new entity type</a>
+</section>
