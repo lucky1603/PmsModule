@@ -46,6 +46,12 @@ class EntityDefinitionController extends AbstractActionController
                 {
                     $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
                 }
+                elseif ($attribute->type == 'text') {
+                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+                }
+                elseif ($attribute->type == 'timestamp') {
+                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+                }
                 else {
                     $attElement = new \Zend\Form\Element\Text($attribute->code);
                 }
