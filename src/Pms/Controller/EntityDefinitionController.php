@@ -38,6 +38,10 @@ class EntityDefinitionController extends AbstractActionController
             $id = (int)$id;
             $entityDefinition = $table->getEntityDefinition($id);
             $form->setData($entityDefinition->getArrayCopy());
+            $attrModel = $this->getServiceLocator()->get('AttributeModel');
+            $attrModel->setRefId($id);
+            $attributes = $attrModel->getCollection();
+            \Zend\Debug\Debug::dump($attributes);
             $viewModel = new ViewModel([
                 'form' => $form,
                 'id' => $id,

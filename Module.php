@@ -17,6 +17,7 @@ use Pms\Model\EntityTypeTable;
 use Pms\Model\AttributeTable;
 use Pms\Model\EntityDefinitionTable;
 use Pms\Model\EntityDefinition;
+use Pms\Model\AttributeModel;
 use Pms\Form\LoginForm;
 use Pms\Form\RegisterForm;
 use Pms\Form\LoginFilter;
@@ -153,6 +154,12 @@ class Module implements AutoloaderProviderInterface
                     $registerFilter = new RegisterFilter();
                     return $registerFilter;
                 },
+                // Complex models
+                'AttributeModel' => function($sm) {
+                    $dbAdapter = $sm->get('Adapter');
+                    $attModel = new AttributeModel($dbAdapter);
+                    return $attModel;
+                },                      
                 // Authentication Services
                 'AuthenticationService' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
