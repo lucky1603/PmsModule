@@ -35,28 +35,21 @@ class EntityDefinitionController extends AbstractActionController
         $table = $this->getServiceLocator()->get('EntityDefinitionTable');
         if($id)
         {
-//            $id = (int)$id;
-//            $entityDefinition = $table->getEntityDefinition($id);
-//            $form->setData($entityDefinition->getArrayCopy());
-//            $attrModel = $this->getServiceLocator()->get('AttributeModel');
-//            $attrModel->setRefId($id);
-//            $attributes = $attrModel->getCollection();
-//            \Zend\Debug\Debug::dump($attributes);
-//            $viewModel = new ViewModel([
-//                'form' => $form,
-//                'id' => $id,
-//            ]);       
-//            return $viewModel;
             $id = (int)$id;
             $entityDefModel = $this->getServiceLocator()->get('EntityDefinitionModel');
             $entityDefModel->setId($id);
             $form->setData($entityDefModel->getData());
             $attributes = $entityDefModel->getAttributes();
-//            \Zend\Debug\Debug::dump($attributes);
-//            die();
             foreach($attributes as $attribute)
             {                
-                $attElement = new \Zend\Form\Element\Text($attribute->code);
+                if($attribute->type == 'boolean')
+                {
+                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+                }
+                else {
+                    $attElement = new \Zend\Form\Element\Text($attribute->code);
+                }
+                
                 $attElement->setLabel($attribute->label);
                 $attElement->setValue($attribute->getValue());
                 $form->add($attElement);

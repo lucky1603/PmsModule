@@ -8,8 +8,6 @@
 
 namespace Pms\Model;
 
-use Zend\Mvc\Controller\Ab
-
 /**
  * Attribute class.
  */
