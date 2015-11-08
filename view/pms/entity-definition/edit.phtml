@@ -2,6 +2,8 @@
     <?php 
         $id = $this->id;
         $form = $this->form;
+        $attributes = $this->attributes;
+        
         if($id)
         {
             $id = (int)$id;
@@ -43,8 +45,15 @@
             <?php echo $this->formElement($form->get('description')) ?>
             <?php echo $this->formElementErrors($form->get('description'))?>
         </dd>
-
-        
+        <?php if(count($attributes) > 0): ?>
+            <?php foreach ($attributes as $attribute):?>
+                <dt><?php echo $this->formLabel($form->get($attribute->code)) ?></dt>
+                <dd>
+                    <?php echo $this->formElement($form->get($attribute->code)) ?>
+                    <?php echo $this->formElementErrors($form->get($attribute->code))?>
+                </dd>
+            <?php endforeach;?>
+        <?php endif;?>        
         <dd>
             <?php echo $this->formElement($form->get('submit')) ?>
         </dd>
