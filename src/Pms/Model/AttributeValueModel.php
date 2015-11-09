@@ -5,7 +5,7 @@ namespace Pms\Model;
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 
-class AttributeModel
+class AttributeValueModel
 {
     public $id;
     public $label;
@@ -17,7 +17,7 @@ class AttributeModel
     protected $dbAdapter;
     protected $tableName;
     protected $value_id;
-    protected $entity_type_id;
+    protected $entity_definition_id;
     protected $sql;
     protected $dirty = false;
     
@@ -27,14 +27,14 @@ class AttributeModel
         $this->sql = new Sql($this->dbAdapter);
     }
     
-    public function setEntityTypeId($id)
+    public function setEntityDefinitionId($id)
     {
-        $this->entity_type_id = $id;
+        $this->entity_definition_id = $id;
     }
     
-    public function setId($id)
+    public function setAttributeId($id)
     {
-        if(!$this->entity_type_id)
+        if(!$this->entity_definition_id)
             return;
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select();
@@ -51,6 +51,8 @@ class AttributeModel
             $this->type = $row['type'];
             $this->sort_order = $row['sort_order'];
         }
+        
+        $this->getValue();
     }
     
     public function setData($data)
@@ -90,7 +92,7 @@ class AttributeModel
            $select = $this->sql->select(); 
            $select->from($this->tableName.'_value_'.$this->type)
                    ->columns(['value'])
-                   ->where(['entity_type_id' => $this->entity_type_id]);
+                   ->where(['entity_definition_id' => $this->entity_definition_id]);
            $statement = $this->sql->prepareStatementForSqlObject($select);
            $results = $statement->execute();
            $row = $results->current();
@@ -141,6 +143,36 @@ class AttributeModel
             $rows[] = $results->current();
         } while($results->next());        
         return $rows;
+    }
+    
+    public function save()
+    {
+        if(isset($this->id))
+        {
+            $update = $this->sql->update();
+            $update->table($this->tableName.'_value_'.$this->type)
+                    ->set([
+                        'value' => $this->value,
+                    ])
+                    ->where([
+                            'attribute_id' => $this->id,
+                            'entity_definition_id' => $this->entity_definition_id,
+                        ]);
+            $statement = $this->sql->prepareStatementForSqlObject($update);
+            $statement->execute();
+        }
+        else 
+        {
+            $insert = $this->sql->insert();
+            $insert->into($this->tableName.'_value_'.$this->type)
+                    ->values([
+                        'attribute_id' => $this->id,
+                        'entity_definition_id' => $this->entity_definition_id,
+                        'value' => $this->value,
+                    ]);
+            $statement = $this->sql->prepareStatementForSqlObject($insert);
+            $statement->execute();
+        }
     }
         
 }

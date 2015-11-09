@@ -57,7 +57,7 @@ class EntityDefinitionForm extends Form
                 'type' => 'textarea',
             ],
             'options' => [
-                'label' => 'Name' 
+                'label' => 'Description' 
             ]
         ]);
         

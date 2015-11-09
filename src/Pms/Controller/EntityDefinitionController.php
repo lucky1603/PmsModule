@@ -80,19 +80,46 @@ class EntityDefinitionController extends AbstractActionController
     public function processAction()
     {
         $post = $this->request->getPost();
+        
         $id = $this->params()->fromRoute('id');
         $form = $this->getServiceLocator()->get('EntityDefinitionForm');
         $table = $this->getServiceLocator()->get('EntityDefinitionTable');
         if($id)
         {
-            $id = (int)$id;
-            $entityDefinition = $table->getEntityDefinition($id);
-            $form->bind($entityDefinition);
+            $id = (int)$id;            
+            // handling attributes ...
+            $entityDefinitionModel = $this->getServiceLocator()->get('EntityDefinitionModel');
+            $entityDefinitionModel->setId($id);
+            $attributes = $entityDefinitionModel->getAttributes();
+            foreach($attributes as $attribute)
+            {                
+                if($attribute->type == 'boolean')
+                {
+                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+                }
+                elseif ($attribute->type == 'text') {
+                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+                }
+                elseif ($attribute->type == 'timestamp') {
+                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+                }
+                else {
+                    $attElement = new \Zend\Form\Element\Text($attribute->code);
+                }
+                
+                $attElement->setLabel($attribute->label);
+                $attElement->setValue($attribute->getValue());
+                $form->add($attElement);
+            }
+            
+            $form->bind($entityDefinitionModel);
             $form->setData($post);
+
             if($form->isValid())
             {
-                $table->saveEntityDefinition($entityDefinition);
+                $entityDefinitionModel->save();
             }
+                    
         }
         else 
         {            
@@ -102,6 +129,9 @@ class EntityDefinitionController extends AbstractActionController
                 $entityDefinition = new EntityDefinition();
                 $entityDefinition->exchangeArray($form->getData());
                 $table->saveEntityDefinition($entityDefinition);
+                
+                //handling attributes ...
+                
             }                        
         }
         
