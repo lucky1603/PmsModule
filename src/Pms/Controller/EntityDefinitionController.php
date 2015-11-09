@@ -131,13 +131,7 @@ class EntityDefinitionController extends AbstractActionController
             $form->setData($post);
             if($form->isValid())
             {                
-//                $entityDefinition = new EntityDefinition();
-//                $entityDefinition->exchangeArray($form->getData());
-//                $table->saveEntityDefinition($entityDefinition);
                 $entityDefinitionModel->save();
-                
-                //handling attributes ...
-                
             }                        
         }
         
