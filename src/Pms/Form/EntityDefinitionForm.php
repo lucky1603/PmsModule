@@ -55,6 +55,8 @@ class EntityDefinitionForm extends Form
             'name' => 'description',
             'attributes' => [
                 'type' => 'textarea',
+                'COLS' => 40,
+                'ROWS' => 4,
             ],
             'options' => [
                 'label' => 'Description' 

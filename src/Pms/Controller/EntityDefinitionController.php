@@ -5,6 +5,7 @@ namespace Pms\Controller;
 use Pms\Model\Attribute;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Pms\Model\EntityDefinitionModel;
 
 /**
  * Entity type controller class.
@@ -48,6 +49,8 @@ class EntityDefinitionController extends AbstractActionController
                 }
                 elseif ($attribute->type == 'text') {
                     $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+                    $attElement->setAttribute('COLS', 40);
+                    $attElement->setAttribute('ROWS', 4);
                 }
                 elseif ($attribute->type == 'timestamp') {
                     $attElement = new \Zend\Form\Element\DateTime($attribute->code);
@@ -123,12 +126,15 @@ class EntityDefinitionController extends AbstractActionController
         }
         else 
         {            
+            $entityDefinitionModel = $this->getServiceLocator()->get("EntityDefinitionModel");
+            $form->bind($entityDefinitionModel);
             $form->setData($post);
             if($form->isValid())
             {                
-                $entityDefinition = new EntityDefinition();
-                $entityDefinition->exchangeArray($form->getData());
-                $table->saveEntityDefinition($entityDefinition);
+//                $entityDefinition = new EntityDefinition();
+//                $entityDefinition->exchangeArray($form->getData());
+//                $table->saveEntityDefinition($entityDefinition);
+                $entityDefinitionModel->save();
                 
                 //handling attributes ...
                 

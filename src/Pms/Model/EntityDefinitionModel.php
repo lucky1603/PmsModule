@@ -169,14 +169,14 @@ class EntityDefinitionModel
         {
             $insert = $this->sql->insert();
             $insert->into('entity_definition')
-                    ->set([
+                    ->values([
                         'code' => $this->code,
                         'name' => $this->name,
                         'description' => $this->description,  
                         'entity_type_id' => $this->entity_type_id,
                     ]);
             $statement = $this->sql->prepareStatementForSqlObject($insert);
-            $insert->execute();
+            $statement->execute();
             
             if(isset($this->attributes))
             {
