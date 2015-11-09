@@ -5,6 +5,7 @@ namespace Pms\Controller;
 use Pms\Model\Attribute;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Form\Form;
 
 /**
  * Entity type controller class.
@@ -101,6 +102,49 @@ class AttributeManagerController extends AbstractActionController
         $attribute = $table->getAttribute($id);
         $table->deleteAttribute($id);
         return $this->redirect()->toRoute('pms/attribute-manager');
+    }
+        
+    public function edefAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        if(!isset($id))
+        {
+            return $this->redirect()->toRoute('pms/entity-definition');
+        }
+        $id = (int)$id;
+        $attributeTable = $this->getServiceLocator()->get('AttributeTable');
+        $results = $attributeTable->fetchAll();
+        $attributes = array();
+        do {
+            $attributes[] = $results->current();
+        } while($results->next());
+        
+        $entityDefModel = $this->getServiceLocator()->get('EntityDefinitionModel');
+        $entityDefModel->setId($id);
+        $selectedAttributes = $entityDefModel->getAttributes();
+        $form = new \Zend\Form\Form("EdefForm");
+        $form->setAttributes([
+            'method' => 'post',
+            'enctype' => 'multipart/form-data',
+        ]);
+        
+        foreach($attributes as $attribute)
+        {
+            $checkBox = new \Zend\Form\Element\Checkbox($attribute['code']);
+            $checkBox->setLabel($attribute['label'].' ('.$attribute['type'].')');            
+            $checkBox->setLabelOption('placement', 'append');
+            if(array_key_exists($attribute['code'], $selectedAttributes))
+            {
+                $checkBox->setValue(TRUE);
+            }
+            $form->add($checkBox);
+        }
+        
+        $viewModel = new ViewModel([
+            'attributes' => $attributes,
+            'selectedAttributes' => $selectedAttributes,
+        ]);
+        return $viewModel;
     }
 }
 

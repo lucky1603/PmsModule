@@ -18,7 +18,7 @@ use Pms\Model\AttributeTable;
 use Pms\Model\EntityDefinitionTable;
 use Pms\Model\EntityDefinition;
 use Pms\Model\EntityDefinitionModel;
-use Pms\Model\AttributeModel;
+use Pms\Model\AttributeValueModel;
 use Pms\Form\LoginForm;
 use Pms\Form\RegisterForm;
 use Pms\Form\LoginFilter;
@@ -158,7 +158,7 @@ class Module implements AutoloaderProviderInterface
                 // Complex models
                 'AttributeModel' => function($sm) {
                     $dbAdapter = $sm->get('Adapter');
-                    $attModel = new AttributeModel($dbAdapter);
+                    $attModel = new AttributeValueModel($dbAdapter);
                     return $attModel;
                 },          
                 'EntityDefinitionModel' => function($sm) {
