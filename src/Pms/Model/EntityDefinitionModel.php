@@ -1,11 +1,18 @@
 <?php
+/**
+ * @name Entity definition model object.
+ * @author Sinisa Ristic <sinisa.ristic@gmail.com> 
+ * @date 10.11.2015.
+ */
 
 namespace Pms\Model;
 
 use Zend\Db\Sql\Sql;
-use Zend\Db\Sql\Select;
 use Zend\Db\Adapter\Adapter;
 
+/**
+ * EntityDefinitionModel class.
+ */
 class EntityDefinitionModel 
 {
     public $id;   
@@ -17,7 +24,13 @@ class EntityDefinitionModel
     
     protected $sql;
     protected $dbAdapter;
+    protected $attributesToDelete;
     
+    /**
+     * Constructor.
+     * @param Adapter $dbAdapter
+     * @param type $id
+     */
     public function __construct(Adapter $dbAdapter, $id=NULL) {
         $this->dbAdapter = $dbAdapter;
         $this->sql = new Sql($dbAdapter);
@@ -27,6 +40,10 @@ class EntityDefinitionModel
         }
     }
     
+    /**
+     * Binds the entity definition model to the given id.
+     * @param type $id
+     */
     public function setId($id)
     {
         if(isset($this->id))
@@ -54,6 +71,10 @@ class EntityDefinitionModel
         }
     }
     
+    /**
+     * Gets content of entity definition model.
+     * @return type
+     */
     public function getData()
     {
         return [
@@ -66,6 +87,10 @@ class EntityDefinitionModel
         ];
     }
     
+    /**
+     * Sets content of entity definition model.
+     * @param type $data
+     */
     public function setData($data)
     {
         if(isset($data['id']))
@@ -100,6 +125,10 @@ class EntityDefinitionModel
         }        
     }
     
+    /**
+     * Gets the attribute value collection.
+     * @return type
+     */
     public function getAttributes()
     {
         if(isset($this->attributes))
@@ -142,6 +171,9 @@ class EntityDefinitionModel
         return $this->attributes;
     }
     
+    /**
+     * Saves the entity definition data together with attribute value data.
+     */
     public function save()
     {
         if($this->id != NULL)
@@ -186,14 +218,122 @@ class EntityDefinitionModel
                 }
             }
         }
+        
+        if(count($this->attributesToDelete) > 0)
+        {
+            foreach($this->attributesToDelete as $key)
+            {
+                $this->attributes[$key]->delete();
+                unset($this->attributes[$key]);
+            }
+            
+            $this->attributesToDelete = array();            
+        }
     }
     
-    // These two are for the sake of compatibility with zend form-model relationship.
+    /**
+     * Does it have attributes collection attached?
+     * @param type $attributeCode
+     * @return boolean
+     */
+    public function hasAttribute($attributeCode)
+    {
+        if(!isset($this->attributes))
+        {
+            return FALSE;
+        }
+        
+        if(!array_key_exists($attributeCode, $this->attributes))
+        {
+            return FALSE;
+        }
+        
+        return TRUE;
+    }
+    
+    /**
+     * Sets attribute value.
+     * @param type $attributeCode
+     * @param type $value
+     */
+    public function setAttributeValue($attributeCode, $value)
+    {
+        if(!array_key_exists($attributeCode, $this->attributes))
+        {
+            $this->addAttribute($attributeCode);
+        }
+        
+        $attModel = $this->attributes[$attributeCode];
+        $attModel->setValue($value);
+    }
+    
+    /**
+     * Gets the attribute value.
+     * @param type $attributeCode
+     * @return type
+     */
+    public function getAttributeValue($attributeCode)
+    {
+        if(array_key_exists($attributeCode, $this->attributes))
+        {
+            $attModel = $this->attributes[$attributeCode];
+            return $attModel->setValue($value);
+        }
+    }
+    
+    /**
+     * Adds attribute model.
+     * @param type $attributeCode
+     */
+    public function addAttribute($attributeCode)
+    {
+        if(!array_key_exists($attributeCode, $this->attributes))
+        {
+            \Zend\Debug\Debug::dump('Wants to add attribute...' . $attributeCode);
+            $attModel = new AttributeValueModel($this->dbAdapter);
+            $attModel->setEntityDefinitionId($this->id);
+            $select = $this->sql->select();
+            $select->from('attribute')
+                    ->where(['code' => $attributeCode]);
+            $statement = $this->sql->prepareStatementForSqlObject($select);
+            $results = $statement->execute();
+            $row = $results->current();
+            if(isset($row))
+            {
+                \Zend\Debug\Debug::dump($row);
+                $attModel->setData($row);
+                $this->attributes[$row['code']] = $attModel;
+            }
+        }
+    }
+    
+    /** 
+     * Deletes attribute model. It actually moves it to the collection of attributes, marked for the deletion.
+     * Once when the save is called, these attributes will be deleted.
+     * @param type $attributeCode
+     */
+    public function deleteAttribute($attributeCode)
+    {
+        if(!array_key_exists($attributeCode, $this->attributesToDelete))
+        {
+            $this->attributesToDelete[$attributeCode] = $attributeCode;
+        }
+    }
+    
+    // These two are for the sake of compatibility with zend form-model relationship ex. $form->bind($model);$form->setData($data).
+    /**
+     * Returns the data content to outside.
+     * @return type
+     */
     public function getArrayCopy()
     {
         return $this->getData();
     }
     
+    /**
+     * Sets data content from outside.
+     * @param type $data
+     */
     public function exchangeArray($data)
     {
         $this->setData($data);

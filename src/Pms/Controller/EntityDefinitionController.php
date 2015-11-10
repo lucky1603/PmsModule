@@ -156,6 +156,49 @@ class EntityDefinitionController extends AbstractActionController
         $table->deleteAttribute($id);
         return $this->redirect()->toRoute('pms/entity-definition');
     }
+    
+    public function processAttributesAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        if(!isset($id))
+            return $this->redirect()->toRoute('pms/entity-definition');
+        $id = (int)$id;
+        $post =  $this->request->getPost();
+                        
+        $entityDefinitionModel = $this->getServiceLocator()->get('EntityDefinitionModel');
+        $entityDefinitionModel->setId($id);
+        $attributes = $entityDefinitionModel->getAttributes();
+                
+        foreach($post as $key=>$value)
+        {
+            \Zend\Debug\Debug::dump('value '.$key.'='.$value);
+            if(!$value || $key == 'submit')
+                continue;
+                        
+            if(!array_key_exists($key, $attributes))
+            {
+                \Zend\Debug\Debug::dump('doesn\'t exist...');
+                $entityDefinitionModel->addAttribute($key);
+            }
+        }        
+        
+//        die();
+                
+        foreach($attributes as $attribute)
+        {
+            if(!array_key_exists($attribute->code, $post))
+            {
+                $entityDefinitionModel->deleteAttribute($attribute->code);
+            }
+        }
+        
+        $entityDefinitionModel->save();
+        
+        return $this->redirect()->toRoute('pms/entity-definition', [
+            'action' => 'edit',
+            'id' => $id,
+        ]);        
+    }
 }
 
 

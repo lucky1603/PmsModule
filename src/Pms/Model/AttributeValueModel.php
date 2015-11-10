@@ -57,9 +57,15 @@ class AttributeValueModel
     
     public function setData($data)
     {
+        \Zend\Debug\Debug::dump($data);
         if(isset($data['attribute_id']))
         {
             $this->id = $data['attribute_id'];
+        }
+        
+        if(isset($data['id']))
+        {
+            $this->id = $data['id'];
         }
         
         $this->code = (isset($data['code'])) ? $data['code'] : null;
@@ -149,6 +155,9 @@ class AttributeValueModel
     {
         if(isset($this->id))
         {
+            \Zend\Debug\Debug::dump('AtModel:Save:Update');
+            \Zend\Debug\Debug::dump($this);
+            
             $update = $this->sql->update();
             $update->table($this->tableName.'_value_'.$this->type)
                     ->set([
@@ -163,6 +172,9 @@ class AttributeValueModel
         }
         else 
         {
+            \Zend\Debug\Debug::dump('AtModel:Save:Insert');
+            \Zend\Debug\Debug::dump($this);
+
             $insert = $this->sql->insert();
             $insert->into($this->tableName.'_value_'.$this->type)
                     ->values([
@@ -173,6 +185,19 @@ class AttributeValueModel
             $statement = $this->sql->prepareStatementForSqlObject($insert);
             $statement->execute();
         }
+    }
+    
+    public function delete()
+    {
+        if(!isset($this->id))
+            return;
+        $delete = $this->sql->delete();
+        $table = $this->tableName.'_value_'.$this->type;
+        $delete->from($table)
+                ->where(['id' => $this->id]);
+        $statement = $this->sql->prepareStatementForSqlObject($delete);
+        $statement->execute();
+        unset($this->id);
     }
         
 }

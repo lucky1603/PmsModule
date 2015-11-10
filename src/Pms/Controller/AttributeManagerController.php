@@ -113,12 +113,7 @@ class AttributeManagerController extends AbstractActionController
         }
         $id = (int)$id;
         $attributeTable = $this->getServiceLocator()->get('AttributeTable');
-        $results = $attributeTable->fetchAll();
-        $attributes = array();
-        do {
-            $attributes[] = $results->current();
-        } while($results->next());
-        
+        $attributes = $attributeTable->fetchAll()->toArray();        
         $entityDefModel = $this->getServiceLocator()->get('EntityDefinitionModel');
         $entityDefModel->setId($id);
         $selectedAttributes = $entityDefModel->getAttributes();
@@ -127,7 +122,7 @@ class AttributeManagerController extends AbstractActionController
             'method' => 'post',
             'enctype' => 'multipart/form-data',
         ]);
-        
+                
         foreach($attributes as $attribute)
         {
             $checkBox = new \Zend\Form\Element\Checkbox($attribute['code']);
@@ -140,9 +135,14 @@ class AttributeManagerController extends AbstractActionController
             $form->add($checkBox);
         }
         
+        $submit = new \Zend\Form\Element\Submit('submit');
+        $submit->setLabel('submit');
+        $submit->setValue('Save Changes');
+        $form->add($submit);
+        
         $viewModel = new ViewModel([
-            'attributes' => $attributes,
-            'selectedAttributes' => $selectedAttributes,
+            'form' => $form,
+            'id' => $id,
         ]);
         return $viewModel;
     }

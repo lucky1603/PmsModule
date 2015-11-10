@@ -80,6 +80,23 @@ class AttributeTable
     }
     
     /**
+     * Gets the attribute by attribute code.
+     * @param type $code
+     * @return type
+     * @throws Exception
+     */
+    public function getAttributeByCode($code)
+    {
+        $resultSet = $this->tableGateway->select(['code' => $code]);
+        $row = $resultSet->current();
+        if(!$row)
+        {
+            throw new Exception("No attribute with code = " . $code);
+        }        
+        return $row;
+    }
+    
+    /**
      * Fetch all attributes.
      * @return type
      */
