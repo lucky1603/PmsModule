@@ -1,8 +1,26 @@
 <section class="attribute-manager-edef">
     <?php 
-        $attributes = $this->attributes;
-        $selectedAttributes = $this->selectedAttributes;
-        
-        
+//        $attributes = $this->attributes;
+//        \Zend\Debug\Debug::dump($attributes);
+//        $selectedAttributes = $this->selectedAttributes;
+//        \Zend\Debug\Debug::dump($selectedAttributes);                
+        $form = $this->form;
+        $id = $this->id;
+        $form->setAttribute('action', $this->url('pms/entity-definition', [
+            'action' => 'processAttributes',
+            'id' => $this->id,
+        ]));
+        echo $this->form()->openTag($form);
     ?>
+    <h2>Select attributes</h2>
+    <?php $elements = $form->getElements() ?>
+    <ul>
+        <?php foreach($elements as $element):?>
+            <?php if($element->getName() != 'submit'):?>
+                <li><?php echo $this->formElement($element)?> <?php echo $this->formLabel($element)?></li>
+            <?php endif;?>
+        <?php endforeach;?>
+    </ul>
+    <?php echo $this->formElement($form->get('submit'))?>
+    <?php echo $this->form()->closeTag()?>
 </section>
