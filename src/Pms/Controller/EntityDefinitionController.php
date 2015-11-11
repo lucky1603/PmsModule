@@ -171,13 +171,13 @@ class EntityDefinitionController extends AbstractActionController
                 
         foreach($post as $key=>$value)
         {
-            \Zend\Debug\Debug::dump('value '.$key.'='.$value);
+//            \Zend\Debug\Debug::dump('value '.$key.'='.$value);
             if(!$value || $key == 'submit')
                 continue;
                         
             if(!array_key_exists($key, $attributes))
             {
-                \Zend\Debug\Debug::dump('doesn\'t exist...');
+//                \Zend\Debug\Debug::dump('doesn\'t exist...');
                 $entityDefinitionModel->addAttribute($key);
             }
         }        
@@ -186,7 +186,7 @@ class EntityDefinitionController extends AbstractActionController
                 
         foreach($attributes as $attribute)
         {
-            if(!array_key_exists($attribute->code, $post))
+            if($post[$attribute->code] == FALSE)
             {
                 $entityDefinitionModel->deleteAttribute($attribute->code);
             }

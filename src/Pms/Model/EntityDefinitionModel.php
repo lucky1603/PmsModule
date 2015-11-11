@@ -151,6 +151,7 @@ class EntityDefinitionModel
             $table = "entity_definition_value_".$type;
             $select = $this->sql->select();
             $select->from($table)
+                   ->columns(['value_id' => 'id', 'attribute_id', 'value'])
                    ->join(['a' => 'attribute'], 'attribute_id = a.id', ['*'])
                    ->where(['entity_definition_id' => $this->id]);
             $statement = $this->sql->prepareStatementForSqlObject($select);
@@ -221,8 +222,10 @@ class EntityDefinitionModel
         
         if(count($this->attributesToDelete) > 0)
         {
+            \Zend\Debug\Debug::dump("There is something to be deleted...");
             foreach($this->attributesToDelete as $key)
             {
+                \Zend\Debug\Debug::dump("Deleting ... ".$key);
                 $this->attributes[$key]->delete();
                 unset($this->attributes[$key]);
             }

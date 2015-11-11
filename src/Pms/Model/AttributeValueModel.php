@@ -57,7 +57,8 @@ class AttributeValueModel
     
     public function setData($data)
     {
-        \Zend\Debug\Debug::dump($data);
+//        \Zend\Debug\Debug::dump('AttrModel:SetData');
+//        \Zend\Debug\Debug::dump($data);
         if(isset($data['attribute_id']))
         {
             $this->id = $data['attribute_id'];
@@ -67,7 +68,7 @@ class AttributeValueModel
         {
             $this->id = $data['id'];
         }
-        
+        $this->value_id = (isset($data['value_id'])) ? $data['value_id'] : null;
         $this->code = (isset($data['code'])) ? $data['code'] : null;
         $this->type = (isset($data['type'])) ? $data['type'] : null;
         $this->sort_order = (isset($data['sort_order'])) ? $data['sort_order'] : null;
@@ -97,7 +98,7 @@ class AttributeValueModel
         {
            $select = $this->sql->select(); 
            $select->from($this->tableName.'_value_'.$this->type)
-                   ->columns(['value'])
+                   ->columns(['value_id' => 'id', 'value'])
                    ->where(['entity_definition_id' => $this->entity_definition_id]);
            $statement = $this->sql->prepareStatementForSqlObject($select);
            $results = $statement->execute();
@@ -105,6 +106,7 @@ class AttributeValueModel
            if(isset($row))
            {
                $this->value = $row['value'];
+               $this->value_id = $row['value_id'];
            }
         }
         
@@ -127,7 +129,7 @@ class AttributeValueModel
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select();
         $select->from(['u' => $this->tableName.'_value_'.$datatype])
-                ->columns(['id', 'entity_definition_id', 'value'])
+                ->columns(['id' => 'value_id', 'entity_definition_id', 'value'])
                 ->join([
                             'a' => 'attribute'
                         ], 
@@ -153,10 +155,10 @@ class AttributeValueModel
     
     public function save()
     {
-        if(isset($this->id))
+        if(isset($this->value_id))
         {
-            \Zend\Debug\Debug::dump('AtModel:Save:Update');
-            \Zend\Debug\Debug::dump($this);
+//            \Zend\Debug\Debug::dump('AtModel:Save:Update');            
+//            \Zend\Debug\Debug::dump($this->value_id);
             
             $update = $this->sql->update();
             $update->table($this->tableName.'_value_'.$this->type)
@@ -164,16 +166,16 @@ class AttributeValueModel
                         'value' => $this->value,
                     ])
                     ->where([
-                            'attribute_id' => $this->id,
-                            'entity_definition_id' => $this->entity_definition_id,
+//                            'attribute_id' => $this->id,
+//                            'entity_definition_id' => $this->entity_definition_id,
+                            'id' => $this->value_id,
                         ]);
             $statement = $this->sql->prepareStatementForSqlObject($update);
             $statement->execute();
         }
         else 
         {
-            \Zend\Debug\Debug::dump('AtModel:Save:Insert');
-            \Zend\Debug\Debug::dump($this);
+//            \Zend\Debug\Debug::dump('AtModel:Save:Insert');
 
             $insert = $this->sql->insert();
             $insert->into($this->tableName.'_value_'.$this->type)
@@ -183,21 +185,22 @@ class AttributeValueModel
                         'value' => $this->value,
                     ]);
             $statement = $this->sql->prepareStatementForSqlObject($insert);
-            $statement->execute();
+            $results = $statement->execute();
         }
     }
     
     public function delete()
     {
-        if(!isset($this->id))
+        \Zend\Debug\Debug::dump("Entered delete...value_id=".$this->value_id);
+        if(!isset($this->value_id))
             return;
         $delete = $this->sql->delete();
         $table = $this->tableName.'_value_'.$this->type;
         $delete->from($table)
-                ->where(['id' => $this->id]);
+                ->where(['id' => $this->value_id]);
         $statement = $this->sql->prepareStatementForSqlObject($delete);
         $statement->execute();
-        unset($this->id);
+        unset($this->value_id);
     }
         
 }
