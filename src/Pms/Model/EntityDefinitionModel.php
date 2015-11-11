@@ -24,7 +24,7 @@ class EntityDefinitionModel
     
     protected $sql;
     protected $dbAdapter;
-    protected $attributesToDelete;
+    protected $attributesToDelete = array();
     
     /**
      * Constructor.
@@ -235,26 +235,6 @@ class EntityDefinitionModel
     }
     
     /**
-     * Does it have attributes collection attached?
-     * @param type $attributeCode
-     * @return boolean
-     */
-    public function hasAttribute($attributeCode)
-    {
-        if(!isset($this->attributes))
-        {
-            return FALSE;
-        }
-        
-        if(!array_key_exists($attributeCode, $this->attributes))
-        {
-            return FALSE;
-        }
-        
-        return TRUE;
-    }
-    
-    /**
      * Sets attribute value.
      * @param type $attributeCode
      * @param type $value
@@ -317,6 +297,7 @@ class EntityDefinitionModel
      */
     public function deleteAttribute($attributeCode)
     {
+        \Zend\Debug\Debug::dump('want to delete attribute ... ' . $attributeCode);
         if(!array_key_exists($attributeCode, $this->attributesToDelete))
         {
             $this->attributesToDelete[$attributeCode] = $attributeCode;

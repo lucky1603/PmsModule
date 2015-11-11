@@ -9,6 +9,7 @@ return array(
             'Pms\Controller\UserManager' => 'Pms\Controller\UserManagerController',
             'Pms\Controller\AttributeManager' => 'Pms\Controller\AttributeManagerController',
             'Pms\Controller\EntityDefinition' => 'Pms\Controller\EntityDefinitionController',
+            'Pms\Controller\Entity' => 'Pms\Controller\EntityController',
         ),
     ),
     'router' => array(
@@ -96,6 +97,20 @@ return array(
                             ),
                             'defaults' => array(
                                 'controller' => 'Pms\Controller\EntityDefinition',
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
+                    'entity' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/entity[/:action[/:id]]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id' => '[a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Pms\Controller\Entity',
                                 'action' => 'index',
                             ),
                         ),
