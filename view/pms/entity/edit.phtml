@@ -8,7 +8,7 @@
         ]));
         echo $this->form()->openTag($form);
     ?>
-    <h2>Room Details</h2>
+    <h3>Room Details</h3>
     <dl>
         
         <dt><?php echo $this->formLabel($form->get('definition_id')) ?></dt>
@@ -31,7 +31,7 @@
         </dd>
     </dl>
     <?php echo $this->form()->closeTag();?>
-    <h3> Definition data</h3>
+    <h3>Features</h3>
     <?php
         $attributes = $entityModel->getDefinitionModel()->getAttributes();
     ?>
