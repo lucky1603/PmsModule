@@ -1,0 +1,68 @@
+<section class="entity-edit">
+    <?php 
+        $form = $this->form;
+        $entityModel = $this->entityModel;
+        $form->setAttribute('action', $this->url('pms/entity', [
+            'action' => 'edit',
+            'id' => $entityModel->id,
+        ]));
+        echo $this->form()->openTag($form);
+    ?>
+    <h2>Room Details</h2>
+    <dl>
+        
+        <dt><?php echo $this->formLabel($form->get('definition_id')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('definition_id'));?>
+            <?php echo $this->formElementErrors($form->get('definition_id'));?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('guid')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('guid'));?>
+            <?php echo $this->formElementErrors($form->get('guid'));?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('status')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('status'));?>
+            <?php echo $this->formElementErrors($form->get('status'));?>
+        </dd>
+        <dd>
+            <?php echo $this->formElement($form->get('submit'));?>
+        </dd>
+    </dl>
+    <?php echo $this->form()->closeTag();?>
+    <h3> Definition data</h3>
+    <?php
+        $attributes = $entityModel->getDefinitionModel()->getAttributes();
+    ?>
+    
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Value</th>
+            <th>Unit</th>
+        </tr>
+        <?php foreach($attributes as $attribute):?>
+            <tr>
+                <td ><?php echo $attribute->label?></td>
+                <td style="font-style:italic"><?php 
+                    if($attribute->type == 'boolean')
+                    {
+                        if($attribute->value == TRUE)
+                        {
+                            echo "YES";    
+                        }
+                        else {
+                            echo "NO";
+                        }                        
+                    }
+                    else 
+                    {
+                        echo $attribute->value;
+                    }
+                ?></td>
+                <td><?php echo $attribute->unit?></td>
+            </tr>
+        <?php endforeach;?>
+    </table>
+</section>

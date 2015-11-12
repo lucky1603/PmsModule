@@ -9,18 +9,22 @@
 
 namespace Pms;
 
-use Pms\Model\User;
-use Pms\Model\EntityType;
 use Pms\Model\Attribute;
-use Pms\Model\UserTable;
-use Pms\Model\EntityTypeTable;
-use Pms\Model\AttributeTable;
-use Pms\Model\EntityDefinitionTable;
+use Pms\Model\Entity;
 use Pms\Model\EntityDefinition;
-use Pms\Model\EntityDefinitionModel;
+use Pms\Model\EntityType;
+use Pms\Model\User;
+use Pms\Model\AttributeTable;
+use Pms\Model\EntityTable;
+use Pms\Model\EntityDefinitionTable;
+use Pms\Model\EntityTypeTable;
+use Pms\Model\UserTable;
 use Pms\Model\AttributeValueModel;
+use Pms\Model\EntityDefinitionModel;
+use Pms\Model\EntityModel;
 use Pms\Form\LoginForm;
 use Pms\Form\RegisterForm;
+use Pms\Form\EntityForm;
 use Pms\Form\LoginFilter;
 use Pms\Form\RegisterFilter;
 use Pms\Form\AttributeForm;
@@ -91,6 +95,11 @@ class Module implements AutoloaderProviderInterface
                     $table = new EntityDefinitionTable($tableGateway);
                     return $table; 
                 },
+                'EntityTable' => function($sm) {
+                    $tableGateway = $sm->get('EntityTableGateway');
+                    $table = new EntityTable($tableGateway);
+                    return $table;
+                },
                 //Gateways
                 'UserTableGateway' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
@@ -116,6 +125,12 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype->setArrayObjectPrototype(new EntityDefinition());
                     return new TableGateway('entity_definition', $dbAdapter, null, $resultSetPrototype);
                 },  
+                'EntityTableGateway' => function($sm) {
+                    $dbAdapter = $sm->get("\Zend\Db\Adapter\Adapter");
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Entity());
+                    return new TableGateway('entity', $dbAdapter, null, $resultSetPrototype);
+                },
                 // Adapters
                 'Adapter' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
@@ -146,6 +161,11 @@ class Module implements AutoloaderProviderInterface
                     $form = new EntityDefinitionForm('', ['adapter' => $dbAdapter]);
                     return $form;
                 },
+                'EntityForm' => function($sm) {
+                    $dbAdapter = $sm->get("Adapter");
+                    $form = new EntityForm('', ['adapter' => $dbAdapter]);
+                    return $form;
+                },
                 // Filters
                 'LoginFilter' => function($sm) {
                     $loginFilter = new LoginFilter();
@@ -166,6 +186,11 @@ class Module implements AutoloaderProviderInterface
                     $edModel = new EntityDefinitionModel($dbAdapter);
                     return $edModel;
                 },
+                'EntityModel' => function($sm) {
+                    $dbAdapter = $sm->get('Adapter');
+                    $eModel = new EntityModel($dbAdapter);
+                    return $eModel;
+                },        
                 // Authentication Services
                 'AuthenticationService' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');

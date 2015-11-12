@@ -1,5 +1,28 @@
 <section class="entity">
-    <h2>Entity</h2>
-    <p>Wellcome to entity page!
+    <?php 
+        $entities = $this->entities;
+    ?>
+    <h2>Rooms (the name will come from $entities configuration)</h2>
+    <?php if(count($entities) == 0):?>
+        <p class="error">There are no rooms in the facility.
+    <?php else: ?>
+        <table class="table">
+            <tr>
+                <th>Room Nr.</th>
+                <th>Room Type</th>
+                <th>State</th>
+                <th>Action</th>
+            </tr>
+            <?php foreach($entities as $entity):?>
+                <tr>
+                    <td><?php echo $entity['guid']?></td>
+                    <td><?php echo $entity['code']?></td>
+                    <td><?php echo $entity['status']?></td>
+                    <td><a href="/pms/entity/edit/<?php echo $entity['id']?>">Edit</a> | <a href="">Delete</a>
+                </tr>
+            <?php endforeach;?>
+        </table>
+    <?php endif;?>
+    <a href="">Add new</a>
 </section>
 
