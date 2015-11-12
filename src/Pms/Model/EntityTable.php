@@ -25,7 +25,7 @@ class EntityTable
      * @param TableGateway $tableGateway
      */
     public function __construct(TableGateway $tableGateway) {
-        $this->tableGateway = $TableGateway;
+        $this->tableGateway = $tableGateway;
     }
     
     /**
@@ -98,7 +98,7 @@ class EntityTable
                 ->join(['e' => 'entity_definition'], 'definition_id = e.id', ['code']);
         $statement = $sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
-        return $results->toArray();
+        return $results;
     }
     
     /**
