@@ -10,6 +10,8 @@ return array(
             'Pms\Controller\AttributeManager' => 'Pms\Controller\AttributeManagerController',
             'Pms\Controller\EntityDefinition' => 'Pms\Controller\EntityDefinitionController',
             'Pms\Controller\Entity' => 'Pms\Controller\EntityController',
+            'Pms\Controller\Admin' => 'Pms\Controller\AdminController',
+            
         ),
     ),
     'router' => array(
