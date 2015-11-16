@@ -1,0 +1,36 @@
+<section class="client-index">
+    <?php 
+        $clients = $this->clients;
+    ?>
+    <h3>Clients List</h3>
+    <?php if(count($clients) == 0):?>
+        <p class="error">Client list is empty!
+    <?php else:?>
+        <table class="table">
+            <tr>
+                <th>Name</th>
+                <th>Last Name</th>
+                <th>Address</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Phone</th>
+                <th>E Mail</th>
+                <th>Action</th>
+            </tr>
+            <?php foreach($clients as $client):?>
+            <tr>
+                <td><?php echo $client['first_name']?></td>
+                <td><?php echo $client['last_name']?></td>
+                <td><?php echo $client['address1']?></td>
+                <td><?php echo $client['city']?></td>
+                <td><?php echo $client['country']?></td>
+                <td><?php echo $client['phone']?></td>
+                <td><?php echo $client['email']?></td>
+                <td><a href="/pms/client/edit/<?php echo $client['id']?>">Edit</a> | <a href="">Delete</a></td>
+            </tr>
+            <?php endforeach;?>
+        </table>
+    <?php endif;?>
+    <p> <a href="">Add new</a> | <a href="/pms/admin">Home</a>
+</section>
+

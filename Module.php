@@ -14,11 +14,13 @@ use Pms\Model\Entity;
 use Pms\Model\EntityDefinition;
 use Pms\Model\EntityType;
 use Pms\Model\User;
+use Pms\Model\Client;
 use Pms\Model\AttributeTable;
 use Pms\Model\EntityTable;
 use Pms\Model\EntityDefinitionTable;
 use Pms\Model\EntityTypeTable;
 use Pms\Model\UserTable;
+use Pms\Model\ClientTable;
 use Pms\Model\AttributeValueModel;
 use Pms\Model\EntityDefinitionModel;
 use Pms\Model\EntityModel;
@@ -29,6 +31,7 @@ use Pms\Form\LoginFilter;
 use Pms\Form\RegisterFilter;
 use Pms\Form\AttributeForm;
 use Pms\Form\EntityDefinitionForm;
+use Pms\Form\ClientForm;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -100,6 +103,11 @@ class Module implements AutoloaderProviderInterface
                     $table = new EntityTable($tableGateway);
                     return $table;
                 },
+                'ClientTable' => function($sm) {
+                    $tableGateway = $sm->get("ClientTableGateway");
+                    $table = new ClientTable($tableGateway);
+                    return $table;
+                },
                 //Gateways
                 'UserTableGateway' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
@@ -130,6 +138,12 @@ class Module implements AutoloaderProviderInterface
                     $resultSetPrototype = new ResultSet();
                     $resultSetPrototype->setArrayObjectPrototype(new Entity());
                     return new TableGateway('entity', $dbAdapter, null, $resultSetPrototype);
+                },
+                'ClientTableGateway' => function($sm) {
+                    $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');
+                    $resultSetPrototype = new ResultSet();
+                    $resultSetPrototype->setArrayObjectPrototype(new Client());
+                    return new TableGateway('clients', $dbAdapter, null, $resultSetPrototype);
                 },
                 // Adapters
                 'Adapter' => function($sm) {
@@ -164,6 +178,11 @@ class Module implements AutoloaderProviderInterface
                 'EntityForm' => function($sm) {
                     $dbAdapter = $sm->get("Adapter");
                     $form = new EntityForm('', ['adapter' => $dbAdapter]);
+                    return $form;
+                },
+                'ClientForm' => function($sm) {
+                    $dbAdapter = $sm->get("Adapter");
+                    $form = new ClientForm('', ['adapter' => $dbAdapter]);
                     return $form;
                 },
                 // Filters

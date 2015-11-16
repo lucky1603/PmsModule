@@ -1,0 +1,112 @@
+<section class="client-edit">
+    <?php
+        $form = $this->form;
+        $id = $this->id;
+        if(isset($id))
+        {
+            $form->setAttribute('action', $this->url('pms/client', [
+                'action' => 'process',
+                'id' => $id,
+            ]));    
+        }
+        else {
+            $form->setAttribute('action', $this->url('pms/client', [
+                'action' => 'process',
+            ]));
+        }
+        echo $this->form()->openTag($form);
+    ?>
+    <h2>Client Details</h2>
+    <table>
+         <tr>
+            <td><?php echo $this->formLabel($form->get('title_id'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('title_id'))?>
+                <?php echo $this->formElementErrors($form->get('title_id'))?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $this->formLabel($form->get('first_name'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('first_name'))?>
+                <?php echo $this->formElementErrors($form->get('first_name'))?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $this->formLabel($form->get('last_name'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('last_name'))?>
+                <?php echo $this->formElementErrors($form->get('last_name'))?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $this->formLabel($form->get('address1'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('address1'))?>
+                <?php echo $this->formElementErrors($form->get('address1'))?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $this->formLabel($form->get('address2'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('address2'))?>
+                <?php echo $this->formElementErrors($form->get('address2'))?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $this->formLabel($form->get('city'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('city'))?>
+                <?php echo $this->formElementErrors($form->get('city'))?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $this->formLabel($form->get('zipcode'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('zipcode'))?>
+                <?php echo $this->formElementErrors($form->get('zipcode'))?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $this->formLabel($form->get('country'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('country'))?>
+                <?php echo $this->formElementErrors($form->get('country'))?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $this->formLabel($form->get('phone'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('phone'))?>
+                <?php echo $this->formElementErrors($form->get('phone'))?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $this->formLabel($form->get('mobile'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('mobile'))?>
+                <?php echo $this->formElementErrors($form->get('mobile'))?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $this->formLabel($form->get('fax'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('fax'))?>
+                <?php echo $this->formElementErrors($form->get('fax'))?>
+            </td>
+        </tr>
+        <tr>
+            <td><?php echo $this->formLabel($form->get('email'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('email'))?>
+                <?php echo $this->formElementErrors($form->get('email'))?>
+            </td>
+        </tr>
+                  
+        <tr>
+            <td colspan="2" style="alignment-adjust: central"><?php echo $this->formElement($form->get('submit'))?></td>
+        </tr>
+    </table>
+    <?php echo $this->form()->closeTag()?>
+</section>
+

@@ -55,7 +55,7 @@ class EntityTable
             }
             else 
             {                
-               throw new Exception("User IO doesn't exist!");            
+               throw new Exception("Entity doesn't exist!");            
             }
         }
     }

@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * @name AttributeManagerController - Controller for attribute management.
+ * @author Dragutin Jovanovic<gutindra@gmail.com>
+ * @date 12.11.2015.
+ */
 namespace Pms\Controller;
 
 use Pms\Model\Attribute;
