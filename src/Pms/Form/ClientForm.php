@@ -138,7 +138,7 @@ class ClientForm extends Form
            'name' => 'email',
            'attributes' => [
                'type' => 'text',
-               'required' => 'required'
+               'required' => 'required',
            ],
            'options' => [
                'label' => 'E-Mail'

@@ -57,7 +57,7 @@ class ClientTable
         {
             if($this->getClient($id))
             {
-                $this->update($data, ['id' => $id]);
+                $this->tableGateway->update($data, ['id' => $id]);
             }
             else 
             {

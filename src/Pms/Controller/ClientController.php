@@ -8,6 +8,7 @@ namespace Pms\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Pms\Model\Client;
 
 /**
  * ClientController class.
@@ -29,6 +30,7 @@ class ClientController extends AbstractActionController
     
     /**
      * Edit client data.
+     * @return ViewModel Edit view model.
      */
     public function editAction()
     {
@@ -53,8 +55,50 @@ class ClientController extends AbstractActionController
         ]);        
     }
     
+    /**
+     * Process user action.
+     */
     public function processAction()
     {
+        $id = $this->params()->fromRoute('id');
+        $table = $this->getServiceLocator()->get('ClientTable');
+        $post = $this->request->getPost();
+        $form = $this->getServiceLocator()->get('ClientForm');
+        if(isset($id))
+        {
+            $client = $table->getClient($id);
+            $form->bind($client);
+            $form->setData($post);
+            if($form->isValid())
+            {
+                $table->saveClient($client);
+            }
+            else {
+                throw new \Exception('Invalid form entries found!');
+            }
+        }
+        else
+        {
+            $client = new Client();
+            $client->exchangeArray($post);
+            $table->saveClient($client);            
+        }
         
+        $this->redirect()->toRoute('pms/client');
+    }
+    
+    /**
+     * Deletes the user with the given id.
+     */
+    public function deleteAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        $table = $this->getServiceLocator()->get('ClientTable');
+        if(isset($id))
+        {
+            $table->deleteClient($id);
+        }
+        
+        $this->redirect()->toRoute('pms/client');
     }
 }

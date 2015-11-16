@@ -26,11 +26,11 @@
                 <td><?php echo $client['country']?></td>
                 <td><?php echo $client['phone']?></td>
                 <td><?php echo $client['email']?></td>
-                <td><a href="/pms/client/edit/<?php echo $client['id']?>">Edit</a> | <a href="">Delete</a></td>
+                <td><a href="/pms/client/edit/<?php echo $client['id']?>">Edit</a> | <a href="/pms/client/delete/<?php echo $client['id']?>">Delete</a></td>
             </tr>
             <?php endforeach;?>
         </table>
     <?php endif;?>
-    <p> <a href="">Add new</a> | <a href="/pms/admin">Home</a>
+    <p> <a href="/pms/client/edit">Add new</a> | <a href="/pms/admin">Home</a>
 </section>
 
