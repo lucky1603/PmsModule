@@ -44,13 +44,15 @@ class EntityTable
         $id = (int) $entity->id;
         if($id == 0)
         {
+            \Zend\Debug\Debug::dump("inserting ...");
             $this->tableGateway->insert($data);
         }
         else 
         {
+            \Zend\Debug\Debug::dump("updating ...");
             if($this->getEntity($id))
             {
-                $this->tableGateway->update(['id' => $id]);
+                $this->tableGateway->update($data, ['id' => $id]);
             }
             else 
             {                
@@ -73,6 +75,7 @@ class EntityTable
         {
             throw new Exception('Entity '.$id.' not found!');
         }
+        return $row;
     }
     
     /**
@@ -95,7 +98,9 @@ class EntityTable
         $sql = new Sql($dbAdapter);
         $select = $sql->select();
         $select->from('entity')
-                ->join(['e' => 'entity_definition'], 'definition_id = e.id', ['code']);
+                ->join(['e' => 'entity_definition'], 'definition_id = e.id', ['code'])
+                ->join(['s' => 'status'], 'status_id = s.id', ['SValue' => 'value'])
+                ->order(['guid ASC']);
         $statement = $sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
         return $results;
@@ -105,7 +110,7 @@ class EntityTable
      * Deletes entity with given id.
      * @param type $id
      */
-    public function deleteAttribute($id)
+    public function deleteEntity($id)
     {
         $this->tableGateway->delete(['id' => $id]);
     }

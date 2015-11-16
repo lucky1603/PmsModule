@@ -29,6 +29,7 @@ class EntityForm extends Form
             $options[$result['id']] = $result['code'];
         }
         $select->setValueOptions($options);
+        $select->setAttribute('id', 'definition_id');
         $this->add($select);
         
         $this->add([
@@ -41,6 +42,23 @@ class EntityForm extends Form
                 'label' => 'Number',
             ],
         ]);
+        
+//        $status = new \Zend\Form\Element\Select('status_id');
+//        $status->setLabel('Set status');
+//        $sql = new Sql($dbAdapter);
+//        $sqlselect = $sql->select();
+//        $sqlselect->from('status')
+//                ->columns(['id', 'value']);
+//        $statement = $sql->prepareStatementForSqlObject($sqlselect);
+//        $results = $statement->execute();        
+//        $options = array();
+//        foreach($results as $result)
+//        {
+//            $options[$result['id']] = $result['value'];
+//        }
+//        $status->setValueOptions($options);
+//        $status->setAttribute('id', 'status_id');
+//        $this->add($status);
         
         $this->add([
             'name' => 'status',

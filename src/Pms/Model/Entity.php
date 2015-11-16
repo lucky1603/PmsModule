@@ -17,6 +17,7 @@ class Entity
     public $definition_id;
     public $status;
     public $guid;
+    public $status_id;
     
     /**
      * Feeds attribute params with externla values.
@@ -26,12 +27,13 @@ class Entity
     {
         if(isset($data['id']))
         {
-            $this->id = $id;
+            $this->id = $data['id'];
         }
         
         $this->definition_id = isset($data['definition_id']) ? $data['definition_id'] : null;
         $this->status = isset($data['status']) ? $data['status'] : null;
         $this->guid = isset($data['guid']) ? $data['guid'] : null;
+        $this->status_id = isset($data['status_id']) ? $data['status_id'] : null;
         
     }
     
@@ -46,6 +48,7 @@ class Entity
             'definition_id' => $this->definition_id,
             'status' => $this->status,
             'guid' => $this->guid,
+            'status_id' => $this->status_id,
         ];
     }
 }

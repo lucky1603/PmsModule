@@ -2,10 +2,9 @@
 
 namespace Pms\Controller;
 
-use Pms\Model\Attribute;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Pms\Model\EntityDefinitionModel;
+use Zend\Debug\Debug;
 
 /**
  * Entity type controller class.
@@ -171,19 +170,15 @@ class EntityDefinitionController extends AbstractActionController
                 
         foreach($post as $key=>$value)
         {
-//            \Zend\Debug\Debug::dump('value '.$key.'='.$value);
             if(!$value || $key == 'submit')
                 continue;
                         
             if(!array_key_exists($key, $attributes))
             {
-//                \Zend\Debug\Debug::dump('doesn\'t exist...');
                 $entityDefinitionModel->addAttribute($key);
             }
         }        
-        
-//        die();
-                
+                        
         foreach($attributes as $attribute)
         {
             if($post[$attribute->code] == FALSE)
@@ -198,6 +193,26 @@ class EntityDefinitionController extends AbstractActionController
             'action' => 'edit',
             'id' => $id,
         ]);        
+    }
+    
+    /**
+     * This action will show the list of all attributes associated with the entity definitions
+     * whose id is passed as argument.
+     * @return ViewModel
+     */
+    public function previewAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        $id = (int)$id;
+        $entityDefinitionModel = $this->getServiceLocator()->get('EntityDefinitionModel');
+        $entityDefinitionModel->setId($id);
+        $attributes = $entityDefinitionModel->getAttributes();
+        
+        return new ViewModel([
+            'model' => $entityDefinitionModel,
+            'id' => $id,
+            'attributes' => $attributes,
+        ]);
     }
 }
 
