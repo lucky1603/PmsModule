@@ -21,6 +21,7 @@ class EntityModel
     public $guid;
     public $status;
     public $definition_id;
+    public $status_id;
     public $entityDefinitionModel;
     
     protected $dbAdapter;
@@ -55,6 +56,7 @@ class EntityModel
         $select = $this->sql->select();
         $select->from(['a' => 'entity'])
                 ->join(['e' => 'entity_definition'], 'a.definition_id = e.id', ['code'])
+                ->join(['s' => 'status'], 'a.status_id = s.id', ['SValue' => 'value'])
                 ->where(['a.id' => $id]);
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
@@ -81,7 +83,7 @@ class EntityModel
         $this->definition_id = isset($data['definition_id']) ? $data['definition_id'] : null;
         $this->guid = isset($data['guid']) ? $data['guid'] : null;
         $this->status = isset($data['status']) ? $data['status'] : null;
-        
+        $this->status_id = isset($data['status_id']) ? $data['status_id'] : null;        
     }
     
     /**
@@ -95,6 +97,7 @@ class EntityModel
             'definition_id' => $this->definition_id,
             'guid' => $this->guid,
             'status' => $this->status,
+            'status_id' => $this->status_id,
         ];
     }
     /**

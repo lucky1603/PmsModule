@@ -33,10 +33,15 @@
             <?php echo $this->formElement($form->get('guid'));?>
             <?php echo $this->formElementErrors($form->get('guid'));?>
         </dd>
-        <dt><?php echo $this->formLabel($form->get('status')) ?></dt>
+<!--        <dt><?php echo $this->formLabel($form->get('status')) ?></dt>
         <dd>
             <?php echo $this->formElement($form->get('status'));?>
             <?php echo $this->formElementErrors($form->get('status'));?>
+        </dd>-->
+        <dt><?php echo $this->formLabel($form->get('status_id')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('status_id'));?>
+            <?php echo $this->formElementErrors($form->get('status_id'));?>
         </dd>
         <dd>
             <?php echo $this->formElement($form->get('submit'));?>

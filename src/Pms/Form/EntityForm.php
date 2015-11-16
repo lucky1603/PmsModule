@@ -43,22 +43,21 @@ class EntityForm extends Form
             ],
         ]);
         
-//        $status = new \Zend\Form\Element\Select('status_id');
-//        $status->setLabel('Set status');
-//        $sql = new Sql($dbAdapter);
-//        $sqlselect = $sql->select();
-//        $sqlselect->from('status')
-//                ->columns(['id', 'value']);
-//        $statement = $sql->prepareStatementForSqlObject($sqlselect);
-//        $results = $statement->execute();        
-//        $options = array();
-//        foreach($results as $result)
-//        {
-//            $options[$result['id']] = $result['value'];
-//        }
-//        $status->setValueOptions($options);
-//        $status->setAttribute('id', 'status_id');
-//        $this->add($status);
+        $status = new \Zend\Form\Element\Select('status_id');
+        $status->setLabel('Set status');
+        $sqlselect1 = $sql->select();
+        $sqlselect1->from('status')
+                ->columns(['id', 'value']);
+        $statement = $sql->prepareStatementForSqlObject($sqlselect1);
+        $results = $statement->execute();        
+        $options = array();
+        foreach($results as $result)
+        {
+            $options[$result['id']] = $result['value'];
+        }
+        $status->setValueOptions($options);
+        $status->setAttribute('id', 'status_id');
+        $this->add($status);
         
         $this->add([
             'name' => 'status',

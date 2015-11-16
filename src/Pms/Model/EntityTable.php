@@ -39,17 +39,16 @@ class EntityTable
             'definition_id' => $entity->definition_id,
             'status' => $entity->status,
             'guid' => $entity->guid,
+            'status_id' => $entity->status_id,
         ];
         
         $id = (int) $entity->id;
         if($id == 0)
         {
-            \Zend\Debug\Debug::dump("inserting ...");
             $this->tableGateway->insert($data);
         }
         else 
         {
-            \Zend\Debug\Debug::dump("updating ...");
             if($this->getEntity($id))
             {
                 $this->tableGateway->update($data, ['id' => $id]);
