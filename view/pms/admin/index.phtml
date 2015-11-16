@@ -2,20 +2,26 @@
     <h1>
         Welcome System Administrator 
     </h1>
-    <p>Here, you can do following things...
-    <h2>Entity Type Management</h2>
+    <p>On this page, you can choose to do following things...
+    <h3>Entity Type Management</h3>
     <p>Entity types are the basic prototypes of reservation process objects, which are going to be dealt with in this presentation.
-        You can add new ones or edit existing ones, or eventually delete them. <a href="/pms/entity-type">To entity type management >>> </a>
-    <h2>Entity definition management</h2>
+        You can add new ones or edit existing ones, or eventually delete them. <p><p><a href="/pms/entity-type">To entity type management >>> </a>
+    <h3>Entity definition management</h3>
     <p>Entity types are further split to the subtypes, which are fitted to the potential client needs. These subtypes are called 'entity definitions'
        and except the basic set of parameters, can have an arbitrary set of parameters which can be added and deleted by you. This will be explained 
        by example: if an 'entity type' is a room, an 'entity definition' would be what kind of room it is - single, double, suite, de louxe single etc.
        By defining a set of parameters and setting of their values, you make the different entity definitions. In this section you can add the new ones
-       and edit or delete existing ones. <a href='/pms/entity-definition'>To entity definitions management >>> </a>
-    <h2>Attribute Management</h2>
+       and edit or delete existing ones. <p><p><a href='/pms/entity-definition'>To entity definitions management >>> </a>
+    <h3>Entity Management</h3>
+    Entity is the final subject of our actions. It can be anything which can be reserved and used on defined period of time - hotel room, conference room,
+    office, gym, sport field, boat etc. Entities are defined by the entity definitions and inherit of of their properties, having also some of their own, like 
+    <i>guid</i> and <i>status</i> properties, which help them differ one from another. You could define some of the parameters which are specific only to a particular 
+    entity. Example: Room 101 is single room, which means that it can receive max one person, it has bathroom, AC and TV appliances. But it could have a 'sea view' or 'rare view', 
+    which is not defined by a room definition. This property is specific to this particular room. <p><p><a href='/pms/entity'>On to entity management >>> </a>
+    <h3>Attribute Management</h3>
     <p>Attributes are the parameter objects which can be associated with the different entity definitions or entities. An attribute basically consists name, 
-        datatype and value. Here, you can add new and edit or delete the existing ones. <a href='/pms/attribute-manager'>To attribute management >>> </a>
-    <h2>User management</h2>
-    <p>As administrator, you have the possibility to add and delete the application users. <a href='/pms/user-manager'>To user management >>>> </a>
+        datatype and value. Here, you can add new and edit or delete the existing ones. <p><p><a href='/pms/attribute-manager'>To attribute management >>> </a>
+    <h3>User management</h3>
+    <p>As administrator, you have the possibility to add and delete the application users. <p><p><a href='/pms/user-manager'>To user management >>>> </a>
 </section>
 

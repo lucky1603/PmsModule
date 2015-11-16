@@ -1,0 +1,26 @@
+<section class="entity-definition-preview">
+    <?php 
+        $entityDefinitionModel = $this->model;
+        $attributes = $this->attributes;
+        $id = $this->id;        
+    ?>
+    <table class="table">
+        <h3><?php echo $entityDefinitionModel->code?> parameters</h3>
+        <?php foreach($attributes as $attribute):?>
+        <tr>
+            <td><?php echo $attribute->label?></td>
+            <td><?php 
+                if($attribute->type == "boolean")
+                {
+                    echo $attribute->value ? 'Yes' : 'False';
+                }
+                else
+                {
+                    echo $attribute->value;
+                }        
+            ?></td>
+            <td><?php echo $attribute->unit?></td>
+        </tr>
+        <?php endforeach;?>
+    </table>
+</section>

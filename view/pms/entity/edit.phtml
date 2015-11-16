@@ -1,11 +1,23 @@
 <section class="entity-edit">
     <?php 
+        $this->headScript()->appendFile('/js/jquery-2.1.4.js');
+        $this->headScript()->appendFile('/js/helper.js');        
+//        $this->addHelperPath("ZendX/JQuery/View/Helper", "ZendX_JQuery_View_Helper");
         $form = $this->form;
-        $entityModel = $this->entityModel;
-        $form->setAttribute('action', $this->url('pms/entity', [
-            'action' => 'edit',
-            'id' => $entityModel->id,
-        ]));
+        if(isset($this->id))
+        {
+                $form->setAttribute('action', $this->url('pms/entity', [
+                    'action' => 'process',
+                    'id' => $this->id,
+                ]));
+        }
+        else 
+        {
+                $form->setAttribute('action', $this->url('pms/entity', [
+                    'action' => 'process',
+                ]));
+        }
+        
         echo $this->form()->openTag($form);
     ?>
     <h3>Room Details</h3>
@@ -31,38 +43,5 @@
         </dd>
     </dl>
     <?php echo $this->form()->closeTag();?>
-    <h3>Features</h3>
-    <?php
-        $attributes = $entityModel->getDefinitionModel()->getAttributes();
-    ?>
-    
-    <table class="table">
-        <tr>
-            <th>Name</th>
-            <th>Value</th>
-            <th>Unit</th>
-        </tr>
-        <?php foreach($attributes as $attribute):?>
-            <tr>
-                <td ><?php echo $attribute->label?></td>
-                <td style="font-style:italic"><?php 
-                    if($attribute->type == 'boolean')
-                    {
-                        if($attribute->value == TRUE)
-                        {
-                            echo "YES";    
-                        }
-                        else {
-                            echo "NO";
-                        }                        
-                    }
-                    else 
-                    {
-                        echo $attribute->value;
-                    }
-                ?></td>
-                <td><?php echo $attribute->unit?></td>
-            </tr>
-        <?php endforeach;?>
-    </table>
+    <div class="attribute-content" style="margin-left: 0px;padding-left: 0px"></div>   
 </section>

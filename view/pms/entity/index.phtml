@@ -18,11 +18,11 @@
                     <td><?php echo $entity['guid']?></td>
                     <td><?php echo $entity['code']?></td>
                     <td><?php echo $entity['status']?></td>
-                    <td><a href="/pms/entity/edit/<?php echo $entity['id']?>">Edit</a> | <a href="">Delete</a>
+                    <td><a href="/pms/entity/edit/<?php echo $entity['id']?>">Edit</a> | <a href="/pms/entity/delete/<?php echo $entity['id'] ?>">Delete</a>
                 </tr>
             <?php endforeach;?>
         </table>
     <?php endif;?>
-    <a href="">Add new</a>
+    <a href="/pms/entity/add">Add new</a> | <a href='/pms/admin'>Home</a>
 </section>
 
