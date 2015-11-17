@@ -101,4 +101,18 @@ class ClientController extends AbstractActionController
         
         $this->redirect()->toRoute('pms/client');
     }
+    
+    /**
+     * Action that prepares the basic client data preview.
+     * @return ViewModel
+     */
+    public function previewAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        $table = $this->getServiceLocator()->get('ClientTable');
+        $client = $table->getClient($id);
+        return new ViewModel([
+            'client' => $client,
+        ]);
+    }
 }

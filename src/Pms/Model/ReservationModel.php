@@ -20,6 +20,7 @@ class ReservationModel
     public $created_at;
     public $modified_at;
     public $client_id;
+    public $status_id;
 //    public $pax_a;
 //    public $pax_y;
 //    public $pax_c;
@@ -51,13 +52,46 @@ class ReservationModel
                 ->where(['r.id' => $id]);
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();        
+        
+        $row = $results->current();
+//        \Zend\Debug\Debug::dump($row);
+        $this->setData($row);        
         $entities = $this->getReservedEntities($id);
-        $ownData = array();
-
+    }
+    
+    /**
+     * Sets the object data from outside..
+     * @param type $data
+     */
+    public function setData($data)
+    {
+        if(isset($data['id']))
+        {
+            $this->id = $data['id'];
+        }
+        
+        $this->reservation_id = isset($data['reservation_id']) ? $data['reservation_id'] : null;
+        $this->status = isset($data['status']) ? $data['status'] : null;
+        $this->created_at = isset($data['created_at']) ? $data['created_at'] : null;
+        $this->modified_at = isset($data['modified_at']) ? $data['modified_at'] : null;
+        $this->client_id = isset($data['client_id']) ? $data['client_id'] : null;
+        $this->status_id = isset($data['status_id']) ? $data['status_id'] : null;       
+    }
+    
+    /**
+     * Return object data to outside.
+     * @return type
+     */
+    public function getData()
+    {
         return [
-            'fields' => $results->current(),
-            'entities' => $entities,
-        ];
+            'reservation_id' => $this->reservation_id,
+            'status' => $this->status,
+            'created_at' => $this->created_at,
+            'modified_at' => $this->modified_at,
+            'client_id' => $this->client_id,
+            'status_id' => $this->status_id,
+        ]; 
     }
     
     /**
@@ -77,6 +111,7 @@ class ReservationModel
         $select->from(['r' => 'reservation_entity'])
                 ->join(['e' => 'entity'], 'r.entity_id = e.id', ['guid'])
                 ->join(['c' => 'clients'], 'r.guest_id = c.id', ['first_name', 'last_name'])
+                ->join(['ed' => 'entity_definition'], 'e.definition_id = ed.id', ['code'])
                 ->where(['r.reservation_id' => $id]);
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
@@ -106,5 +141,25 @@ class ReservationModel
         }
         
         return $rows;
+    }
+    
+    // These two methods are for the compatibility sake with form binding.
+    
+    /**
+     * Sets the object data from outside.
+     * @param type $data
+     */
+    public function exchangeArray($data)
+    {
+         $this->setData($data);
+    }
+    
+    /**
+     * Return object data to outside.
+     * @return type
+     */
+    public function getArrayCopy()
+    {
+        return $this->getData();
     }
 }
