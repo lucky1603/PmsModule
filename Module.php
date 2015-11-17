@@ -24,6 +24,7 @@ use Pms\Model\ClientTable;
 use Pms\Model\AttributeValueModel;
 use Pms\Model\EntityDefinitionModel;
 use Pms\Model\EntityModel;
+use Pms\Model\ReservationModel;
 use Pms\Form\LoginForm;
 use Pms\Form\RegisterForm;
 use Pms\Form\EntityForm;
@@ -210,6 +211,11 @@ class Module implements AutoloaderProviderInterface
                     $eModel = new EntityModel($dbAdapter);
                     return $eModel;
                 },        
+                'ReservationModel' => function($sm) {
+                    $dbAdapter = $sm->get('Adapter');
+                    $eModel = new ReservationModel($dbAdapter);
+                    return $eModel;
+                },
                 // Authentication Services
                 'AuthenticationService' => function($sm) {
                     $dbAdapter = $sm->get('\Zend\Db\Adapter\Adapter');

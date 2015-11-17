@@ -12,7 +12,7 @@ return array(
             'Pms\Controller\Entity' => 'Pms\Controller\EntityController',
             'Pms\Controller\Admin' => 'Pms\Controller\AdminController',
             'Pms\Controller\Client' => 'Pms\Controller\ClientController',
-            
+            'Pms\Controller\Reservation' => 'Pms\Controller\ReservationController',            
         ),
     ),
     'router' => array(
@@ -128,6 +128,20 @@ return array(
                             ),
                             'defaults' => array(
                                 'controller' => 'Pms\Controller\Client',
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
+                    'reservation' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/reservation[/:action[/:id]]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id' => '[a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Pms\Controller\Reservation',
                                 'action' => 'index',
                             ),
                         ),

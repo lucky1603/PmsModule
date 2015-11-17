@@ -1,0 +1,31 @@
+<section class="reservation-index">
+    <?php
+        $reservations = $this->reservations;
+    ?>
+    <h2>Reservations</h2>
+    <?php if(count($reservations) == 0):?>
+        <p class="error">No current reservations!
+    <?php else: ?>
+        <table class="table">
+            <tr>
+                <th>ID</th>
+                <th>Client</th>
+                <th>Created Ad</th>
+                <th>Modified At</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        <?php foreach($reservations as $reservation):?>
+            <tr>
+                <td><?php echo $reservation['reservation_id']?></td>
+                <td><?php echo $reservation['first_name'].' '.$reservation['last_name']?></td>
+                <td><?php echo $reservation['created_at']?></td>
+                <td><?php echo $reservation['modified_at']?></td>
+                <td><?php echo $reservation['status']?></td>
+                <td><a href="">Edit</a> | <a href="">Delete</a>
+            </tr>
+        <?php endforeach;?>
+        </table>
+    <?php endif;?>
+</section>
+
