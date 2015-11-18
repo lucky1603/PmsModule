@@ -63,7 +63,7 @@ class ReservationForm extends Form
             'name' => 'submit',
             'attributes' => [
                 'type' => 'Submit', 
-                'value' => 'Register',
+                'value' => 'Save',
                 'id' => 'submitbutton'
             ],
         ]);

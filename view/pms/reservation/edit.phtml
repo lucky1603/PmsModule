@@ -1,0 +1,81 @@
+<section class="reservation-edit">
+    <?php 
+        $this->headScript()->appendFile('/js/helper.js');   
+        $form = $this->form;
+        $id = $this->id;
+        $model = $this->model;
+        
+        if(isset($id))
+        {
+            $form->setAttribute('action', $this->url('pms/reservation', [
+                'action' => 'process',
+                'id' => $id,
+            ]));
+            
+        }
+        else 
+        {
+            $form->setAttribute('action', $this->url('pms/reservation', [
+                'action' => 'process',
+            ]));            
+        }
+        echo $this->form()->openTag($form);        
+    ?>
+    <h2>Details <?php echo isset($id) ? 'Reservation ID: '. $model->reservation_id : 'New Reservation'?></h2>
+    <table class="table">
+        <tr>
+            <td style="width:100px"><?php echo $this->formLabel($form->get('client_id'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('client_id'))?>
+                <?php echo $this->formElementErrors($form->get('client_id'))?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"> 
+                <div class="client-content">Here comes the client content.</div>
+                
+            </td>            
+        </tr>
+        <tr>
+            <td><?php echo $this->formLabel($form->get('status_id'))?></td>
+            <td>
+                <?php echo $this->formElement($form->get('status_id'))?>
+                <?php echo $this->formElementErrors($form->get('status_id'))?>
+            </td>
+        </tr>
+    </table>
+    
+    <h4>Reserved Entities</h4>
+    <?php
+        if(isset($model))
+        {
+            $entities = $model->getReservedEntities($id);
+        }
+    ?>
+    <?php if(!isset($entities) || count($entities) == 0):?>
+        <p class="error">There are no reserved entities associated with this reservation!
+    <?php else:?>
+        <table class="table">
+            <tr>
+                <th>Room</th>
+                <th>Type</th>
+                <th>Guest</th>
+                <th>Start</th>
+                <th>End</th>
+            </tr>
+            <?php foreach($entities as $entity):?>
+            <tr>
+                <td><?php echo $entity['guid']?></td>
+                <td><?php echo $entity['code']?></td>
+                <td><?php echo $entity['first_name']. ' '.$entity['last_name']?></td>
+                <td><?php echo $entity['date_start']?></td>
+                <td><?php echo $entity['date_end']?></td>
+            </tr>
+            <?php endforeach;?>
+        </table>    
+    <?php endif;?>
+    <a href="">Add new</a>
+    <?php echo $this->formElement($form->get('submit'))?>
+    <?php echo $this->form()->closeTag()?>
+</section>
+

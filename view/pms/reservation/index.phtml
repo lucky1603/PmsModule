@@ -22,7 +22,7 @@
                 <td><?php echo $reservation['created_at']?></td>
                 <td><?php echo $reservation['modified_at']?></td>
                 <td><?php echo $reservation['status']?></td>
-                <td><a href="">Edit</a> | <a href="">Delete</a>
+                <td><a href="/pms/reservation/edit/<?php echo $reservation['id']?>">Edit</a> | <a href="">Delete</a>
             </tr>
         <?php endforeach;?>
         </table>

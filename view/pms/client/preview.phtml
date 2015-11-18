@@ -1,0 +1,16 @@
+<section class="client-preview">
+    <?php 
+        $client = $this->client;        
+    ?>
+    <ul>
+        <li>Name: <?php echo $client->first_name.' '.$client->last_name?></li>
+        <li>Address: <?php echo $client->address1?></li>
+        <li>City: <?php echo $client->city?></li>
+        <li>ZIP/Postal: <?php echo $client->zipcode?></li>
+        <li>E-Mail: <?php echo $client->email?></li>
+        <li>Phone: <?php echo $client->phone?></li>
+        <li>Mobile: <?php echo $client->mobile?></li>
+        <li>Fax: <?php echo $client->fax?></li>
+    </ul>    
+</section>
+
