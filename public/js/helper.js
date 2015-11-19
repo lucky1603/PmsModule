@@ -14,6 +14,8 @@ $(document).ready(function() {
     $('#client_id').on('change load', function(evt) {
         fill('#client_id');
     }); 
+    
+    $('.reservation-date').datepicker();
 });
 
 /**
