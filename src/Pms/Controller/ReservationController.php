@@ -51,4 +51,28 @@ class ReservationController extends AbstractActionController
             'form' => $form,
         ]);
     }
+    
+    public function processAction()
+    {
+        $form = $this->getServiceLocator()->get('ReservationForm');
+        $post = $this->request->getPost();
+        Debug::dump($post);
+        $model = $this->getServiceLocator()->get("ReservationModel");
+        
+        $id = $this->params()->fromRoute('id');           
+        if(isset($id))
+        {            
+            $model->setId($id);
+                                    
+        }
+        
+        $form->bind($model);
+        $form->setData($post);
+        if($form->isValid())
+        {
+            $model->save();
+        }
+        
+        return $this->redirect()->toRoute('pms/reservation', []);
+    }
 }

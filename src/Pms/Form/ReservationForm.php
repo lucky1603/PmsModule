@@ -60,6 +60,24 @@ class ReservationForm extends Form
         $this->add($status);
         
         $this->add([
+            'name' => 'created_at',
+            'attributes' => [
+                'type' => 'text', 
+                'id' => 'submitbutton',
+                'hidden' => true,
+            ],
+        ]);
+        
+        $this->add([
+            'name' => 'modified_at',
+            'attributes' => [
+                'type' => 'text', 
+                'id' => 'submitbutton',
+                'hidden' => true,
+            ],
+        ]);
+        
+        $this->add([
             'name' => 'submit',
             'attributes' => [
                 'type' => 'Submit', 

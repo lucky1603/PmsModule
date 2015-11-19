@@ -8,6 +8,9 @@ namespace Pms\Model;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
+use Zend\Db\TableGateway\TableGateway;
+use Pms\Model\ReservationEntityModel;
+
 
 /**
  * ReservationModel class.
@@ -49,14 +52,16 @@ class ReservationModel
         $select = $this->sql->select();
         $select->from(['r' => 'reservations'])
                 ->join(['c' => 'clients'], 'r.client_id = c.id', ['first_name', 'last_name'])
+                ->join(['s' => 'reservation_status'], 'r.status_id = s.id',['real_status' => 'statustext'])
                 ->where(['r.id' => $id]);
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();        
         
         $row = $results->current();
 //        \Zend\Debug\Debug::dump($row);
-        $this->setData($row);        
-        $entities = $this->getReservedEntities($id);
+        $this->setData($row);     
+//        \Zend\Debug\Debug::dump($this);
+        $entities = $this->getReservedEntities();
     }
     
     /**
@@ -70,12 +75,25 @@ class ReservationModel
             $this->id = $data['id'];
         }
         
-        $this->reservation_id = isset($data['reservation_id']) ? $data['reservation_id'] : null;
-        $this->status = isset($data['status']) ? $data['status'] : null;
+        if(isset($data['reservation_id']))
+        {
+            $this->reservation_id = $data['reservation_id'];
+        }
+               
         $this->created_at = isset($data['created_at']) ? $data['created_at'] : null;
         $this->modified_at = isset($data['modified_at']) ? $data['modified_at'] : null;
         $this->client_id = isset($data['client_id']) ? $data['client_id'] : null;
-        $this->status_id = isset($data['status_id']) ? $data['status_id'] : null;       
+        
+        // Set Status
+        if(isset($data['status_id']))
+        {
+            $this->status_id = isset($data['status_id']) ? $data['status_id'] : null;       
+            $tableGateway = new TableGateway('reservation_status', $this->dbAdapter);
+            $result = $tableGateway->select(['id' => $this->status_id]);
+            $row = $result->current();
+            $this->status = $row['statustext'];    
+        }
+                
     }
     
     /**
@@ -99,28 +117,119 @@ class ReservationModel
      * @param type $id
      * @return type
      */
-    public function getReservedEntities($id)
+    public function getReservedEntities()
     {
         if(isset($this->reservedEntities))
         {
             return $this->reservedEntities;
         }
-        
         $this->reservedEntities = array();
-        $select = $this->sql->select();
-        $select->from(['r' => 'reservation_entity'])
-                ->join(['e' => 'entity'], 'r.entity_id = e.id', ['guid'])
-                ->join(['c' => 'clients'], 'r.guest_id = c.id', ['first_name', 'last_name'])
-                ->join(['ed' => 'entity_definition'], 'e.definition_id = ed.id', ['code'])
-                ->where(['r.reservation_id' => $id]);
-        $statement = $this->sql->prepareStatementForSqlObject($select);
-        $results = $statement->execute();
-        foreach($results as $row)
+        if($this->id)
         {
-            $this->reservedEntities[$row['guid']] = $row;
+            $select = $this->sql->select();
+            $select->from(['r' => 'reservation_entity'])
+                    ->join(['e' => 'entity'], 'r.entity_id = e.id', ['guid'])
+                    ->join(['c' => 'clients'], 'r.guest_id = c.id', ['first_name', 'last_name'])
+                    ->join(['ed' => 'entity_definition'], 'e.definition_id = ed.id', ['ed_code' => 'code', 'ed_name' => 'name'])
+                    ->where(['r.reservation_id' => $this->id]);
+            $statement = $this->sql->prepareStatementForSqlObject($select);
+            $results = $statement->execute();
+            foreach($results as $row)
+            {
+//                \Zend\Debug\Debug::dump($row);
+                $reModel = new ReservationEntityModel($this->dbAdapter);
+                $reModel->setData($row);
+                $this->reservedEntities[$row['guid']] = $reModel;
+            }
+        }
+                
+        return $this->reservedEntities;
+    }
+    
+    /**
+     * Adds entity model to the entity collection.
+     * @param ReservationEntityModel $reModel
+     */
+    public function addEntity(ReservationEntityModel $reModel)
+    {
+        $this->reservedEntities[$reModel->guid] = $reModel;
+    }
+    
+    /**
+     * Removes entity model from the collection.
+     * @param type $guid
+     */
+    public function deleteEntity($guid)
+    {
+        unset($this->reservedEntities[$guid]);
+    }
+    
+    /**
+     * Saves the reservation to database.
+     */
+    public function save()
+    {
+        // Save main table.
+        if(!isset($this->id))
+        {       
+            \Zend\Debug\Debug::dump($this->getData());
+            $insert = $this->sql->insert();
+            $insert->into('reservations')
+                    ->values($this->getData());
+            $statement = $this->sql->prepareStatementForSqlObject($inser);
+            $statement->execute();                            
+        }
+        else 
+        {
+            \Zend\Debug\Debug::dump($this->getData());
+            $update = $this->sql->update();
+            $update->table('reservations')
+                    ->set($this->getData())
+                    ->where(['id' => $this->id]);
+            $statement = $this->sql->prepareStatementForSqlObject($update);
+            $statement->execute();        
         }
         
-        return $this->reservedEntities;
+        return;
+        
+        // Get belonging entities.
+        $tg2 = new TableGateway('reservation_entity', $this->dbAdapter, null, null);
+        $rows = $tg2->select(['id' => $id]);
+        $currentEntities = $this->getReservedEntities();
+        
+        // If there are more entities in the table, than in the model,
+        // delete the superfluous entries from the table.
+        $keysToDelete = array();
+        do {
+            $row = $rows->current();
+            $guid = $row['guid'];
+            if(!array_key_exists($guid, $currentEntities))
+            {
+                $keysToDelete[] = $row['id'];
+            }            
+        } while ($rows->next());            
+       
+        if(count($keysToDelete) > 0)
+        {
+            $tg2->delete(['id' => $keysToDelete]);    
+        }
+                
+        // Now save the 
+        if(null != $this->getReservedEntities())
+        {
+            foreach($this->reservedEntities as $rEntity)
+            {
+                $rEntity->save();
+            }
+        }
+    }
+    
+    /**
+     * Deletes the reservation from database.
+     */
+    public function delete()
+    {
+        
     }
     
     /**
@@ -131,7 +240,9 @@ class ReservationModel
     {
         $select = $this->sql->select();
         $select->from(['r' => 'reservations'])
-                ->join(['c' => 'clients'], 'r.client_id = c.id', ['first_name', 'last_name']);
+                ->join(['c' => 'clients'], 'r.client_id = c.id', ['first_name', 'last_name'])
+                ->join(['s' => 'reservation_status'], 'r.status_id = s.id', ['statustext'])
+                ->order(['reservation_id ASC']);
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $results = $statement->execute(); 
         $rows = array();

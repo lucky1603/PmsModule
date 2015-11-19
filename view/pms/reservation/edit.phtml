@@ -22,6 +22,8 @@
         echo $this->form()->openTag($form);        
     ?>
     <h2>Details <?php echo isset($id) ? 'Reservation ID: '. $model->reservation_id : 'New Reservation'?></h2>
+    <br>
+    <br>
     <table class="table">
         <tr>
             <td style="width:100px"><?php echo $this->formLabel($form->get('client_id'))?></td>
@@ -33,7 +35,6 @@
         <tr>
             <td colspan="2"> 
                 <div class="client-content">Here comes the client content.</div>
-                
             </td>            
         </tr>
         <tr>
@@ -44,7 +45,8 @@
             </td>
         </tr>
     </table>
-    
+    <?php echo $this->formElement($form->get('created_at'))?>
+    <?php echo $this->formElement($form->get('modified_at'))?>
     <h4>Reserved Entities</h4>
     <?php
         if(isset($model))
@@ -65,17 +67,17 @@
             </tr>
             <?php foreach($entities as $entity):?>
             <tr>
-                <td><?php echo $entity['guid']?></td>
-                <td><?php echo $entity['code']?></td>
-                <td><?php echo $entity['first_name']. ' '.$entity['last_name']?></td>
-                <td><?php echo $entity['date_start']?></td>
-                <td><?php echo $entity['date_end']?></td>
+                <td><?php echo $entity->guid?></td>
+                <td><?php echo $entity->ed_name?></td>
+                <td><?php echo $entity->first_name. ' '.$entity->last_name; ?></td>
+                <td><?php echo date('Y-m-d',$entity->date_start)?></td>
+                <td><?php echo date('Y-m-d', $entity->date_end)?></td>
             </tr>
             <?php endforeach;?>
         </table>    
-    <?php endif;?>
-    <a href="">Add new</a>
+    <?php endif;?>    
+    <p><a href="">Add new entity</a><br>
     <?php echo $this->formElement($form->get('submit'))?>
-    <?php echo $this->form()->closeTag()?>
+    <?php echo $this->form()->closeTag()?>        
 </section>
 
