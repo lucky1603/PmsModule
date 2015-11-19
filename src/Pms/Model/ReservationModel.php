@@ -181,7 +181,6 @@ class ReservationModel
         }
         else 
         {
-            \Zend\Debug\Debug::dump($this->getData());
             $update = $this->sql->update();
             $update->table('reservations')
                     ->set($this->getData())
@@ -189,32 +188,39 @@ class ReservationModel
             $statement = $this->sql->prepareStatementForSqlObject($update);
             $statement->execute();        
         }
-        
-        return;
-        
+                
         // Get belonging entities.
-        $tg2 = new TableGateway('reservation_entity', $this->dbAdapter, null, null);
-        $rows = $tg2->select(['id' => $id]);
         $currentEntities = $this->getReservedEntities();
         
-        // If there are more entities in the table, than in the model,
-        // delete the superfluous entries from the table.
+        // Get existing reservation entities from the database.
+        $select = $this->sql->select();
+        $select->from(['r' => 'reservation_entity'])
+                ->join(['e' => 'entity'], 'r.entity_id = e.id', ['guid']);
+        $statement = $this->sql->prepareStatementForSqlObject($select);
+        $entities = array();
+        $results = $statement->execute();
+        
+        // Find entries in the database, that don't exist
+        // in the model anymore and mark their id's.
         $keysToDelete = array();
-        do {
-            $row = $rows->current();
-            $guid = $row['guid'];
+        foreach($results as $entity)
+        {
+            $guid = $entity['guid'];
             if(!array_key_exists($guid, $currentEntities))
             {
-                $keysToDelete[] = $row['id'];
-            }            
-        } while ($rows->next());            
-       
+                $keysToDelete[] = $entity['id'];
+            }
+        }
+               
+        // If there were any, delete them.
         if(count($keysToDelete) > 0)
         {
-            $tg2->delete(['id' => $keysToDelete]);    
+            $delete = $this->sql->delete();
+            $delete->from('reservation_entity')
+                    ->where(['id' => $keysToDelete]);
         }
-                
-        // Now save the 
+                        
+        // Now save the entities from the model. 
         if(null != $this->getReservedEntities())
         {
             foreach($this->reservedEntities as $rEntity)
