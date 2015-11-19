@@ -12,7 +12,8 @@ return array(
             'Pms\Controller\Entity' => 'Pms\Controller\EntityController',
             'Pms\Controller\Admin' => 'Pms\Controller\AdminController',
             'Pms\Controller\Client' => 'Pms\Controller\ClientController',
-            'Pms\Controller\Reservation' => 'Pms\Controller\ReservationController',            
+            'Pms\Controller\Reservation' => 'Pms\Controller\ReservationController',   
+            'Pms\Controller\Ajax' => 'Pms\Controller\AjaxController',  
         ),
     ),
     'router' => array(

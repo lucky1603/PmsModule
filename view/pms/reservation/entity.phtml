@@ -1,0 +1,47 @@
+<section class="reservation-entity">
+    <?php        
+        $this->headLink()->setStylesheet('/js/jquery-ui/jquery-ui.css');
+        $this->headScript()->appendFile('/js/jquery-2.1.4.js');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');
+        $this->headScript()->appendFile('/js/helper.js');       
+        
+        $form = $this->form;
+        $form->setAttribute('action', $this->url('pms/reservation', [
+            'action' => 'index'
+        ]));        
+        echo $this->form()->openTag($form);
+    ?>
+    <h2>Room Reservation Details</h2>
+    <dl>
+        <dt><?php echo $this->formLabel($form->get('date_start'))?><dt>
+        <dd>
+            <?php echo $this->formElement($form->get('date_start'))?>
+            <?php echo $this->formElementErrors($form->get('date_start'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('date_end'))?><dt>
+        <dd>
+            <?php echo $this->formElement($form->get('date_end'))?>
+            <?php echo $this->formElementErrors($form->get('date_end'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('entity_definition_id'))?><dt>
+        <dd>
+            <?php echo $this->formElement($form->get('entity_definition_id'))?>
+            <?php echo $this->formElementErrors($form->get('entity_definition_id'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('entity_id'))?><dt>
+        <dd>
+            <?php echo $this->formElement($form->get('entity_id'))?>
+            <?php echo $this->formElementErrors($form->get('entity_id'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('guest_id'))?><dt>
+        <dd>
+            <?php echo $this->formElement($form->get('guest_id'))?>
+            <?php echo $this->formElementErrors($form->get('guest_id'))?>
+        </dd>
+        <dd>
+            <?php echo $this->formElement($form->get('submit'))?>
+        </dd>
+    </dl>
+    <?php echo $this->form()->closeTag()?>
+</section>
+

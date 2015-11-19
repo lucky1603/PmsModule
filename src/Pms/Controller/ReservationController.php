@@ -10,6 +10,7 @@ namespace Pms\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Debug\Debug;
+use Zend\View\Model\JsonModel;
 
 /**
  * ReservationController
@@ -29,6 +30,7 @@ class ReservationController extends AbstractActionController
     
     /**
      * Edit existing reservation.
+     * @return ViewModel Default view model.
      */
     public function editAction() {
         $form = $this->getServiceLocator()->get('ReservationForm');
@@ -52,6 +54,10 @@ class ReservationController extends AbstractActionController
         ]);
     }
     
+    /**
+     * Processes actions on reservation.
+     * @return ViewModel Default view model.
+     */
     public function processAction()
     {
         $form = $this->getServiceLocator()->get('ReservationForm');
@@ -75,4 +81,18 @@ class ReservationController extends AbstractActionController
         
         return $this->redirect()->toRoute('pms/reservation', []);
     }
+    
+    /**
+     * Adding, editing, removing entity from reservation.
+     * @return ViewModel Default view model.
+     */
+    public function entityAction()
+    {
+        $form = $this->getServiceLocator()->get('ReservationEntityForm');
+        
+        return new ViewModel([
+            'form' => $form,
+        ]);
+    }
+    
 }

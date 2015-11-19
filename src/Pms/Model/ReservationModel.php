@@ -58,9 +58,7 @@ class ReservationModel
         $results = $statement->execute();        
         
         $row = $results->current();
-//        \Zend\Debug\Debug::dump($row);
         $this->setData($row);     
-//        \Zend\Debug\Debug::dump($this);
         $entities = $this->getReservedEntities();
     }
     
@@ -172,7 +170,6 @@ class ReservationModel
         // Save main table.
         if(!isset($this->id))
         {       
-            \Zend\Debug\Debug::dump($this->getData());
             $insert = $this->sql->insert();
             $insert->into('reservations')
                     ->values($this->getData());

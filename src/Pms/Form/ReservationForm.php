@@ -19,8 +19,7 @@ class ReservationForm extends Form
         parent::__construct('ReservationForm');
         $this->setAttribute('method', 'post');
         $this->setAttribute('enctype', 'multipart/form-data');
-        
-        
+                
         // Initialize client field.
         $client = new \Zend\Form\Element\Select('client_id');
         $client->setLabel('Client');

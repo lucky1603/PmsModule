@@ -191,6 +191,11 @@ class Module implements AutoloaderProviderInterface
                     $form = new \Pms\Form\ReservationForm('', ['adapter' => $dbAdapter]);
                     return $form;
                 },
+                'ReservationEntityForm' => function($sm) {
+                    $dbAdapter = $sm->get('Adapter');
+                    $form = new \Pms\Form\ReservationEntityForm('ReservationEntity', ['adapter' => $dbAdapter]);
+                    return $form;
+                },
                 // Filters
                 'LoginFilter' => function($sm) {
                     $loginFilter = new LoginFilter();
