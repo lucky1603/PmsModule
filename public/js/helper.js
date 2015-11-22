@@ -16,6 +16,24 @@ $(document).ready(function() {
     }); 
     
     $('.reservation-date').datepicker();
+    
+    $('#entity_definition_id').on('change', function(evt) {
+        var something = $('#entity_definition_id option:selected').val();
+        var date_from = $('#date_start').val();
+        var date_to = $('#date_end').val();
+        
+        $.get('/pms/ajax/getAvailableRooms?from='+date_from+'&to='+date_to+'&type='+something, function(data) {
+            var what = JSON.parse(data);
+//            dump(what);
+
+            $('#entity_id').empty();
+            for(var i in what)
+            {
+                $('#entity_id').append($("<option></option>").attr('value', i).text(what[i]));
+                //alert(i + ' = ' + what[i]);
+            }
+        });        
+    });
 });
 
 /**
@@ -45,5 +63,25 @@ function fill(what) {
             });    
         }        
     }
+}
+
+/**
+ * Dumps the contents of an object to the message box.
+ * @param {type} obj
+ * @returns {undefined}
+ */
+function dump(obj) {
+    var out = '';
+    for (var i in obj) {
+        out += i + ": " + obj[i] + "\n";
+    }
+
+    alert(out);
+
+//    // or, if you wanted to avoid alerts...
+//
+//    var pre = document.createElement('pre');
+//    pre.innerHTML = out;
+//    document.body.appendChild(pre)
 }
 
