@@ -95,4 +95,11 @@ class ReservationController extends AbstractActionController
         ]);
     }
     
+    public function exampleAction()
+    {
+        if($this->request->isXmlHttpRequest())
+        {
+            
+        }
+    }
 }
