@@ -5,8 +5,4 @@ return array(
 //    'ZendSkeletonModule\Controller\SkeletonController' => __DIR__ . '/src/ZendSkeletonModule/Controller/SkeletonController.php',
 //    'ZendSkeletonModuleTest\Framework\TestCase'        => __DIR__ . '/tests/ZendSkeletonModule/Framework/TestCase.php',
 //    'ZendSkeletonModuleTest\SampleTest'                => __DIR__ . '/tests/ZendSkeletonModule/SampleTest.php',
-    'Pms\Module'                        => __DIR__ . '/Module.php',
-    'Pms\Controller\AdminController' => __DIR__ . '/src/ZendSkeletonModule/Controller/AdminController.php',
-//    'Pms\Framework\TestCase'        => __DIR__ . '/tests/ZendSkeletonModule/Framework/TestCase.php',
-//    'Pms\SampleTest'                => __DIR__ . '/tests/ZendSkeletonModule/SampleTest.php',    
 );

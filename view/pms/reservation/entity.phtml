@@ -6,22 +6,34 @@
         $this->headScript()->appendFile('/js/helper.js');       
         
         $form = $this->form;
-        $form->setAttribute('action', $this->url('pms/reservation', [
-            'action' => 'index'
-        ]));        
+        $id = $this->id;
+        if(isset($id))
+        {
+            $form->setAttribute('action', $this->url('pms/reservation', [
+                'action' => 'processEntity',
+                'id' => $id,
+            ]));
+        }
+        else 
+        {
+            $form->setAttribute('action', $this->url('pms/reservation', [
+                'action' => 'processEntity'
+            ]));    
+        }
+                
         echo $this->form()->openTag($form);
     ?>
     <h2>Room Reservation Details</h2>
     <dl>
-        <dt><?php echo $this->formLabel($form->get('date_start'))?><dt>
+        <dt><?php echo $this->formLabel($form->get('date_from'))?><dt>
         <dd>
-            <?php echo $this->formElement($form->get('date_start'))?>
-            <?php echo $this->formElementErrors($form->get('date_start'))?>
+            <?php echo $this->formElement($form->get('date_from'))?>
+            <?php echo $this->formElementErrors($form->get('date_from'))?>
         </dd>
-        <dt><?php echo $this->formLabel($form->get('date_end'))?><dt>
+        <dt><?php echo $this->formLabel($form->get('date_to'))?><dt>
         <dd>
-            <?php echo $this->formElement($form->get('date_end'))?>
-            <?php echo $this->formElementErrors($form->get('date_end'))?>
+            <?php echo $this->formElement($form->get('date_to'))?>
+            <?php echo $this->formElementErrors($form->get('date_to'))?>
         </dd>
         <dt><?php echo $this->formLabel($form->get('entity_definition_id'))?><dt>
         <dd>

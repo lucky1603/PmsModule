@@ -48,12 +48,13 @@ class ReservationController extends AbstractActionController
                 $reservation_id = (int)$reservationModelData['reservation_id'];
                 if($id != $reservation_id)
                 {
-                    Debug::dump('They are not equal');
+//                    Debug::dump('They are not equal');
                     $model->setId($id);
                     $sessionModels->reservationModel = $model->getData();
                 }
                 else 
                 {
+//                    Debug::dump('They are equal');
                     $model->setData($reservationModelData);
                 }
                 
@@ -70,6 +71,7 @@ class ReservationController extends AbstractActionController
         
         if(isset($id))
         {            
+//            Debug::dump('From the beginning...');
             $model->setId($id);
             $form->bind($model);                     
             $sessionModels->reservationModel = $model->getData();
@@ -82,8 +84,11 @@ class ReservationController extends AbstractActionController
             return $viewModel;
         }
         
+        
+        $sessionModels->reservationModel = $model->getData();
         return $viewModel = new ViewModel([
             'form' => $form,
+            'model' => $model,
         ]);
     }
     
@@ -134,6 +139,7 @@ class ReservationController extends AbstractActionController
                 $model->save();
             } 
         }
+        die();
         return $this->redirect()->toRoute('pms/reservation');
     }
     
@@ -177,6 +183,23 @@ class ReservationController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
         ]);
+    }
+    
+    /**
+     * Deletes reservation with the given id.
+     * @return type
+     */
+    public function deleteAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        if(!isset($id))
+        {
+            return;
+        }
+        
+        $model = $this->getServiceLocator()->get('ReservationModel');
+        $model->delete($id);
+        return $this->redirect()->toRoute('pms/reservation');
     }
     
     /**
@@ -242,39 +265,93 @@ class ReservationController extends AbstractActionController
     }
     
     /**
+     * Deletes the selected entity from the current reservation.
+     */
+    public function deleteEntityAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        if(!isset($id))
+        {
+            return $this->redirect()->toRoute('pms/reservation', []);
+        }
+        
+        $reservationModel = $this->getServiceLocator()->get('ReservationModel');
+        $sessionModels = new Container('models');
+        if(isset($sessionModels->reservationModel))
+        {
+            $reservationModelData = $sessionModels->reservationModel;
+            $reservationModel->setData($reservationModelData);
+            $reservationModel->getReservedEntities();
+            if(array_key_exists($id, $reservationModel->reservedEntities))
+            {
+                unset($reservationModel->reservedEntities[$id]);
+            }
+            $reservationModelData = $reservationModel->getData();
+            $sessionModels->reservationModel = $reservationModelData;
+            
+            if(isset($reservationModel->id))
+            {
+                return $this->redirect()->toRoute('pms/reservation', [
+                    'action' => 'edit',
+                    'id' => $reservationModel->id,
+                ]);    
+            } else 
+            {
+                return $this->redirect()->toRoute('pms/reservation', [
+                    'action' => 'edit',
+                ]);
+            }                        
+        }
+        
+        return $this->redirect()->toRoute('pms/reservation');
+    }
+    
+    /**
      * Test action (one only use). Copies the dates from string/int -> timestamp fomatted fields.
      * TODO: To remove later.
      */
     public function testAction()
     {
-       $dbAdapter = $this->getServiceLocator()->get('Adapter');
-       $sql = new Sql($dbAdapter);
-              
-       // Get id's 
-       $ids = array();
-       $select = $sql->select();
-       $select->from('reservation_entity')
-              ->columns(['id', 'date_start', 'date_end']);
-       $statement = $sql->prepareStatementForSqlObject($select);
-       $results = $statement->execute();
-       foreach($results as $row)
-       {
-           $date_from = date('m/d/Y', (int) $row['date_start']);
-           $date_to = date('m/d/Y', $row['date_end']);
-           Debug::dump($row['date_start']);
-           Debug::dump($row['date_end']);
-           Debug::dump($date_from);
-           Debug::dump($date_to);
-           
-           
-           $update = $sql->update();
-           $update->table('reservation_entity')
-                  ->set(['date_from' => $date_from,
-                         'date_to' => $date_to])
-                  ->where(['id' => $row['id']]);
-           $statement = $sql->prepareStatementForSqlObject($update);
-           $statement->execute();
-       }
+//       $dbAdapter = $this->getServiceLocator()->get('Adapter');
+//       $sql = new Sql($dbAdapter);
+//              
+//       // Get id's 
+//       $ids = array();
+//       $select = $sql->select();
+//       $select->from('reservation_entity')
+//              ->columns(['id', 'date_start', 'date_end']);
+//       $statement = $sql->prepareStatementForSqlObject($select);
+//       $results = $statement->execute();
+//       foreach($results as $row)
+//       {
+//           $date_from = date('m/d/Y', (int) $row['date_start']);
+//           $date_to = date('m/d/Y', $row['date_end']);
+//           Debug::dump($row['date_start']);
+//           Debug::dump($row['date_end']);
+//           Debug::dump($date_from);
+//           Debug::dump($date_to);
+//           
+//           
+//           $update = $sql->update();
+//           $update->table('reservation_entity')
+//                  ->set(['date_from' => $date_from,
+//                         'date_to' => $date_to])
+//                  ->where(['id' => $row['id']]);
+//           $statement = $sql->prepareStatementForSqlObject($update);
+//           $statement->execute();
+//       }
+        
+        // Now get the id of inserted row.
+        $dbAdapter = $this->getServiceLocator()->get("Adapter");
+        $sql = new Sql($dbAdapter);
+        $select = $sql->select();
+        $select->from('reservations')
+                ->order(['id DESC']);
+        $select->limit(1);
+        
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+        Debug::dump($results->current());
       
        die('conversion done!');
     }

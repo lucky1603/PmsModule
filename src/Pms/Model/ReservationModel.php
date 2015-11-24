@@ -11,7 +11,6 @@ use Zend\Db\Sql\Sql;
 use Zend\Db\TableGateway\TableGateway;
 use Pms\Model\ReservationEntityModel;
 
-
 /**
  * ReservationModel class.
  */
@@ -127,6 +126,7 @@ class ReservationModel
         }
         
         $data['reservedEntities'] = [];
+        $this->getReservedEntities();
         foreach($this->reservedEntities as $entity)
         {
             $data['reservedEntities'][$entity->internal_id] = $entity->getData();
@@ -196,22 +196,49 @@ class ReservationModel
         if(!isset($this->id))
         {                   
             $dataToUpdate = $this->getData();
-            unset($dataToUpdate['reservedEntities']);
-            \Zend\Debug\Debug::dump($dataToUpdate);
             
-            $insert = $this->sql->insert();
-            $insert->into('reservations')
-                    ->values($dataToUpdate);
-            $statement = $this->sql->prepareStatementForSqlObject($insert);
-            $statement->execute();                            
+            // Unse entity collection, the table doesn't recognize it.
+            unset($dataToUpdate['reservedEntities']);
+            
+            // Set mandatory entry values.
+            $dataToUpdate['created_at'] = date('m/d/Y', time());
+            $dataToUpdate['modified_at'] = date('m/d/Y', time());
+            
+            // Now insert.
+//            $insert = $this->sql->insert();
+//            $insert->into('reservations')
+//                    ->values($dataToUpdate);
+//            $statement = $this->sql->prepareStatementForSqlObject($insert);
+//            $statement->execute();       
+            
+            // Now get the id of inserted row.
+            $table = new TableGateway('reservations', $this->dbAdapter, null, null);
+            $table->insert($dataToUpdate);
+            //$this->id = $table->getLastInsertValue();         
+                        
+            $select = $this->sql->select();
+            $select->from('reservations')
+                    ->order(['id DESC'])
+                    ->limit(1);
+            $statement = $this->sql->prepareStatementForSqlObject($select);
+            $results = $statement->execute();
+            $row = $results->current();
+            $this->id = $row['id'];
+//            \Zend\Debug\Debug::dump("Row is...");
+//            \Zend\Debug\Debug::dump($row);
+//            \Zend\Debug\Debug::dump($this->id);
         }
         else 
         {
-            \Zend\Debug\Debug::dump('id is '.$this->id);
             $dataToUpdate = $this->getData();
-            unset($dataToUpdate['reservedEntities']);
-            \Zend\Debug\Debug::dump($dataToUpdate);
             
+            // Unse entity collection, the table doesn't recognize it.
+            unset($dataToUpdate['reservedEntities']);
+            
+            // Set mandatory entry values.
+            $dataToUpdate['modified_at'] = date('m/d/Y', time());
+            
+            // Now update.
             $update = $this->sql->update();
             $update->table('reservations')
                     ->set($dataToUpdate)
@@ -222,41 +249,60 @@ class ReservationModel
                 
         // Get belonging entities.
         $currentEntities = $this->getReservedEntities();
-        
-        // Get existing reservation entities from the database.
-        $select = $this->sql->select();
-        $select->from(['r' => 'reservation_entity'])
-                ->join(['e' => 'entity'], 'r.entity_id = e.id', ['guid']);
-        $statement = $this->sql->prepareStatementForSqlObject($select);
-        $entities = array();
-        $results = $statement->execute();
-        
-        // Find entries in the database, that don't exist
-        // in the model anymore and mark their id's.
-        $keysToDelete = array();
-        foreach($results as $entity)
+        \Zend\Debug\Debug::dump('currentEntities');
+        foreach($currentEntities as $entity)
         {
-            $id = $entity['id'];
-            if(!array_key_exists($id, $currentEntities))
+            \Zend\Debug\Debug::dump($entity->internal_id);
+        }
+        
+        if(isset($this->id))
+        {
+            // Get existing reservation entities from the database.
+            $select = $this->sql->select();
+            $select->from(['r' => 'reservation_entity'])
+                    ->join(['e' => 'entity'], 'r.entity_id = e.id', ['guid'])
+                    ->where(['reservation_id' => $this->id]);
+            $statement = $this->sql->prepareStatementForSqlObject($select);
+            $entities = array();
+            $results = $statement->execute();
+
+            // Find entries in the database, that don't exist
+            // in the model anymore and mark their id's.
+            $keysToDelete = array();
+            foreach($results as $entity)
             {
-                $keysToDelete[] = $entity['id'];
+                $id = $entity['id'];
+                if(!array_key_exists($id, $currentEntities))
+                {
+                    $keysToDelete[] = $entity['id'];
+                }
+            }
+
+            \Zend\Debug\Debug::dump("Keys to be deleted ... ");
+            \Zend\Debug\Debug::dump($keysToDelete);
+
+            // If there were any, delete them.
+            if(count($keysToDelete) > 0)
+            {
+                $delete = $this->sql->delete();
+                $delete->from('reservation_entity')
+                        ->where->in('id', $keysToDelete);
+                $statement = $this->sql->prepareStatementForSqlObject($delete);
+                $statement->execute();
             }
         }
-               
-        // If there were any, delete them.
-        if(count($keysToDelete) > 0)
-        {
-            $delete = $this->sql->delete();
-            $delete->from('reservation_entity')
-                    ->where(['id' => $keysToDelete]);
-        }
+        
+//        \Zend\Debug\Debug::dump('id is ..');
+//        \Zend\Debug\Debug::dump($some_id);
                         
+
+        \Zend\Debug\Debug::dump($this->id);
         // Now save the entities from the model. 
         if(null != $this->getReservedEntities())
         {
             foreach($this->reservedEntities as $rEntity)
             {
-//                \Zend\Debug\Debug::dump($rEntity);
+                $rEntity->setReservationId($this->id);
                 $rEntity->save();
             }
         }
@@ -265,9 +311,15 @@ class ReservationModel
     /**
      * Deletes the reservation from database.
      */
-    public function delete()
+    public function delete($id)
     {
+        if(!isset($id))
+        {
+            return;
+        }
         
+        $table = new TableGateway('reservations', $this->dbAdapter, null, null);
+        $table->delete(['id' => $id]);
     }
     
     /**
@@ -312,6 +364,10 @@ class ReservationModel
         return $this->getData();
     }
     
+    /**
+     * Calculates new internal id for the reserved entities.
+     * @return type
+     */
     public function getNewInternalId()
     {
         $id = 0;
@@ -322,5 +378,13 @@ class ReservationModel
             $id = $last['internal_id'];
         }
         return ++$id;
+    }
+    
+    /**
+     * Generates reservation id, which will be visible to user.
+     */
+    protected function generateReservationID()
+    {
+        $this->reservation_id = sprintf("%'.010d\n", $broj);
     }
 }

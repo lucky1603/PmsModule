@@ -64,14 +64,16 @@
                 <th>Guest</th>
                 <th>Start</th>
                 <th>End</th>
+                <th>Action</th>
             </tr>
             <?php foreach($entities as $entity):?>
             <tr>
                 <td><?php echo $entity->guid?></td>
                 <td><?php echo $entity->ed_name?></td>
                 <td><?php echo $entity->first_name. ' '.$entity->last_name; ?></td>
-                <td><?php echo date('Y-m-d',$entity->date_start)?></td>
-                <td><?php echo date('Y-m-d', $entity->date_end)?></td>
+                <td><?php echo $entity->date_from?></td>
+                <td><?php echo $entity->date_to?></td>
+                <td><a href="/pms/reservation/entity/<?php echo $entity->internal_id?>">Edit</a> | <a href="/pms/reservation/deleteEntity/<?php echo $entity->internal_id?>">Delete</a>
             </tr>
             <?php endforeach;?>
         </table>    

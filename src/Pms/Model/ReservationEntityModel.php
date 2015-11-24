@@ -158,16 +158,22 @@ class ReservationEntityModel
         {
             $insert = $this->sql->insert();
             $data = $this->getData();
+            
+            // Unset unwanted entries.
             unset($data['internal_id']);
             unset($data['entity_definition_id']);
             unset($data['guid']);
             unset($data['ed_name']);
             unset($data['first_name']);
             unset($data['last_name']);            
+            
+            // Set the mandatory entry values.
             $data['date_start'] = 0;
             $data['date_end'] = 0;
-            Debug::dump('Inserting ...');
-            Debug::dump($data);
+            
+//            Debug::dump('Inserting ...');
+//            Debug::dump($data);
+            
             $insert->into('reservation_entity')
                     ->values($data);
             $statement = $this->sql->prepareStatementForSqlObject($insert);
@@ -176,16 +182,21 @@ class ReservationEntityModel
         else
         {
             $data = $this->getData();
+            
+            // Unset unwanted entries.
             unset($data['internal_id']);
             unset($data['entity_definition_id']);
             unset($data['guid']);
             unset($data['ed_name']);
             unset($data['first_name']);
             unset($data['last_name']);            
+            
+            // Set mandatory entry values.
             $data['date_start'] = 0;
             $data['date_end'] = 0;      
-            Debug::dump("Updating...");
-            Debug::dump($data);
+            
+//            Debug::dump("Updating...");
+//            Debug::dump($data);
             
             $update = $this->sql->update();
             $update->table('reservation_entity')
