@@ -179,6 +179,10 @@ class ReservationController extends AbstractActionController
         ]);
     }
     
+    /**
+     * Process reservation entity changes (add new, edit).
+     * @return Redirect Redirects to 'edit' action.
+     */
     public function processEntityAction()
     {        
         $post = $this->request->getPost();
@@ -237,6 +241,10 @@ class ReservationController extends AbstractActionController
         ]);
     }
     
+    /**
+     * Test action (one only use). Copies the dates from string/int -> timestamp fomatted fields.
+     * TODO: To remove later.
+     */
     public function testAction()
     {
        $dbAdapter = $this->getServiceLocator()->get('Adapter');
