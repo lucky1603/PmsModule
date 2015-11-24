@@ -20,13 +20,16 @@ class ReservationEntityModel
     public $guest_id;
     public $entity_id;
     public $reservation_id;
-    public $date_start;
-    public $date_end;
+    public $date_from;
+    public $date_to;
     public $first_name;
     public $last_name;
     public $ed_code;
     public $ed_name;
     public $guid;
+    public $entity_definition_id;
+    
+    public $internal_id;
     
     protected $sql;
     
@@ -41,6 +44,11 @@ class ReservationEntityModel
         {
             $this->setId($id);
         }
+    }
+    
+    public function setInternalId($id)
+    {
+        $this->internal_id = $id;
     }
     
     /**
@@ -61,39 +69,48 @@ class ReservationEntityModel
         if(isset($data['id']))
         {
             $this->id = $data['id'];
+            $this->internal_id = $this->id;
         }
-        
         $this->guest_id = isset($data['guest_id']) ? $data['guest_id'] : null;
         $this->entity_id = isset($data['entity_id']) ? $data['entity_id'] : null;
         $this->reservation_id = isset($data['reservation_id']) ? $data['reservation_id'] : null;
-        $this->date_start = isset($data['date_start']) ? $data['date_start'] : null;
-        $this->date_end = isset($data['date_end']) ? $data['date_end'] : null;
-        
-        if(isset($data['first_name']))
+                
+        if(isset($data['date_from']))
         {
-            $this->first_name = $data['first_name'];
-        }
-        
-        if(isset($data['last_name']))
+            $this->date_from = $data['date_from'];
+        }                
+        if(isset($data['date_to']))
         {
-            $this->last_name = $data['last_name'];
-        }
-        
-        if(isset($data['ed_code']))
-        {
-            $this->ed_code = $data['ed_code'];
-        }
-        
-        if(isset($data['ed_name']))
-        {
-            $this->ed_name = $data['ed_name'];
-        }
-        
+            $this->date_to = $data['date_to'];
+        }                
+                             
         if(isset($data['guid']))
         {
             $this->guid = $data['guid'];
         }
         
+        $select = $this->sql->select();
+        $select->from(['e' => 'entity'])
+               ->columns(['id', 'guid'])
+               ->join(['ed' => 'entity_definition'], 'e.definition_id=ed.id', ['ed.code' => 'code', 'ed.name' => 'name'])
+               ->where(['e.id' => $this->entity_id]);
+        $statement = $this->sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+        $row = $results->current();
+        $this->entity_definition_id = $row['ed.code'];        
+        $this->guid = $row['guid'];
+        $this->ed_code = $row['ed.code'];
+        $this->ed_name = $row['ed.name'];
+        
+        $select = $this->sql->select();
+        $select->from('clients')
+               ->columns(['first_name','last_name'])
+               ->where(['id' => $this->guest_id]);
+        $statement = $this->sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+        $row = $results->current();
+        $this->first_name = $row['first_name'];
+        $this->last_name = $row['last_name'];        
     }
     
     /**
@@ -102,14 +119,27 @@ class ReservationEntityModel
      */
     public function getData()
     {
-        return [
+        $data = [
             //'id' => $this->id,
+            'internal_id' => $this->internal_id,
             'guest_id' => $this->guest_id,
             'reservation_id' => $this->reservation_id,
             'entity_id' => $this->entity_id,
-            'date_start' => $this->date_start,
-            'date_end' => $this->date_end,
+            'date_from' => $this->date_from,
+            'date_to' => $this->date_to,
+            'entity_definition_id' => $this->entity_definition_id,
+            'guid' => $this->guid,
+            'ed_name' => $this->ed_name,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
         ];
+        
+        if(isset($this->id))
+        {
+            $data['id'] = $this->id;
+        }
+        
+        return $data;
     }
     
     /**
@@ -120,23 +150,47 @@ class ReservationEntityModel
     {
         if(!isset($this->reservation_id) || !isset($this->guest_id))
         {
+            Debug::dump('reservation '.$this->reservation_id.' guest '.$this->guest_id);
             return;
         }
         
-        if(!isset($id))
+        if(!isset($this->id))
         {
             $insert = $this->sql->insert();
+            $data = $this->getData();
+            unset($data['internal_id']);
+            unset($data['entity_definition_id']);
+            unset($data['guid']);
+            unset($data['ed_name']);
+            unset($data['first_name']);
+            unset($data['last_name']);            
+            $data['date_start'] = 0;
+            $data['date_end'] = 0;
+            Debug::dump('Inserting ...');
+            Debug::dump($data);
             $insert->into('reservation_entity')
-                    ->values($this->getData());
+                    ->values($data);
             $statement = $this->sql->prepareStatementForSqlObject($insert);
             $results = $statement->execute();
         }
         else
         {
+            $data = $this->getData();
+            unset($data['internal_id']);
+            unset($data['entity_definition_id']);
+            unset($data['guid']);
+            unset($data['ed_name']);
+            unset($data['first_name']);
+            unset($data['last_name']);            
+            $data['date_start'] = 0;
+            $data['date_end'] = 0;      
+            Debug::dump("Updating...");
+            Debug::dump($data);
+            
             $update = $this->sql->update();
             $update->table('reservation_entity')
-                    ->set($this->getData())
-                    ->where(['id' => $id]);
+                    ->set($data)
+                    ->where(['id' => $this->id]);
             $statement = $this->sql->prepareStatementForSqlObject($update);
             $results = $statement->execute();
         }
@@ -157,5 +211,15 @@ class ReservationEntityModel
                 ->where(['id' => $id]);
         $statement = $this->sql->prepareStatementForSqlObject($delete);
         $results = $statement->execute();        
+    }
+    
+    public function getArrayCopy()
+    {
+        return $this->getData();
+    }
+    
+    public function exchangeArray($data)
+    {
+        $this->setData($data);
     }
 }

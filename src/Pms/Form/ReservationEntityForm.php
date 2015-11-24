@@ -21,29 +21,29 @@ class ReservationEntityForm extends Form
        
        // datum_start
        $this->add([
-           'name' => 'date_start',
+           'name' => 'date_from',
            'attributes' => [
                'type' => 'text',
                'required' => 'required',
-               'id' => 'date_start',
+               'id' => 'date_from',
                'class' => 'reservation-date'
            ],
            'options' => [
-               'label' => "Start",
+               'label' => "From",
            ],
        ]);
        
        // datum_end
        $this->add([
-           'name' => 'date_end',
+           'name' => 'date_to',
            'attributes' => [
                'type' => 'text',
                'required' => 'required',
-               'id' => 'date_end',
+               'id' => 'date_to',
                'class' => 'reservation-date'
            ],
            'options' => [
-               'label' => "End",
+               'label' => "To",
            ],
        ]);
                               

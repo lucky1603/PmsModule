@@ -44,8 +44,11 @@ class AjaxController extends AbstractActionController
      */
     public function getAvailableRoomsAction()
     {
-        $from = (int) strtotime($this->params()->fromQuery('from'));
-        $to = strtotime($this->params()->fromQuery('to'));   
+//        $from = (int) strtotime($this->params()->fromQuery('from'));
+//        $to = strtotime($this->params()->fromQuery('to'));   
+        
+        $from = $this->params()->fromQuery('from');
+        $to = $this->params()->fromQuery('to');           
         $type = $this->params()->fromQuery('type');
 
         $current = date('d.m.Y', time());
@@ -73,13 +76,13 @@ class AjaxController extends AbstractActionController
             ->join(['ed' => 'entity_definition'], 'e.definition_id = ed.id', ['code', 'name']);
         
         $select->where->NEST
-                ->between('re.date_start', $from, $to)
+                ->between('re.date_from', $from, $to)
                 ->OR
-                ->between('re.date_end', $from, $to)
+                ->between('re.date_to', $from, $to)
                 ->OR
                 ->NEST
-                ->lessThan('re.date_start', $from)
-                ->greaterThan('re.date_end', $to)
+                ->lessThan('re.date_from', $from)
+                ->greaterThan('re.date_to', $to)
                 ->UNNEST
                 ->UNNEST;
         

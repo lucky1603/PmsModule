@@ -91,7 +91,19 @@ class ReservationModel
             $row = $result->current();
             $this->status = $row['statustext'];    
         }
-                
+        
+        // set entities
+        if(isset($data['reservedEntities']))
+        {            
+            $this->reservedEntities = array();
+            foreach($data['reservedEntities'] as $entity)
+            {
+                $entityModel = new ReservationEntityModel($this->dbAdapter);
+                $entityModel->setData($entity);
+                $entityModel->setReservationId($this->reservation_id);
+                $this->reservedEntities[$entityModel->internal_id] = $entityModel;
+            }
+        }                
     }
     
     /**
@@ -100,7 +112,7 @@ class ReservationModel
      */
     public function getData()
     {
-        return [
+        $data =  [
             'reservation_id' => $this->reservation_id,
             'status' => $this->status,
             'created_at' => $this->created_at,
@@ -108,6 +120,19 @@ class ReservationModel
             'client_id' => $this->client_id,
             'status_id' => $this->status_id,
         ]; 
+        
+        if(isset($this->id))
+        {
+            $data['id'] = $this->id;
+        }
+        
+        $data['reservedEntities'] = [];
+        foreach($this->reservedEntities as $entity)
+        {
+            $data['reservedEntities'][$entity->internal_id] = $entity->getData();
+        }
+        
+        return $data;
     }
     
     /**
@@ -137,29 +162,29 @@ class ReservationModel
 //                \Zend\Debug\Debug::dump($row);
                 $reModel = new ReservationEntityModel($this->dbAdapter);
                 $reModel->setData($row);
-                $this->reservedEntities[$row['guid']] = $reModel;
+                $this->reservedEntities[$row['id']] = $reModel;
             }
         }
                 
         return $this->reservedEntities;
     }
-    
+        
     /**
      * Adds entity model to the entity collection.
      * @param ReservationEntityModel $reModel
      */
     public function addEntity(ReservationEntityModel $reModel)
     {
-        $this->reservedEntities[$reModel->guid] = $reModel;
+        $this->reservedEntities[$reModel->internal_id] = $reModel;
     }
     
     /**
      * Removes entity model from the collection.
      * @param type $guid
      */
-    public function deleteEntity($guid)
+    public function deleteEntity($id)
     {
-        unset($this->reservedEntities[$guid]);
+        unset($this->reservedEntities[$id]);
     }
     
     /**
@@ -169,18 +194,27 @@ class ReservationModel
     {
         // Save main table.
         if(!isset($this->id))
-        {       
+        {                   
+            $dataToUpdate = $this->getData();
+            unset($dataToUpdate['reservedEntities']);
+            \Zend\Debug\Debug::dump($dataToUpdate);
+            
             $insert = $this->sql->insert();
             $insert->into('reservations')
-                    ->values($this->getData());
-            $statement = $this->sql->prepareStatementForSqlObject($inser);
+                    ->values($dataToUpdate);
+            $statement = $this->sql->prepareStatementForSqlObject($insert);
             $statement->execute();                            
         }
         else 
         {
+            \Zend\Debug\Debug::dump('id is '.$this->id);
+            $dataToUpdate = $this->getData();
+            unset($dataToUpdate['reservedEntities']);
+            \Zend\Debug\Debug::dump($dataToUpdate);
+            
             $update = $this->sql->update();
             $update->table('reservations')
-                    ->set($this->getData())
+                    ->set($dataToUpdate)
                     ->where(['id' => $this->id]);
             $statement = $this->sql->prepareStatementForSqlObject($update);
             $statement->execute();        
@@ -202,8 +236,8 @@ class ReservationModel
         $keysToDelete = array();
         foreach($results as $entity)
         {
-            $guid = $entity['guid'];
-            if(!array_key_exists($guid, $currentEntities))
+            $id = $entity['id'];
+            if(!array_key_exists($id, $currentEntities))
             {
                 $keysToDelete[] = $entity['id'];
             }
@@ -222,6 +256,7 @@ class ReservationModel
         {
             foreach($this->reservedEntities as $rEntity)
             {
+//                \Zend\Debug\Debug::dump($rEntity);
                 $rEntity->save();
             }
         }
@@ -275,5 +310,17 @@ class ReservationModel
     public function getArrayCopy()
     {
         return $this->getData();
+    }
+    
+    public function getNewInternalId()
+    {
+        $id = 0;
+        if(isset($this->reservedEntities))
+        {
+            $count = count($this->reservedEntities);
+            $last = $this->reservedEntities[$count -1];
+            $id = $last['internal_id'];
+        }
+        return ++$id;
     }
 }
