@@ -18,11 +18,11 @@ $(document).ready(function() {
     $('.reservation-date').datepicker();
     
     $('#entity_definition_id').on('change', function(evt) {
-        var something = $('#entity_definition_id option:selected').val();
-        var date_from = $('#date_start').val();
-        var date_to = $('#date_end').val();
+        var code = $('#entity_definition_id option:selected').val();
+        var date_from = $('#date_from').val();
+        var date_to = $('#date_to').val();
         
-        $.get('/pms/ajax/getAvailableRooms?from='+date_from+'&to='+date_to+'&type='+something, function(data) {
+        $.get('/pms/ajax/getAvailableRooms?from='+date_from+'&to='+date_to+'&type='+code, function(data) {
             var what = JSON.parse(data);
 //            dump(what);
 
@@ -30,7 +30,6 @@ $(document).ready(function() {
             for(var i in what)
             {
                 $('#entity_id').append($("<option></option>").attr('value', i).text(what[i]));
-                //alert(i + ' = ' + what[i]);
             }
         });        
     });
