@@ -115,13 +115,13 @@ class AttributeModel
         {
             $this->value = $data['value'];
         }        
-        if(!empty($data['unique']))
+        if(isset($data['unique']))
         {
             $this->unique = $data['unique'];
         }
-        if(!empty($data['$nullable']))
+        if(isset($data['nullable']))
         {
-            $this->$nullable = $data['$nullable'];
+            $this->nullable = $data['nullable'];
         }
         if(!empty($data['option_values']))
         {
@@ -197,7 +197,7 @@ class AttributeModel
         if(empty($this->id))
         {            
             $insert = $this->sql->insert();
-            $insert->into($table)
+            $insert->into('attribute')
                    ->values($dataToInsert);
             $statement = $this->sql->prepareStatementForSqlObject($insert);
             $statement->execute();
@@ -215,26 +215,50 @@ class AttributeModel
         else 
         {
             $update = $this->sql->update();
-            $update->table('entity_type')
+            \Zend\Debug\Debug::dump($dataToInsert);
+            $update->table('attribute')
                     ->set($dataToInsert)
                     ->where(['id' => $this->id]);
             $statement = $this->sql->prepareStatementForSqlObject($update);
             $statement->execute();
         }
         
-        // Find existing option values.
-//        $select = $this->sql->select();
-//        $select->from('option_values')
-//                ->where(['attribute_id' => $this->id]);
-//        $statement = $this->sql->prepareStatementForSqlObject($select);
-//        $resultset = $statement->execute();
-//        $options = array();
-//        foreach($resultset as $row)
-//        {
-//            $options[$row['value']] = $row;
-//        }
-//        
-        
+        if(!empty($this->optionValues))
+        {
+            // Find existing option values.
+            $select = $this->sql->select();
+            $select->from('attribute_option_values')
+                    ->where(['attribute_id' => $this->id]);
+            $statement = $this->sql->prepareStatementForSqlObject($select);
+            $resultset = $statement->execute();
+            $options = array();
+            foreach($resultset as $row)
+            {
+                $options[$row['value']] = $row;
+            }
+
+            foreach($this->optionValues as $optionValue)
+            {
+                if(isset($optionValue['id']))
+                {
+                    // update
+                    $update = $this->sql->update();
+                    $update->table('attribute_option_values')
+                        ->set($optionValue)
+                        ->where(['id' => $optionValue['id']]);
+                    $statement = $this->sql->prepareStatementForSqlObject($update);
+                }      
+                else 
+                {
+                    // insert
+                    $insert = $this->sql->insert();
+                    $insert->into('attribute_option_values')
+                            ->values($optionValue);
+                    $statement = $this->sql->prepareStatementForSqlObject($insert);
+                }
+                $statement->execute();
+            }
+        }                
     }
         
     /**

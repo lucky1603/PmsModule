@@ -154,6 +154,7 @@ class AttributeManagerController extends AbstractActionController
     
     public function testAction()
     {
+        // List existing...
         $dbAdapter = $this->getServiceLocator()->get('Adapter');
         $model = new AttributeModel($dbAdapter);
         $model->setId(28);
@@ -161,12 +162,22 @@ class AttributeManagerController extends AbstractActionController
         $model->optionValues[3] = [
             'attribute_id' => 28, 
             'value' => 3, 
-            'text' => 'Svaciji'
+            'text' => 'Svaciji',
         ];
         
-        $data = $model->getData();
+         $data = $model->getData();
         \Zend\Debug\Debug::dump($data);
-       
+//        die();
+        
+        // Try to save it.
+        $model->save();
+        die();
+                       
+        // Now delete option and see what happens.
+        unset($model->optionValues[1]);
+        $model->optionValues[2] ['value'] = 1;
+        $model->save();
+               
         die();
     }
 }
