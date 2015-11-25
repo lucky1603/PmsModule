@@ -71,6 +71,11 @@ class ReservationEntityModel
             $this->id = $data['id'];
             $this->internal_id = $this->id;
         }
+        else if(isset($data['internal_id']))
+        {
+            $this->internal_id = $data['internal_id'];
+        }
+                        
         $this->guest_id = isset($data['guest_id']) ? $data['guest_id'] : null;
         $this->entity_id = isset($data['entity_id']) ? $data['entity_id'] : null;
         $this->reservation_id = isset($data['reservation_id']) ? $data['reservation_id'] : null;

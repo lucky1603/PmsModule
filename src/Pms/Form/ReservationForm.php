@@ -81,7 +81,8 @@ class ReservationForm extends Form
             'attributes' => [
                 'type' => 'Submit', 
                 'value' => 'Save',
-                'id' => 'submitbutton'
+                'id' => 'submitbutton',
+                'class' => 'ui-button',
             ],
         ]);
     }

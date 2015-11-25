@@ -139,7 +139,7 @@ class ReservationController extends AbstractActionController
                 $model->save();
             } 
         }
-        die();
+//        die();
         return $this->redirect()->toRoute('pms/reservation');
     }
     
@@ -222,9 +222,9 @@ class ReservationController extends AbstractActionController
             $form->setData($post);
             if($form->isValid())
             {
-                $entity = $form->getData();
+                $entity->setData($post);
                 $entity->setReservationId($reservationModel->reservation_id);
-                $reservationModel->reservedEntities[$id] = $form->getData();
+                $reservationModel->reservedEntities[$id] = $entity;
             }
             else 
             {
@@ -242,7 +242,7 @@ class ReservationController extends AbstractActionController
                 $entity->setData($post);
                 $entity->setReservationId($reservationModel->reservation_id);
                 // create internal id....
-                $entity->internal_id = $reservationModel->getNewInternalId();
+//                $entity->internal_id = $reservationModel->getNewInternalId();
                 $reservationModel->addEntity($entity);                
             }
             else 
@@ -253,8 +253,6 @@ class ReservationController extends AbstractActionController
         }                     
         
         $reservationModelData = $reservationModel->getData();      
-//        Debug::dump($reservationModelData);
-//        die();
         $sessionModels->reservationModel = $reservationModelData;      
         $rid = (int) $reservationModel->reservation_id;        
 
@@ -301,6 +299,21 @@ class ReservationController extends AbstractActionController
                     'action' => 'edit',
                 ]);
             }                        
+        }
+        
+        return $this->redirect()->toRoute('pms/reservation');
+    }
+    
+    /**
+     * Resets the session variable.
+     * @return ViewModel
+     */
+    public function resetAction()
+    {
+        $sessionModels = new Container('models');
+        if(!empty($sessionModels->reservationModel))
+        {
+            unset($sessionModels->reservationModel);
         }
         
         return $this->redirect()->toRoute('pms/reservation');

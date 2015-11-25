@@ -32,6 +32,7 @@ class ReservationModel
             
     protected $dbAdapter;
     protected $sql;
+    protected $max_entity_id = 0;
     
     /**
      * Constructor.
@@ -94,6 +95,7 @@ class ReservationModel
         // set entities
         if(isset($data['reservedEntities']))
         {            
+            $this->max_entity_id = 0;
             $this->reservedEntities = array();
             foreach($data['reservedEntities'] as $entity)
             {
@@ -101,6 +103,10 @@ class ReservationModel
                 $entityModel->setData($entity);
                 $entityModel->setReservationId($this->reservation_id);
                 $this->reservedEntities[$entityModel->internal_id] = $entityModel;
+                if($entityModel->internal_id > $this->max_entity_id)
+                {
+                    $this->max_entity_id = $entityModel->internal_id;
+                }
             }
         }                
     }
@@ -163,6 +169,10 @@ class ReservationModel
                 $reModel = new ReservationEntityModel($this->dbAdapter);
                 $reModel->setData($row);
                 $this->reservedEntities[$row['id']] = $reModel;
+                if($reModel->internal_id > $this->max_entity_id)
+                {
+                    $this->max_entity_id = $reModel->internal_id;
+                }
             }
         }
                 
@@ -175,7 +185,14 @@ class ReservationModel
      */
     public function addEntity(ReservationEntityModel $reModel)
     {
+        if(empty($reModel->internal_id))
+        {
+            $this->max_entity_id++;
+            $reModel->internal_id = $this->max_entity_id;
+        }
+        
         $this->reservedEntities[$reModel->internal_id] = $reModel;
+        
     }
     
     /**
@@ -369,15 +386,9 @@ class ReservationModel
      * @return type
      */
     public function getNewInternalId()
-    {
-        $id = 0;
-        if(isset($this->reservedEntities))
-        {
-            $count = count($this->reservedEntities);
-            $last = $this->reservedEntities[$count -1];
-            $id = $last['internal_id'];
-        }
-        return ++$id;
+    {   
+        $retVal = $this->max_entity_id + 1;
+        return $retVal;
     }
     
     /**
