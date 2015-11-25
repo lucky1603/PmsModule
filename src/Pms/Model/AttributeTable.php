@@ -43,6 +43,8 @@ class AttributeTable
             'type' => $attribute->type,
             'sort_order' => $attribute->sort_order,
             'unit' => $attribute->unit,
+            'unique' => $attribute->unique,
+            'nullable' => $attribute->nullable,
         ];
                 
         $id = (int)$attribute->id;

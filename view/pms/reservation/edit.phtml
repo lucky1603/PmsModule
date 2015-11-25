@@ -1,5 +1,8 @@
 <section class="reservation-edit">
     <?php 
+        $this->headLink()->setStylesheet('/js/jquery-ui/jquery-ui.css');
+        $this->headScript()->appendFile('/js/jquery-2.1.4.js');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');
         $this->headScript()->appendFile('/js/helper.js');   
         $form = $this->form;
         $id = $this->id;
@@ -79,7 +82,7 @@
         </table>    
     <?php endif;?>    
     <p><a href="/pms/reservation/entity">Add new entity</a><br>
-    <?php echo $this->formElement($form->get('submit'))?>
+    <span><?php echo $this->formElement($form->get('submit'))?><a href="/pms/reservation/reset" class='ui-button'>Back</a></span>
     <?php echo $this->form()->closeTag()?>        
 </section>
 

@@ -20,6 +20,8 @@ class Attribute
     public $sort_order;
     public $unit;
     public $value;
+    public $unique;
+    public $nullable;
     
     /**
      * Feeds attribute params with externla values.
@@ -37,6 +39,16 @@ class Attribute
         $this->type = (isset($data['type'])) ? $data['type'] : null;
         $this->sort_order = (isset($data['sort_order'])) ? $data['sort_order'] : null;
         $this->unit = (isset($data['unit'])) ? $data['unit'] : null;
+        
+        if(!empty($data['nullable']))
+        {
+            $this->nullable = $data['nullable'];
+        }
+        
+        if(!empty($data['unique']))
+        {
+            $this->nullable = $data['unique'];
+        }
     }
     
     /**
@@ -52,6 +64,8 @@ class Attribute
             'type' => $this->type,
             'sort_order' => $this->sort_order,
             'unit' => $this->unit,
+            'unique' => $this->nullable,
+            'nullable' => $this->nullable,
         ];
     }
 }

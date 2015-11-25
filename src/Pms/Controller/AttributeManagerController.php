@@ -7,6 +7,7 @@
 namespace Pms\Controller;
 
 use Pms\Model\Attribute;
+use Pms\Model\AttributeModel;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Form\Form;
@@ -149,6 +150,24 @@ class AttributeManagerController extends AbstractActionController
             'id' => $id,
         ]);
         return $viewModel;
+    }
+    
+    public function testAction()
+    {
+        $dbAdapter = $this->getServiceLocator()->get('Adapter');
+        $model = new AttributeModel($dbAdapter);
+        $model->setId(28);
+        $model->setEntityTypeId(3);                
+        $model->optionValues[3] = [
+            'attribute_id' => 28, 
+            'value' => 3, 
+            'text' => 'Svaciji'
+        ];
+        
+        $data = $model->getData();
+        \Zend\Debug\Debug::dump($data);
+       
+        die();
     }
 }
 
