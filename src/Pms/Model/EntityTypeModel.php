@@ -42,7 +42,7 @@ class EntityTypeModel
             {
                 $attribute = new Attribute();
                 $attribute->setData($attributeData);
-                $this->attributes[]
+                //..... continue here!
             }
         }
     }
