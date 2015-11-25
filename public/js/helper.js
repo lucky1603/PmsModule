@@ -1,3 +1,7 @@
+$(function(){
+    $('a.ui_button').button();
+});
+
 /**
  * Called when the document load is completed.
  * @param {type} param
@@ -15,8 +19,9 @@ $(document).ready(function() {
         fill('#client_id');
     }); 
     
+    $('a.ui-button').button();
     $('.reservation-date').datepicker();
-    
+        
     $('#entity_definition_id').on('change', function(evt) {
         var code = $('#entity_definition_id option:selected').val();
         var date_from = $('#date_from').val();
