@@ -185,11 +185,12 @@ class AttributeModel
     }
     
     /**
-     * save
+     * Save the attribute and option values to the database.
      */
     public function save()
     {
         $dataToInsert = $this->getData();
+        unset($dataToInsert['id']);
         unset($dataToInsert['option_values']);
         unset($dataToInsert['internal_id']);
         unset($dataToInsert['entity_type_id']);
@@ -204,7 +205,7 @@ class AttributeModel
             
             // Find id.
             $select = $this->sql->select();
-            $select->from('entity_type')
+            $select->from('attribute')
                     ->order(['id DESC'])
                     ->limit(1);
             $statement = $this->sql->prepareStatementForSqlObject($select);
@@ -215,7 +216,6 @@ class AttributeModel
         else 
         {
             $update = $this->sql->update();
-            \Zend\Debug\Debug::dump($dataToInsert);
             $update->table('attribute')
                     ->set($dataToInsert)
                     ->where(['id' => $this->id]);
@@ -223,6 +223,7 @@ class AttributeModel
             $statement->execute();
         }
         
+        // Update option values, if any.
         if(!empty($this->optionValues))
         {
             // Find existing option values.
@@ -232,16 +233,32 @@ class AttributeModel
             $statement = $this->sql->prepareStatementForSqlObject($select);
             $resultset = $statement->execute();
             $options = array();
+            $dkeys = array();
             foreach($resultset as $row)
             {
                 $options[$row['value']] = $row;
+                if(!array_key_exists($row['value'], $this->optionValues))
+                {
+                    $dkeys[] = $row['id'];
+                }
             }
-
+                       
+            if(count($dkeys))
+            {
+                // Find the ones that don't exist in the collection and delete them.
+               $delete = $this->sql->delete();
+               $delete->from('attribute_option_values')
+                       ->where->in('id', $dkeys);
+               $statement = $this->sql->prepareStatementForSqlObject($delete);
+               $statement->execute();   
+            }
+            
             foreach($this->optionValues as $optionValue)
             {
                 if(isset($optionValue['id']))
                 {
                     // update
+                    \Zend\Debug\Debug::dump('updates...');
                     $update = $this->sql->update();
                     $update->table('attribute_option_values')
                         ->set($optionValue)
@@ -257,7 +274,20 @@ class AttributeModel
                     $statement = $this->sql->prepareStatementForSqlObject($insert);
                 }
                 $statement->execute();
-            }
+                if(empty($optionValue['id']))
+                {
+                    // Find existing option values.
+                    $select = $this->sql->select();
+                    $select->from('attribute_option_values')
+                            ->order('id DESC')
+                            ->limit(1);
+                    $statement = $this->sql->prepareStatementForSqlObject($select);
+                    $resultset = $statement->execute();
+                    $row = $resultset->current();
+                    $this->optionValues[$optionValue['value']]['id'] = $row['id'];
+                }
+            }            
+
         }                
     }
         

@@ -154,30 +154,52 @@ class AttributeManagerController extends AbstractActionController
     
     public function testAction()
     {
-        // List existing...
         $dbAdapter = $this->getServiceLocator()->get('Adapter');
-        $model = new AttributeModel($dbAdapter);
-        $model->setId(28);
-        $model->setEntityTypeId(3);                
-        $model->optionValues[3] = [
-            'attribute_id' => 28, 
-            'value' => 3, 
-            'text' => 'Svaciji',
-        ];
+        $type = $this->params()->fromQuery('type');
+        if($type == 'add')
+        {
+            //        // List existing...
+            
+            $attributeModel = new AttributeModel($dbAdapter);
+            $attributeModel->setId(28);
+
+            $adapter = $this->getServiceLocator()->get('Adapter');
+            $model = new \Pms\Model\EntityTypeModel($adapter);   
+            $model->setId(6);
+            //$model->setId(1);
+    //        \Zend\Debug\Debug::dump($model->getData());
+//            $model->setData([
+//                'name' => 'Jedrilica',
+//                'description' => 'Jedrilica za iznajmljivanje',
+//            ]);
+            $model->addAttribute($attributeModel);
+
+//            $attModel2 = new AttributeModel($adapter);
+//            $attModel2->setData([
+//                'code' => 'mytest',
+//                'label' => "My own test",
+//                'type' => 'double',
+//                'sort_order' => 1,
+//                'unique' => false,
+//                'nullable' => true,
+//            ]);
+//            $model->addAttribute($attModel2);
+            \Zend\Debug\Debug::dump($model->getData());      
+
+            $model->save();        
+            die();
+        }
+        else if ($type == 'delete')
+        {
+            $model = new \Pms\Model\EntityTypeModel($dbAdapter);       
+            $model->setId(14);
+            \Zend\Debug\Debug::dump($model->getData());
+            $model->removeAttribute(28);
+            \Zend\Debug\Debug::dump($model->getData());
+            $model->save();
+            die();
+        }
         
-         $data = $model->getData();
-        \Zend\Debug\Debug::dump($data);
-//        die();
-        
-        // Try to save it.
-        $model->save();
-        die();
-                       
-        // Now delete option and see what happens.
-        unset($model->optionValues[1]);
-        $model->optionValues[2] ['value'] = 1;
-        $model->save();
-               
         die();
     }
 }
