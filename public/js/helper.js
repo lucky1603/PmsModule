@@ -1,7 +1,3 @@
-$(function(){
-    $('a.ui_button').button();
-});
-
 /**
  * Called when the document load is completed.
  * @param {type} param
