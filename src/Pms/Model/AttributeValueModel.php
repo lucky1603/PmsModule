@@ -13,13 +13,13 @@ class AttributeValueModel
     public $type;
     public $sort_order;
     public $value;
+    public $optionValues;
    
     protected $dbAdapter;
     protected $tableName;
     protected $value_id;
     protected $entity_definition_id;
     protected $sql;
-    protected $dirty = false;
     
     public function __construct(Adapter $adapter, $entityTableName='entity_definition') {
         $this->dbAdapter = $adapter;
@@ -30,6 +30,15 @@ class AttributeValueModel
     public function setEntityDefinitionId($id)
     {
         $this->entity_definition_id = $id;
+    }
+    
+    /**
+     * Initialize from attribute model.
+     * @param \Pms\Model\AttributeModel $attributeModel
+     */
+    public function from(AttributeModel $attributeModel)
+    {
+        $this->setData($attributeModel->getData());
     }
     
     public function setAttributeId($id)
@@ -57,8 +66,6 @@ class AttributeValueModel
     
     public function setData($data)
     {
-//        \Zend\Debug\Debug::dump('AttrModel:SetData');
-//        \Zend\Debug\Debug::dump($data);
         if(isset($data['attribute_id']))
         {
             $this->id = $data['attribute_id'];
@@ -78,11 +85,15 @@ class AttributeValueModel
         {
            $this->value = $data['value'];
         }
+        if(isset($data['option_values']))
+        {
+            $this->optionValues = $data['option_values'];
+        }
     }
     
     public function getData()
     {
-        return [
+        $data = [
             'id' => $this->id,
             'label' => $this->label,
             'code' => $this->code,
@@ -90,6 +101,12 @@ class AttributeValueModel
             'sort_order' => $this->sort_order,        
             'value' => $this->value,
         ];
+        
+        if(isset($this->optionValues))
+        {
+            $data['option_values'] = $this->optionValues;
+        }
+        return $data;
     }
     
     public function getValue()
@@ -116,7 +133,6 @@ class AttributeValueModel
     public function setValue($value)
     {
         $this->value = $value;
-        $this->dirty = true;
     }
     
     public function getCollection()
@@ -124,34 +140,34 @@ class AttributeValueModel
         return $this->rows;
     }
     
-    public function getAttributes($id, $datatype)
-    {
-        $sql = new Sql($this->dbAdapter);
-        $select = $sql->select();
-        $select->from(['u' => $this->tableName.'_value_'.$datatype])
-                ->columns(['id' => 'value_id', 'entity_definition_id', 'value'])
-                ->join([
-                            'a' => 'attribute'
-                        ], 
-                        'u.attribute_id = a.id', 
-                        [
-                            'code',
-                            'label',
-                            'type',
-                            'sort_order',
-                            'unit',
-                        ]
-                )
-                ->where(['entity_definition_id' => $id]);
-             
-        $statement = $sql->prepareStatementForSqlObject($select);
-        $results = $statement->execute();        
-        $rows = array();
-        do {
-            $rows[] = $results->current();
-        } while($results->next());        
-        return $rows;
-    }
+//    public function getAttributes($id, $datatype)
+//    {
+//        $sql = new Sql($this->dbAdapter);
+//        $select = $sql->select();
+//        $select->from(['u' => $this->tableName.'_value_'.$datatype])
+//                ->columns(['id' => 'value_id', 'entity_definition_id', 'value'])
+//                ->join([
+//                            'a' => 'attribute'
+//                        ], 
+//                        'u.attribute_id = a.id', 
+//                        [
+//                            'code',
+//                            'label',
+//                            'type',
+//                            'sort_order',
+//                            'unit',
+//                        ]
+//                )
+//                ->where(['entity_definition_id' => $id]);
+//             
+//        $statement = $sql->prepareStatementForSqlObject($select);
+//        $results = $statement->execute();        
+//        $rows = array();
+//        do {
+//            $rows[] = $results->current();
+//        } while($results->next());        
+//        return $rows;
+//    }
     
     public function save()
     {
@@ -186,6 +202,13 @@ class AttributeValueModel
                     ]);
             $statement = $this->sql->prepareStatementForSqlObject($insert);
             $results = $statement->execute();
+            $select = $this->sql->select();
+            $select->from($this->tableName.'_value_'.$this->type)
+                   ->order('id DESC')
+                   ->limit(1);
+            $statement = $this->sql->prepareStatementForSqlObject($select);
+            $results = $statement->execute();
+            $this->value_id = $results->current()['id'];
         }
     }
     

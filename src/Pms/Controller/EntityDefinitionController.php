@@ -54,6 +54,11 @@ class EntityDefinitionController extends AbstractActionController
                 elseif ($attribute->type == 'timestamp') {
                     $attElement = new \Zend\Form\Element\DateTime($attribute->code);
                 }
+                elseif ($attribute->type == 'select')
+                {
+                    $attElement = new \Zend\Form\Element\Select($attribute->code);
+                    $attElement->setValueOptions($attribute->optionValues);
+                }
                 else {
                     $attElement = new \Zend\Form\Element\Text($attribute->code);
                 }
@@ -104,6 +109,11 @@ class EntityDefinitionController extends AbstractActionController
                 }
                 elseif ($attribute->type == 'timestamp') {
                     $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+                }
+                elseif ($attribute->type == 'select')
+                {
+                    $attElement = new \Zend\Form\Element\Select($attribute->code);
+                    $attElement->setValueOptions($attribute->optionValues);
                 }
                 else {
                     $attElement = new \Zend\Form\Element\Text($attribute->code);
@@ -213,6 +223,20 @@ class EntityDefinitionController extends AbstractActionController
             'id' => $id,
             'attributes' => $attributes,
         ]);
+    }
+    
+    public function testAction()
+    {        
+        $edModel = $this->getServiceLocator()->get('EntityDefinitionModel');
+        $edModel->setData([
+            'code' => "TEST",
+            'name' => "Test objekate",
+            'description' => "opis testa",            
+        ]);
+        $edModel->setEntityType(14);
+        Debug::dump($edModel->getData());
+        $edModel->save();
+        die();
     }
 }
 

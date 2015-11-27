@@ -40,6 +40,30 @@ class EntityDefinitionModel
         }
     }
     
+    public function setEntityType($entity_type_id)
+    {
+        // Check the entity_type table.
+        $etTable = new \Zend\Db\TableGateway\TableGateway('entity_type', $this->dbAdapter);
+        $resultset = $etTable->select(['id' => $entity_type_id]);
+        if($resultset->count() == 0)
+        {
+            return;
+        }
+        $etModel = new EntityTypeModel($this->dbAdapter);
+        $etModel->setId($entity_type_id);
+        $attributes = $etModel->attributes;
+        $this->attributes = array();
+        foreach($attributes as $attribute)
+        {
+            $avModel = new AttributeValueModel($this->dbAdapter);
+            //$avModel->setData($attribute->getData());
+            $avModel->from($attribute);
+            $avModel->setEntityDefinitionId($this->id);
+            $this->attributes[$attribute->code] = $avModel;
+        }
+        $this->entity_type_id = $entity_type_id;                        
+    }
+    
     /**
      * Binds the entity definition model to the given id.
      * @param type $id
@@ -77,14 +101,23 @@ class EntityDefinitionModel
      */
     public function getData()
     {
-        return [
+        $data = [
             'id' => $this->id,
             'name' => $this->name,
             'code' => $this->code,
             'description' => $this->description,       
             'entity_type_id' => $this->entity_type_id,
-            'attributes' => $this->getAttributes(),
         ];
+        
+        if(isset($this->attributes))
+        {
+            $data['attributes'] = array();
+            foreach($this->attributes as $attribute)
+            {
+                $data['attributes'][$attribute->code] = $attribute->getData();
+            }
+        }
+        return $data;
     }
     
     /**
@@ -143,7 +176,8 @@ class EntityDefinitionModel
             'integer',
             'text',
             'timestamp',
-            'boolean',            
+            'boolean',    
+            'select',
         ];
         
         foreach($types as $type)
@@ -164,6 +198,19 @@ class EntityDefinitionModel
                     $attribute = new AttributeValueModel($this->dbAdapter);
                     $attribute->setEntityDefinitionId($this->id);
                     $attribute->setData($row);
+                    if($attribute->type == 'select')
+                    {
+                        $attribute->optionValues = array();
+                        $optionsTable = new \Zend\Db\TableGateway\TableGateway('attribute_option_values', $this->dbAdapter);
+                        $select = $this->sql->select();
+                        $select->columns(['value', 'text'])
+                               ->where(['attribute_id' => $attribute->id]);
+                        $options = $optionsTable->select($select);
+                        foreach($options as $option)
+                        {
+                            $attribute->optionValues[$option['value']] = $option['text'];
+                        }
+                    }
                     $this->attributes[$attribute->code] = $attribute;
                 } while ($results->next());     
             }                                
