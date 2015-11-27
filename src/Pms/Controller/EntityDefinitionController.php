@@ -139,7 +139,9 @@ class EntityDefinitionController extends AbstractActionController
             $form->bind($entityDefinitionModel);
             $form->setData($post);
             if($form->isValid())
-            {                
+            {          
+                Debug::dump($entityDefinitionModel->getData());
+                die();
                 $entityDefinitionModel->save();
             }                        
         }
@@ -151,8 +153,76 @@ class EntityDefinitionController extends AbstractActionController
      * Adds the new type.
      */
     public function newAction()
+    {        
+        //$this->redirect()->toRoute('pms/entity-definition', ['action' => 'edit']);
+        $dbAdapter = $this->getServiceLocator()->get('Adapter');
+        $table = new \Zend\Db\TableGateway\TableGateway('entity_type', $dbAdapter);
+        $entity_types = $table->select();
+        return new ViewModel([
+            'entity_types' => $entity_types,
+        ]);
+    }
+    
+    /**
+     * Processes choice of the entity type in order to set up new entity definition.
+     * @return ViewModel
+     */
+    public function processNewAction()
     {
-        $this->redirect()->toRoute('pms/entity-definition', ['action' => 'edit']);
+        $id = $this->params()->fromRoute('id');
+        $dbAdapter = $this->getServiceLocator()->get('Adapter');
+        $model = $this->getServiceLocator()->get('EntityDefinitionModel');
+        $model->setEntityType($id);
+        
+        $form = $this->getServiceLocator()->get('EntityDefinitionForm');
+        $form->bind($model);      
+        $attributes = $model->attributes;
+        if(isset($attributes))
+        {
+            foreach($attributes as $attribute)
+            {                
+                if($attribute->type == 'boolean')
+                {
+                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+                }
+                elseif ($attribute->type == 'text') {
+                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+                    $attElement->setAttribute('COLS', 40);
+                    $attElement->setAttribute('ROWS', 4);
+                }
+                elseif ($attribute->type == 'timestamp') {
+                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+                }
+                elseif ($attribute->type == 'select')
+                {
+                    $attElement = new \Zend\Form\Element\Select($attribute->code);
+                    $attElement->setValueOptions($attribute->optionValues);
+                }
+                else {
+                    $attElement = new \Zend\Form\Element\Text($attribute->code);
+                }
+
+                $attElement->setLabel($attribute->label);
+                $attElement->setValue($attribute->getValue());
+                $form->add($attElement);
+            }  
+            
+            $viewModel =  new ViewModel([
+                'form' => $form,
+                'model' => $model,
+                'attributes' => $attributes,
+            ]);
+            $viewModel->setTemplate('/pms/entity-definition/edit');
+            return $viewModel;
+        }
+        
+        $viewModel =  new ViewModel([
+            'form' => $form,
+            'model' => $model,
+            'attributes' => array(),
+        ]);
+        $viewModel->setTemplate('/pms/entity-definition/edit');              
+        return $viewModel;
     }
     
     /**

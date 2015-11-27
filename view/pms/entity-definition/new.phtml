@@ -1,0 +1,11 @@
+<section class='entity-definition-new'>
+    <?php 
+        $entity_types = $this->entity_types;
+    ?>
+    <ul>
+        <?php foreach($entity_types as $entity_type):?>
+            <li><a href='/pms/entity-definition/processNew/<?php echo $entity_type->id?>'><?php echo $entity_type->name?></a></li>
+        <?php endforeach;?>
+    </ul>
+</section>
+
