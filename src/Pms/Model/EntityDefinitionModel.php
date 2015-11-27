@@ -25,6 +25,7 @@ class EntityDefinitionModel
     protected $sql;
     protected $dbAdapter;
     protected $attributesToDelete = array();
+    protected $oldAttributes;
     
     /**
      * Constructor.
@@ -52,7 +53,15 @@ class EntityDefinitionModel
         $etModel = new EntityTypeModel($this->dbAdapter);
         $etModel->setId($entity_type_id);
         $attributes = $etModel->attributes;
-        $this->attributes = array();
+        
+        // Delete old attributes.
+        // Deletion takes place only the first time, because only 
+        // then the attributes have the values from the table. 
+        if(isset($this->attributes) && empty($this->oldAttributes))
+        {
+            $this->oldAttributes = $this->attributes;            
+        }
+        $this->attributes = array();        
         foreach($attributes as $attribute)
         {
             $avModel = new AttributeValueModel($this->dbAdapter);
@@ -196,7 +205,7 @@ class EntityDefinitionModel
                 {
                     $row = $results->current();
                     $attribute = new AttributeValueModel($this->dbAdapter);
-                    $attribute->setEntityDefinitionId($this->id);
+                    $attribute->setEntityDefinitionId($this->id);                    
                     $attribute->setData($row);
                     if($attribute->type == 'select')
                     {
@@ -211,6 +220,7 @@ class EntityDefinitionModel
                             $attribute->optionValues[$option['value']] = $option['text'];
                         }
                     }
+                    
                     $this->attributes[$attribute->code] = $attribute;
                 } while ($results->next());     
             }                                
@@ -257,11 +267,19 @@ class EntityDefinitionModel
                     ]);
             $statement = $this->sql->prepareStatementForSqlObject($insert);
             $statement->execute();
+            $select = $this->sql->select();
+            $select->from('entity_definition')
+                   ->order('id DESC')
+                   ->limit(1);
+            $statement = $this->sql->prepareStatementForSqlObject($select);
+            $results = $statement->execute();
+            $this->id = $results->current()['id'];
             
             if(isset($this->attributes))
             {
                 foreach($this->attributes as $attribute)
                 {
+                    $attribute->setEntityDefinitionId($this->id);
                     $attribute->save();
                 }
             }
@@ -278,6 +296,19 @@ class EntityDefinitionModel
             }
             
             $this->attributesToDelete = array();            
+        }
+        
+        // Delete invalid entries.
+        if(isset($this->oldAttributes))
+        {
+            foreach($this->oldAttributes as $oldAttribute)
+            {
+                $key = $oldAttribute->code;
+                if(!array_key_exists($key, $this->attributes))
+                {
+                    $oldAttribute->delete();
+                }
+            }
         }
     }
     

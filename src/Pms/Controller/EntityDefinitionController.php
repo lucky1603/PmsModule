@@ -227,15 +227,27 @@ class EntityDefinitionController extends AbstractActionController
     
     public function testAction()
     {        
-        $edModel = $this->getServiceLocator()->get('EntityDefinitionModel');
-        $edModel->setData([
-            'code' => "TEST",
-            'name' => "Test objekate",
-            'description' => "opis testa",            
-        ]);
-        $edModel->setEntityType(14);
-        Debug::dump($edModel->getData());
-        $edModel->save();
+        $type = $this->params()->fromQuery('type');
+        if($type == 'new')
+        {
+            $edModel = $this->getServiceLocator()->get('EntityDefinitionModel');
+            $edModel->setData([
+                'code' => "TEST2",
+                'name' => "Drugi Test objekate",
+                'description' => "opis testa",            
+            ]);
+            $edModel->setEntityType(14);
+            Debug::dump($edModel->getData());
+            $edModel->save();    
+        }
+        
+        if($type == 'preview')
+        {
+            $edModel = $this->getServiceLocator()->get('EntityDefinitionModel');
+            $edModel->setId(9);
+            Debug::dump($edModel->getAttributes());
+        }
+        
         die();
     }
 }

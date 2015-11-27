@@ -14,12 +14,13 @@ class AttributeValueModel
     public $sort_order;
     public $value;
     public $optionValues;
-   
+       
     protected $dbAdapter;
     protected $tableName;
     protected $value_id;
     protected $entity_definition_id;
     protected $sql;
+    protected $text;
     
     public function __construct(Adapter $adapter, $entityTableName='entity_definition') {
         $this->dbAdapter = $adapter;
@@ -87,8 +88,13 @@ class AttributeValueModel
         }
         if(isset($data['option_values']))
         {
-            $this->optionValues = $data['option_values'];
+            $this->optionValues = $data['option_values'];            
         }
+        
+        if(isset($this->optionValues))
+        {
+            $this->text = $this->optionValues[$this->value];
+        }                
     }
     
     public function getData()
@@ -128,6 +134,18 @@ class AttributeValueModel
         }
         
         return $this->value;
+    }
+    
+    public function getText()
+    {
+        if($this->type == 'select')
+        {
+            return $this->optionValues[$this->value];
+        }
+        else 
+        {
+            return 'Error';
+        }
     }
     
     public function setValue($value)
