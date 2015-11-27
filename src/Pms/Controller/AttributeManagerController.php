@@ -108,7 +108,7 @@ class AttributeManagerController extends AbstractActionController
         $table->deleteAttribute($id);
         return $this->redirect()->toRoute('pms/attribute-manager');
     }
-        
+            
     public function edefAction()
     {
         $id = $this->params()->fromRoute('id');
@@ -160,8 +160,8 @@ class AttributeManagerController extends AbstractActionController
         {
             //        // List existing...
             
-            $attributeModel = new AttributeModel($dbAdapter);
-            $attributeModel->setId(28);
+            $attributeModel = new AttributeValueModel($dbAdapter);
+            $attributeValueModel->setId(28);
 
             $adapter = $this->getServiceLocator()->get('Adapter');
             $model = new \Pms\Model\EntityTypeModel($adapter);   

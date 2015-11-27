@@ -19,9 +19,11 @@ use Pms\Model\AttributeTable;
 use Pms\Model\EntityTable;
 use Pms\Model\EntityDefinitionTable;
 use Pms\Model\EntityTypeTable;
+use Pms\Model\EntityTypeModel;
 use Pms\Model\UserTable;
 use Pms\Model\ClientTable;
 use Pms\Model\AttributeValueModel;
+use Pms\Model\AttributeModel;
 use Pms\Model\EntityDefinitionModel;
 use Pms\Model\EntityModel;
 use Pms\Model\ReservationModel;
@@ -206,11 +208,16 @@ class Module implements AutoloaderProviderInterface
                     return $registerFilter;
                 },
                 // Complex models
-                'AttributeModel' => function($sm) {
+                'AttributeValueModel' => function($sm) {
                     $dbAdapter = $sm->get('Adapter');
                     $attModel = new AttributeValueModel($dbAdapter);
                     return $attModel;
-                },          
+                },
+                'AttributeModel' => function($sm) {
+                    $dbAdapter = $sm->get('Adapter');
+                    $attModel = new AttributeModel($dbAdapter);
+                    return $attModel;
+                },                        
                 'EntityDefinitionModel' => function($sm) {
                     $dbAdapter = $sm->get('Adapter');
                     $edModel = new EntityDefinitionModel($dbAdapter);
@@ -221,6 +228,11 @@ class Module implements AutoloaderProviderInterface
                     $eModel = new EntityModel($dbAdapter);
                     return $eModel;
                 },        
+                'EntityTypeModel' => function($sm) {
+                    $dbAdapter = $sm->get('Adapter');
+                    $eModel = new EntityTypeModel($dbAdapter);
+                    return $eModel;
+                },                                
                 'ReservationModel' => function($sm) {
                     $dbAdapter = $sm->get('Adapter');
                     $eModel = new ReservationModel($dbAdapter);

@@ -66,6 +66,24 @@ class AttributeForm extends Form
             ],
         ]);
         
+        // Initialize options field.
+        $unique = new \Zend\Form\Element\Select('unique');
+        $unique->setLabel('Unique');    
+        $unique->setValueOptions([
+            false => 'FALSE',
+            true => 'TRUE',
+        ]);        
+        $this->add($unique);
+        
+        // Initialize options field.
+        $nullable = new \Zend\Form\Element\Select('nullable');
+        $nullable->setLabel('Can be null');    
+        $nullable->setValueOptions([
+            false => 'FALSE',
+            true => 'TRUE',
+        ]);        
+        $this->add($nullable);
+        
         $this->add([
             'name' => 'submit',
             'attributes' => [

@@ -1,7 +1,9 @@
 <section class="entity-type-edit">
     <?php 
+        $this->headStyle()->appendStyle('footer', 'clear: both');
         $id = $this->id;
         $form = $this->form;
+        $model = $this->model;
         if($id)
         {
             $id = (int)$id;
@@ -17,11 +19,13 @@
         }        
         echo $this->form()->openTag($form);
     ?>
+
     <?php if(!$id):?>
     <h2>New type</h2>
     <?php else:?>
     <h2>Change details</h2>
     <?php endif;?>
+    <div class="general-data">
     <dl>
         <dt><?php echo $this->formLabel($form->get('name')) ?></dt>
         <dd>
@@ -33,10 +37,34 @@
             <?php echo $this->formElement($form->get('description')) ?>
             <?php echo $this->formElementErrors($form->get('description'))?>
         </dd>
+        
         <dd>
             <?php echo $this->formElement($form->get('submit')) ?>
         </dd>
     </dl>
+    </div>
+    <div class='attribute-data'>
+        <h3>Attributes</h3>
+        <?php if (isset($model->attributes)):?>        
+        <table class='table'>
+            <tr>
+                <th>Attribute</th>
+                <th>Type</th>
+                <th>Action</th>
+            </tr>
+            <?php foreach($model->attributes as $attribute):?>
+            <tr>
+                <td><?php echo $attribute->label?></td>
+                <td><?php echo $attribute->type?></td>
+                <td><a href='/pms/entity-type/editAttribute/<?php echo $attribute->internal_id?>'>Edit</a> | <a href=''>Delete</a></td>
+            </tr>
+            <?php endforeach;?>
+        </table>   
+        <?php else:?>
+            <p class='error'>No defined attributes yet.
+        <?php endif;?>
+    </div>
     <?php echo $this->form()->closeTag() ?>
+    <a href='/pms/entity-type/editAttribute'>Add new</a>
 </section>
 
