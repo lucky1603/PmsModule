@@ -21,7 +21,9 @@ class AttributeForm extends Form
             'integer' => 'INTENGER', 
             'text' => 'TEXTAREA',
             'timestamp' => 'TIME',
+            'select' => 'SELECT',
         ]);        
+        $select->setAttribute('class', 'attr-type');
         $this->add($select);
         
         $this->add([

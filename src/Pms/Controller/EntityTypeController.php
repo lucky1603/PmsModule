@@ -218,6 +218,7 @@ class EntityTypeController extends AbstractActionController
             return new ViewModel([
                 'form' => $form,
                 'id' => $id,
+                'model' => $aModel,
             ]);
         }
         else 
