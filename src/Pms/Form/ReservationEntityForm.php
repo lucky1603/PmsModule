@@ -75,8 +75,8 @@ class ReservationEntityForm extends Form
        {
            $sql = new Sql($dbAdapter);
            $select = $sql->select();
-           $select->from('entity_definition')
-                   ->where(['entity_type_id' => 1]);
+           $select->from('entity_definition');
+//                   ->where(['entity_type_id' => 1]);
            $statement = $sql->prepareStatementForSqlObject($select);
            $results = $statement->execute();
            $options = array();

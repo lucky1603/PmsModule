@@ -58,6 +58,7 @@ class EntityDefinitionController extends AbstractActionController
                 elseif ($attribute->type == 'select')
                 {
                     $attElement = new \Zend\Form\Element\Select($attribute->code);
+//                    Debug::dump($attribute->getData());
                     $attElement->setValueOptions($attribute->optionValues);
                 }
                 else {

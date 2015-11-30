@@ -215,9 +215,11 @@ class EntityDefinitionModel
                         $attribute->optionValues = array();
                         $optionsTable = new \Zend\Db\TableGateway\TableGateway('attribute_option_values', $this->dbAdapter);
                         $select = $this->sql->select();
-                        $select->columns(['value', 'text'])
-                               ->where(['attribute_id' => $attribute->id]);
-                        $options = $optionsTable->select($select);
+                        $select->from('attribute_option_values')
+                                ->columns(['value', 'text'])
+                                ->where(['attribute_id' => $attribute->id]);
+                        $statement = $this->sql->prepareStatementForSqlObject($select);
+                        $options = $statement->execute();
                         foreach($options as $option)
                         {
                             $attribute->optionValues[$option['value']] = $option['text'];
