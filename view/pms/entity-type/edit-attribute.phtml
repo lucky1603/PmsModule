@@ -1,5 +1,8 @@
 <section class="entity-type-edit-attribute">
     <?php 
+        $this->headScript()->appendFile('/js/jquery-2.1.4.js');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');
+        $this->headScript()->appendFile('/js/forms.js');   
         $id = $this->id;
         $form = $this->form;
         $model = $this->model;
@@ -17,7 +20,24 @@
             ]));
         }        
         echo $this->form()->openTag($form);
+        // Invisible field.
+        echo $this->formElement($form->get('counter'));
     ?>
+    <?php $this->headScript()->captureStart();?>
+        $(document).ready(function(evt) {
+            var model = <?php 
+                if(isset($model))
+                {
+                    echo json_encode($model);
+                }
+                else 
+                {
+                    echo "No Model!";
+                }            
+            ?>;
+            initEntries(model);
+        });
+    <?php $this->headScript()->captureEnd();?>
     <?php if(!$id):?>
     <h2>New attribute</h2>
     <?php else:?>

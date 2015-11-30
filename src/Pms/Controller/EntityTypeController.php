@@ -247,6 +247,26 @@ class EntityTypeController extends AbstractActionController
         {
             $aModel = $model->attributes[$id];
             $form->bind($aModel);
+            $count = $post['counter'];
+            for($i = 1; $i <= $count; $i++)
+            {
+                $val = $form->add([
+                    'name' => 'val'.$i,
+                    'attributes' => [
+                        'type' => 'text', 
+                        'id' => 'val'.$i,
+                    ]
+                ]);
+                
+                $val = $form->add([
+                    'name' => 'text'.$i,
+                    'attributes' => [
+                        'type' => 'text', 
+                        'id' => 'text'.$i,
+                    ]
+                ]);               
+            }
+
             $form->setData($post);
             if($form->isValid())
             {
@@ -260,6 +280,27 @@ class EntityTypeController extends AbstractActionController
         {
             $aModel = $this->getServiceLocator()->get("AttributeModel");
             $form->bind($aModel);
+            $count = $post['counter'];
+            for($i = 1; $i <= $count; $i++)
+            {
+                $val = $form->add([
+                    'name' => 'val'.$i,
+                    'attributes' => [
+                        'type' => 'text', 
+                        'id' => 'val'.$i,
+                    ]
+                ]);
+                
+                $val = $form->add([
+                    'name' => 'text'.$i,
+                    'attributes' => [
+                        'type' => 'text', 
+                        'id' => 'text'.$i,
+                    ]
+                ]);
+               
+            }
+
             $form->setData($post);
             if($form->isValid())
             {

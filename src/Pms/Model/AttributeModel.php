@@ -172,7 +172,74 @@ class AttributeModel
      */
     public function exchangeArray($data)
     {
-        $this->setData($data);
+        //$this->setData($data);
+        if(!empty($data['entity_type_id']))
+        {
+            $this->entity_type_id = $data['entity_type_id'];
+        }
+        if(!empty($data['code']))
+        {
+            $this->code = $data['code'];
+        }        
+        if(!empty($data['label']))
+        {
+            $this->label = $data['label'];
+        }        
+        if(!empty($data['type']))
+        {
+            $this->type = $data['type'];
+        }        
+        if(!empty($data['sort_order']))
+        {
+            $this->sort_order = $data['sort_order'];
+        }        
+        if(!empty($data['unit']))
+        {
+            $this->unit = $data['unit'];
+        }             
+        if(isset($data['unique']))
+        {
+            $this->unique = $data['unique'];
+        }
+        if(isset($data['nullable']))
+        {
+            $this->nullable = $data['nullable'];
+        }
+        
+        if($this->type == 'select')
+        {
+            if(empty($this->optionValues))
+            {
+                $this->optionValues = array();
+            }
+            
+            $count = $data['counter'];
+            $new_vals = array();
+            for($i = 1; $i <= $count; $i++)
+            {
+                $val = $data['val'.$i];
+                $text = $data['text'.$i];
+                $new_vals[$val] = $text;
+            }
+            
+            // Delete obsolete entries.
+            foreach($this->optionValues as $key=>$value)
+            {
+                if(!array_key_exists($key, $new_vals))
+                {
+                    unset($this->optionValues[$key]);
+                }
+            }
+            
+            // Now update
+            foreach($new_vals as $key=>$value)
+            {
+                $this->optionValues[$key]['attribute_id'] = $this->internal_id;
+                $this->optionValues[$key]['value'] = $key;
+                $this->optionValues[$key]['text'] = $value;
+            }
+            
+        }
     }
     
     /**

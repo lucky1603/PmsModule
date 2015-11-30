@@ -86,6 +86,15 @@ class AttributeForm extends Form
         ]);        
         $this->add($nullable);
         
+        // Hidden field for the option count
+        $this->add([
+            'name' => 'counter',
+            'attributes' => [
+                'type' => 'hidden',
+                'id' => 'counter',
+            ]
+        ]);
+        
         $this->add([
             'name' => 'submit',
             'attributes' => [
