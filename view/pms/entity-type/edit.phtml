@@ -21,9 +21,9 @@
     ?>
 
     <?php if(!$id):?>
-    <h2>New type</h2>
+    <h2>New Object Type</h2>
     <?php else:?>
-    <h2>Change details</h2>
+    <h2>Change '<?php echo $model->name?>' details</h2>
     <?php endif;?>
     <div class="general-data">
     <dl>
@@ -44,11 +44,11 @@
     </dl>
     </div>
     <div class='attribute-data'>
-        <h3>Attributes</h3>
+        <h3>Parameters</h3>
         <?php if (isset($model->attributes)):?>        
         <table class='table'>
             <tr>
-                <th>Attribute</th>
+                <th>Parameter</th>
                 <th>Type</th>
                 <th>Action</th>
             </tr>
@@ -61,7 +61,7 @@
             <?php endforeach;?>
         </table>   
         <?php else:?>
-            <p class='error'>No defined attributes yet.
+            <p class='error'>No defined parameters yet.
         <?php endif;?>
     </div>
     <?php echo $this->form()->closeTag() ?>

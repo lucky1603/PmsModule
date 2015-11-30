@@ -257,6 +257,7 @@ class AttributeModel
     public function save()
     {
         $dataToInsert = $this->getData();
+        
         unset($dataToInsert['id']);
         unset($dataToInsert['option_values']);
         unset($dataToInsert['internal_id']);
@@ -335,6 +336,7 @@ class AttributeModel
                 else 
                 {
                     // insert
+                    $optionValue['attribute_id'] = $this->id;
                     $insert = $this->sql->insert();
                     $insert->into('attribute_option_values')
                             ->values($optionValue);

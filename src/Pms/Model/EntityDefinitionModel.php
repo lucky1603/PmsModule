@@ -138,33 +138,36 @@ class EntityDefinitionModel
         if(isset($data['id']))
         {
             $this->id = $data['id'];
-            unset($data['id']);
         }
         
-        $this->entity_type_id = (isset($data['entity_type_id'])) ? $data['entity_type_id'] : null;
-        unset($data['entity_type_id']);
-        $this->name = (isset($data['name'])) ? $data['name'] : null;
-        unset($data['name']);
-        $this->code = (isset($data['code'])) ? $data['code'] : null;
-        unset($data['code']);
-        $this->description = (isset($data['description'])) ? $data['description'] : null;
-        unset($data['description']);
-        $this->price = (isset($data['price'])) ? $data['price'] : null;
-        unset($data['price']);
-        $this->pax = (isset($data['pax'])) ? $data['pax'] : null;
-        unset($data['pax']);
- 
-        if(count($data))
+        if(isset($data['entity_type_id']))
         {
-            foreach($data as $key=>$value)
+            $this->entity_type_id = $data['entity_type_id'];
+        }
+        if(isset($data['name']))
+        {
+            $this->name = $data['name'];
+        }
+        if(isset($data['code']))
+        {
+            $this->code = $data['code'];
+        }
+        if(isset($data['description']))
+        {
+            $this->description = $data['description'];
+        }
+        
+        if(isset($data['attributes']))
+        {
+            $this->attributes = array();
+            foreach($data['attributes'] as $attributeData)
             {
-                if(isset($this->attributes) && array_key_exists($key, $this->attributes))
-                {
-                    $attribute = $this->attributes[$key];
-                    $attribute->setValue($data[$key]);
-                }                                
+                $aModel = new AttributeValueModel($this->dbAdapter);
+                $aModel->setData($attributeData);
+                $this->attributes[$aModel->code] = $aModel;
             }
-        }        
+        }
+                    
     }
     
     /**
@@ -234,6 +237,8 @@ class EntityDefinitionModel
      */
     public function save()
     {
+        \Zend\Debug\Debug::dump("About to be saved...");
+        \Zend\Debug\Debug::dump($this->getData());
         if($this->id != NULL)
         {
             // Save entity definition data.
@@ -398,7 +403,42 @@ class EntityDefinitionModel
      */
     public function exchangeArray($data)
     {
-        $this->setData($data);
+//        $this->setData($data);
+        if(isset($data['id']))
+        {
+            $this->id = $data['id'];
+            unset($data['id']);
+        }
+        
+        $this->entity_type_id = (isset($data['entity_type_id'])) ? $data['entity_type_id'] : null;
+        unset($data['entity_type_id']);
+        $this->name = (isset($data['name'])) ? $data['name'] : null;
+        unset($data['name']);
+        $this->code = (isset($data['code'])) ? $data['code'] : null;
+        unset($data['code']);
+        $this->description = (isset($data['description'])) ? $data['description'] : null;
+        unset($data['description']);
+//        $this->price = (isset($data['price'])) ? $data['price'] : null;
+//        unset($data['price']);
+//        $this->pax = (isset($data['pax'])) ? $data['pax'] : null;
+//        unset($data['pax']);
+ 
+        if(count($data))
+        {
+            foreach($data as $key=>$value)
+            {
+                if(isset($this->attributes) && array_key_exists($key, $this->attributes))
+                {
+                    $attribute = $this->attributes[$key];
+                    $attribute->setValue($data[$key]);
+                }
+                else 
+                {
+                    $attribute = new AttributeValueModel($this->dbAdapter);
+                    $attribute->setData($value);
+                }
+            }
+        }        
     }
 }
 

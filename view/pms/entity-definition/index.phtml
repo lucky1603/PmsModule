@@ -4,9 +4,9 @@
     ?>
     <?php if($entityDefinitions == null || count($entityDefinitions) == 0):?>
         <h2>Error</h2>
-        <p class="error">There are currently no defined entity definitions.</p>
+        <p class="error">There are currently no defined object definitions.</p>
     <?php else:?>
-        <h2>Entity Definitions</h2>
+        <h2>Object Definitions</h2>
         <p>
         <p>
         <table class="table">
@@ -38,5 +38,5 @@
         <?php endforeach;?>
         </table>
     <?php endif; ?>
-    <a href="/pms/entity-definition/new">Add new entity type</a> | <a href='/pms/admin'>Home</a>
+    <a href="/pms/entity-definition/new">Add new object definition</a> | <a href='/pms/admin'>Home</a>
 </section>

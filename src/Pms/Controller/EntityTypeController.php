@@ -62,7 +62,6 @@ class EntityTypeController extends AbstractActionController
         {
             $entityTypeData = $session->entityTypeData;
 
-            
             if(isset($id))
             {
                 $id = (int)$id;
@@ -90,7 +89,14 @@ class EntityTypeController extends AbstractActionController
             }
             else 
             {
-                 $entityTypeModel->setData($entityTypeData);
+                if(empty($entityTypeData['id']))
+                {
+                    $entityTypeModel->setData($entityTypeData);
+                }
+                else {
+                    $session->entityTypeData = $entityTypeModel->getData();
+                }
+                 
                  $form->bind($entityTypeModel);
                  return new ViewModel([
                      'form' => $form,
@@ -242,7 +248,7 @@ class EntityTypeController extends AbstractActionController
         $entityTypeData = $session->entityTypeData;
         $model = $this->getServiceLocator()->get("EntityTypeModel");
         $model->setData($entityTypeData);
-                
+                        
         if(isset($id))
         {
             $aModel = $model->attributes[$id];
@@ -278,6 +284,7 @@ class EntityTypeController extends AbstractActionController
         }
         else 
         {
+            \Zend\Debug\Debug::dump("new...");
             $aModel = $this->getServiceLocator()->get("AttributeModel");
             $form->bind($aModel);
             $count = $post['counter'];

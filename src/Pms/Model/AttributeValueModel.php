@@ -67,6 +67,8 @@ class AttributeValueModel
     
     public function setData($data)
     {
+        //\Zend\Debug\Debug::dump($data);
+       
         if(isset($data['attribute_id']))
         {
             $this->id = $data['attribute_id'];
@@ -82,19 +84,27 @@ class AttributeValueModel
         $this->sort_order = (isset($data['sort_order'])) ? $data['sort_order'] : null;
         $this->unit = (isset($data['unit'])) ? $data['unit'] : null;
         $this->label = (isset($data['label'])) ? $data['label'] : null;
-        if(isset($data['value']))
-        {
-           $this->value = $data['value'];
-        }
+        
         if(isset($data['option_values']))
         {
             $this->optionValues = $data['option_values'];            
         }
         
-        if(isset($this->optionValues))
+        if(isset($data['value']))
         {
-            $this->text = $this->optionValues[$this->value];
-        }                
+           $this->value = $data['value'];
+        }
+        else 
+        {
+            if(isset($this->optionValues))
+            {
+                reset($this->optionValues);
+                $first_key = key($this->optionValues);
+                $this->value = $first_key;
+                $this->text = $this->optionValues[$first_key];
+            }
+            
+        }                              
     }
     
     public function getData()

@@ -39,9 +39,9 @@
         });
     <?php $this->headScript()->captureEnd();?>
     <?php if(!$id):?>
-    <h2>New attribute</h2>
+    <h2>New Parameter</h2>
     <?php else:?>
-    <h2>Change details</h2>
+    <h2>Change '<?php echo $model->label?>' details</h2>
     <?php endif;?>
     <dl>
         <dt><?php echo $this->formLabel($form->get('code')) ?></dt>

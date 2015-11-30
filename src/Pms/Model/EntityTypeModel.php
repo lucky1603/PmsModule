@@ -237,6 +237,7 @@ class EntityTypeModel
                         
             foreach($this->attributes as $attributeModel)
             {
+                $attributeModel->setEntityTypeId($this->id);
                 $attributeModel->save();
                 
                 // Check entity_type_attribute table.

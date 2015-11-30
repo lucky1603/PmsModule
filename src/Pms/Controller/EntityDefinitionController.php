@@ -5,6 +5,7 @@ namespace Pms\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Debug\Debug;
+use Zend\Session\Container;
 
 /**
  * Entity type controller class.
@@ -91,11 +92,12 @@ class EntityDefinitionController extends AbstractActionController
         $id = $this->params()->fromRoute('id');
         $form = $this->getServiceLocator()->get('EntityDefinitionForm');
         $table = $this->getServiceLocator()->get('EntityDefinitionTable');
+        $entityDefinitionModel = $this->getServiceLocator()->get('EntityDefinitionModel');
         if($id)
         {
             $id = (int)$id;            
             // handling attributes ...
-            $entityDefinitionModel = $this->getServiceLocator()->get('EntityDefinitionModel');
+            
             $entityDefinitionModel->setId($id);
             $attributes = $entityDefinitionModel->getAttributes();
             foreach($attributes as $attribute)
@@ -135,13 +137,38 @@ class EntityDefinitionController extends AbstractActionController
         }
         else 
         {            
-            $entityDefinitionModel = $this->getServiceLocator()->get("EntityDefinitionModel");
+            $session = new Container('models');
+            $entityDefinitionModel->setData($session->entityDefinitionData);
+            $attributes = $entityDefinitionModel->getAttributes();
+            foreach($attributes as $attribute)
+            {                
+                if($attribute->type == 'boolean')
+                {
+                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+                }
+                elseif ($attribute->type == 'text') {
+                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+                }
+                elseif ($attribute->type == 'timestamp') {
+                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+                }
+                elseif ($attribute->type == 'select')
+                {
+                    $attElement = new \Zend\Form\Element\Select($attribute->code);
+                    $attElement->setValueOptions($attribute->optionValues);
+                }
+                else {
+                    $attElement = new \Zend\Form\Element\Text($attribute->code);
+                }
+                
+                $attElement->setLabel($attribute->label);
+                $attElement->setValue($attribute->getValue());
+                $form->add($attElement);
+            }
             $form->bind($entityDefinitionModel);
             $form->setData($post);
             if($form->isValid())
             {          
-                Debug::dump($entityDefinitionModel->getData());
-                die();
                 $entityDefinitionModel->save();
             }                        
         }
@@ -173,6 +200,9 @@ class EntityDefinitionController extends AbstractActionController
         $dbAdapter = $this->getServiceLocator()->get('Adapter');
         $model = $this->getServiceLocator()->get('EntityDefinitionModel');
         $model->setEntityType($id);
+        $session = new Container('models');
+        $session->entityDefinitionData = $model->getData();
+//        Debug::dump($model->getData());
         
         $form = $this->getServiceLocator()->get('EntityDefinitionForm');
         $form->bind($model);      
@@ -196,7 +226,17 @@ class EntityDefinitionController extends AbstractActionController
                 elseif ($attribute->type == 'select')
                 {
                     $attElement = new \Zend\Form\Element\Select($attribute->code);
-                    $attElement->setValueOptions($attribute->optionValues);
+                    $optionValues = array();
+                    if(isset($attribute->optionValues))
+                    {
+                        $optionValues = array();
+                        foreach($attribute->optionValues as $optionValue)
+                        {
+                            $optionValues[$optionValue['value']] = $optionValue['text'];
+                        }
+                        $attElement->setValueOptions($optionValues);
+                    }
+                    
                 }
                 else {
                     $attElement = new \Zend\Form\Element\Text($attribute->code);

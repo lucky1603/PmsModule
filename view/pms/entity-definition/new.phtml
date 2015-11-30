@@ -2,6 +2,8 @@
     <?php 
         $entity_types = $this->entity_types;
     ?>
+    <h2>Choose Type</h2>
+    <p>Please, choose one of the basic object types.
     <ul>
         <?php foreach($entity_types as $entity_type):?>
             <li><a href='/pms/entity-definition/processNew/<?php echo $entity_type->id?>'><?php echo $entity_type->name?></a></li>

@@ -3,10 +3,10 @@
         $types = $this->types;
     ?>
     <?php if($types == null || count($types) == 0):?>
-        <h2>Error</h2>
-        <p class="error">There are currently no defined types.</p>
+        <h2>Configuration required</h2>
+        <p class="error">There are currently no defined object types.</p>
     <?php else:?>
-        <h2>Entity types</h2>
+        <h2>Object Types</h2>
         <p>
         <p>
         <table class="table">
@@ -34,7 +34,7 @@
         <?php endforeach;?>
         </table>
     <?php endif; ?>
-    <a href="/pms/entity-type/new">Add new entity type</a> | <a href='/pms/admin'>Home</a>
+    <a href="/pms/entity-type/new">Add new object type</a> | <a href='/pms/admin'>Home</a>
 </section>
 
 
