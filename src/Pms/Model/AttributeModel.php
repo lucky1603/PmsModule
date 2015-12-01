@@ -25,6 +25,7 @@ class AttributeModel
     public $nullable;
     public $optionValues;
     public $entity_type_id;
+    public $scope;
     
     protected $sql;
     
@@ -123,6 +124,10 @@ class AttributeModel
         {
             $this->nullable = $data['nullable'];
         }
+        if(isset($data['scope']))
+        {
+            $this->scope = $data['scope'];
+        }
         if(!empty($data['option_values']))
         {
             $this->optionValues = array();
@@ -150,7 +155,8 @@ class AttributeModel
             'sort_order' => $this->sort_order,
             'unit' => $this->unit,
             'unique' => $this->unique,
-            'nullable' => $this->nullable,            
+            'nullable' => $this->nullable,        
+            'scope' => $this->scope,
         ];
         
         if(!empty($this->optionValues))
@@ -204,6 +210,10 @@ class AttributeModel
         if(isset($data['nullable']))
         {
             $this->nullable = $data['nullable'];
+        }
+        if(isset($data['scope']))
+        {
+            $this->scope = $data['scope'];
         }
         
         if($this->type == 'select')

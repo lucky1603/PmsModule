@@ -14,6 +14,7 @@ class AttributeValueModel
     public $sort_order;
     public $value;
     public $optionValues;
+    public $scope;
        
     protected $dbAdapter;
     protected $tableName;

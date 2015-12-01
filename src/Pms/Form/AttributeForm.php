@@ -26,6 +26,17 @@ class AttributeForm extends Form
         $select->setAttribute('class', 'attr-type');
         $this->add($select);
         
+        // Initialize scope field.
+        $scope = new \Zend\Form\Element\Select('scope');
+        $scope->setLabel('Accessibility');    
+        $scope->setValueOptions([
+            0 => 'ALL',
+            1 => 'DEFINITION',
+            2 => 'OBJECT',
+        ]);        
+        $scope->setAttribute('class', 'scope');
+        $this->add($scope);
+        
         $this->add([
             'name' => 'code',
             'attributes' => [
