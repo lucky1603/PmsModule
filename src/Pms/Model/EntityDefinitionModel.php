@@ -64,8 +64,12 @@ class EntityDefinitionModel
         $this->attributes = array();        
         foreach($attributes as $attribute)
         {
+            // If not in this scope.
+            if($attribute->scope != 1)
+            {
+                continue;
+            }
             $avModel = new AttributeValueModel($this->dbAdapter);
-            //$avModel->setData($attribute->getData());
             $avModel->from($attribute);
             $avModel->setEntityDefinitionId($this->id);
             $this->attributes[$attribute->code] = $avModel;
@@ -199,9 +203,11 @@ class EntityDefinitionModel
             $select->from($table)
                    ->columns(['value_id' => 'id', 'attribute_id', 'value'])
                    ->join(['a' => 'attribute'], 'attribute_id = a.id', ['*'])
-                   ->where(['entity_definition_id' => $this->id]);
+                   ->where(['entity_definition_id' => $this->id,
+                            'a.scope' => 1]);
             $statement = $this->sql->prepareStatementForSqlObject($select);
             $results = $statement->execute();
+            
             if($results->count() > 0)
             {
                 do 
@@ -213,7 +219,6 @@ class EntityDefinitionModel
                     if($attribute->type == 'select')
                     {
                         $attribute->optionValues = array();
-                        $optionsTable = new \Zend\Db\TableGateway\TableGateway('attribute_option_values', $this->dbAdapter);
                         $select = $this->sql->select();
                         $select->from('attribute_option_values')
                                 ->columns(['value', 'text'])

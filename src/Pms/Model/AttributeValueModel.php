@@ -1,10 +1,18 @@
 <?php
-
+/**
+ * @name AttributeValueModel.php
+ * @description Data model for attribute values.
+ * @author Dragutin Jovanovic <gutindra@gmail.com>
+ * @date 07.11.2015.
+ */
 namespace Pms\Model;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
 
+/**
+ * AttributeValueModel class.
+ */
 class AttributeValueModel
 {
     public $id;
@@ -23,12 +31,21 @@ class AttributeValueModel
     protected $sql;
     protected $text;
     
+    /**
+     * Constructor.
+     * @param Adapter $adapter
+     * @param type $entityTableName
+     */
     public function __construct(Adapter $adapter, $entityTableName='entity_definition') {
         $this->dbAdapter = $adapter;
         $this->tableName = $entityTableName;
         $this->sql = new Sql($this->dbAdapter);
     }
     
+    /**
+     * Sets the entity definition id from outside.
+     * @param type $id
+     */
     public function setEntityDefinitionId($id)
     {
         $this->entity_definition_id = $id;
@@ -43,6 +60,11 @@ class AttributeValueModel
         $this->setData($attributeModel->getData());
     }
     
+    /**
+     * Connects model to the attribute with the given id.
+     * @param type $id
+     * @return type
+     */
     public function setAttributeId($id)
     {
         if(!$this->entity_definition_id)
@@ -66,10 +88,12 @@ class AttributeValueModel
         $this->getValue();
     }
     
+    /**
+     * Sets the object data.
+     * @param type $data
+     */
     public function setData($data)
-    {
-        //\Zend\Debug\Debug::dump($data);
-       
+    {       
         if(isset($data['attribute_id']))
         {
             $this->id = $data['attribute_id'];
@@ -79,12 +103,35 @@ class AttributeValueModel
         {
             $this->id = $data['id'];
         }
-        $this->value_id = (isset($data['value_id'])) ? $data['value_id'] : null;
-        $this->code = (isset($data['code'])) ? $data['code'] : null;
-        $this->type = (isset($data['type'])) ? $data['type'] : null;
-        $this->sort_order = (isset($data['sort_order'])) ? $data['sort_order'] : null;
-        $this->unit = (isset($data['unit'])) ? $data['unit'] : null;
-        $this->label = (isset($data['label'])) ? $data['label'] : null;
+        
+        if(isset($data['value_id']))
+        {
+            $this->value_id = $data['value_id'];
+        }
+        if(isset($data['code']))
+        {
+            $this->code = $data['code'];
+        }
+        if(isset($data['type']))
+        {
+            $this->type = $data['type'];
+        }
+        if(isset($data['sort_order']))
+        {
+            $this->sort_order = $data['sort_order'];
+        }
+        if(isset($data['unit']))
+        {
+            $this->unit = $data['unit'];
+        }
+        if(isset($data['label']))
+        {
+            $this->label = $data['label'];
+        }
+        if(isset($data['scope']))
+        {
+            $this->scope = $data['scope'];
+        }        
         
         if(isset($data['option_values']))
         {
@@ -108,6 +155,10 @@ class AttributeValueModel
         }                              
     }
     
+    /**
+     * Gets the object data.
+     * @return type
+     */
     public function getData()
     {
         $data = [
@@ -117,6 +168,7 @@ class AttributeValueModel
             'type' => $this->type,
             'sort_order' => $this->sort_order,        
             'value' => $this->value,
+            'scope' => $this->scope,
         ];
         
         if(isset($this->optionValues))
@@ -126,6 +178,10 @@ class AttributeValueModel
         return $data;
     }
     
+    /**
+     * Gets the attribute value.
+     * @return type
+     */
     public function getValue()
     {
         if(!isset($this->value))
@@ -147,6 +203,10 @@ class AttributeValueModel
         return $this->value;
     }
     
+    /**
+     * Gets the text for the given value.
+     * @return string
+     */
     public function getText()
     {
         if($this->type == 'select')
@@ -159,60 +219,28 @@ class AttributeValueModel
         }
     }
     
+    /**
+     * Sets value. TODO: Check if this is used at all?
+     * @param type $value
+     */
     public function setValue($value)
     {
         $this->value = $value;
     }
     
-    public function getCollection()
-    {
-        return $this->rows;
-    }
-    
-//    public function getAttributes($id, $datatype)
-//    {
-//        $sql = new Sql($this->dbAdapter);
-//        $select = $sql->select();
-//        $select->from(['u' => $this->tableName.'_value_'.$datatype])
-//                ->columns(['id' => 'value_id', 'entity_definition_id', 'value'])
-//                ->join([
-//                            'a' => 'attribute'
-//                        ], 
-//                        'u.attribute_id = a.id', 
-//                        [
-//                            'code',
-//                            'label',
-//                            'type',
-//                            'sort_order',
-//                            'unit',
-//                        ]
-//                )
-//                ->where(['entity_definition_id' => $id]);
-//             
-//        $statement = $sql->prepareStatementForSqlObject($select);
-//        $results = $statement->execute();        
-//        $rows = array();
-//        do {
-//            $rows[] = $results->current();
-//        } while($results->next());        
-//        return $rows;
-//    }
-    
+    /**
+     * Saves the attribute to the database.
+     */
     public function save()
     {
         if(isset($this->value_id))
         {
-//            \Zend\Debug\Debug::dump('AtModel:Save:Update');            
-//            \Zend\Debug\Debug::dump($this->value_id);
-            
             $update = $this->sql->update();
             $update->table($this->tableName.'_value_'.$this->type)
                     ->set([
                         'value' => $this->value,
                     ])
                     ->where([
-//                            'attribute_id' => $this->id,
-//                            'entity_definition_id' => $this->entity_definition_id,
                             'id' => $this->value_id,
                         ]);
             $statement = $this->sql->prepareStatementForSqlObject($update);
@@ -220,8 +248,6 @@ class AttributeValueModel
         }
         else 
         {
-//            \Zend\Debug\Debug::dump('AtModel:Save:Insert');
-
             $insert = $this->sql->insert();
             $insert->into($this->tableName.'_value_'.$this->type)
                     ->values([
@@ -241,6 +267,10 @@ class AttributeValueModel
         }
     }
     
+    /**
+     * Deletes the attribute from the database.
+     * @return type
+     */
     public function delete()
     {
         \Zend\Debug\Debug::dump("Entered delete...value_id=".$this->value_id);
