@@ -23,6 +23,7 @@ class EntityModel
     public $definition_id;
     public $status_id;
     public $entityDefinitionModel;
+    public $attributes;
     
     protected $dbAdapter;
     protected $sql;
@@ -67,6 +68,10 @@ class EntityModel
         
         // Update definition model.
         $this->getDefinitionModel()->setId($this->definition_id);
+        
+        // Init attribute values.
+        $this->getAttributes();
+                
     }
     
     /**
@@ -118,6 +123,67 @@ class EntityModel
         }  
         
         return $this->entityDefinitionModel;
+    }
+    
+    public function getAttributes()
+    {
+        if(isset($this->attributes))
+        {
+            return $this->attributes;
+        }
+        
+        $this->attributes = array();
+        $types = [
+            'double',
+            'character',
+            'integer',
+            'text',
+            'timestamp',
+            'boolean',    
+            'select',
+        ];
+        
+        foreach($types as $type)
+        {
+            $table = "entity_value_".$type;
+            $select = $this->sql->select();
+            $select->from($table)
+                   ->columns(['value_id' => 'id', 'attribute_id', 'value'])
+                   ->join(['a' => 'attribute'], 'attribute_id = a.id', ['*'])
+                   ->where(['entity_id' => $this->id,
+                            'a.scope' => 2]);
+            $statement = $this->sql->prepareStatementForSqlObject($select);
+            $results = $statement->execute();
+            
+            if($results->count() > 0)
+            {
+                do 
+                {
+                    $row = $results->current();
+                    $attribute = new AttributeValueModel($this->dbAdapter, 'entity');
+                    $attribute->setEntityDefinitionId($this->id);                    
+                    $attribute->setData($row);
+                    if($attribute->type == 'select')
+                    {
+                        $attribute->optionValues = array();
+                        $select = $this->sql->select();
+                        $select->from('attribute_option_values')
+                                ->columns(['value', 'text'])
+                                ->where(['attribute_id' => $attribute->id]);
+                        $statement = $this->sql->prepareStatementForSqlObject($select);
+                        $options = $statement->execute();
+                        foreach($options as $option)
+                        {
+                            $attribute->optionValues[$option['value']] = $option['text'];
+                        }
+                    }
+                    
+                    $this->attributes[$attribute->code] = $attribute;
+                } while ($results->next());     
+            }                                
+        }
+        
+        return $this->attributes;
     }
     
     // Model interface for binding with forms.

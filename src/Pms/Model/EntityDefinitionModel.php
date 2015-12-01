@@ -71,7 +71,7 @@ class EntityDefinitionModel
             }
             $avModel = new AttributeValueModel($this->dbAdapter);
             $avModel->from($attribute);
-            $avModel->setEntityDefinitionId($this->id);
+            $avModel->setReferenceId($this->id);
             $this->attributes[$attribute->code] = $avModel;
         }
         $this->entity_type_id = $entity_type_id;                        
@@ -214,7 +214,7 @@ class EntityDefinitionModel
                 {
                     $row = $results->current();
                     $attribute = new AttributeValueModel($this->dbAdapter);
-                    $attribute->setEntityDefinitionId($this->id);                    
+                    $attribute->setReferenceId($this->id);                    
                     $attribute->setData($row);
                     if($attribute->type == 'select')
                     {
@@ -291,7 +291,7 @@ class EntityDefinitionModel
             {
                 foreach($this->attributes as $attribute)
                 {
-                    $attribute->setEntityDefinitionId($this->id);
+                    $attribute->setReferenceId($this->id);
                     $attribute->save();
                 }
             }
@@ -364,7 +364,7 @@ class EntityDefinitionModel
         {
             \Zend\Debug\Debug::dump('Wants to add attribute...' . $attributeCode);
             $attModel = new AttributeValueModel($this->dbAdapter);
-            $attModel->setEntityDefinitionId($this->id);
+            $attModel->setReferenceId($this->id);
             $select = $this->sql->select();
             $select->from('attribute')
                     ->where(['code' => $attributeCode]);

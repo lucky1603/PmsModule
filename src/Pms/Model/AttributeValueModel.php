@@ -27,7 +27,8 @@ class AttributeValueModel
     protected $dbAdapter;
     protected $tableName;
     protected $value_id;
-    protected $entity_definition_id;
+    protected $reference_id;
+    protected $reference_field;
     protected $sql;
     protected $text;
     
@@ -36,9 +37,10 @@ class AttributeValueModel
      * @param Adapter $adapter
      * @param type $entityTableName
      */
-    public function __construct(Adapter $adapter, $entityTableName='entity_definition') {
+    public function __construct(Adapter $adapter, $entityTableName='entity_definition', $reference_field='entity_definition_id') {
         $this->dbAdapter = $adapter;
         $this->tableName = $entityTableName;
+        $this->reference_field = $reference_field;
         $this->sql = new Sql($this->dbAdapter);
     }
     
@@ -46,9 +48,9 @@ class AttributeValueModel
      * Sets the entity definition id from outside.
      * @param type $id
      */
-    public function setEntityDefinitionId($id)
+    public function setReferenceId($id)
     {
-        $this->entity_definition_id = $id;
+        $this->reference_id = $id;
     }
     
     /**
@@ -67,7 +69,7 @@ class AttributeValueModel
      */
     public function setAttributeId($id)
     {
-        if(!$this->entity_definition_id)
+        if(!$this->reference_id)
             return;
         $sql = new Sql($this->dbAdapter);
         $select = $sql->select();
@@ -189,7 +191,7 @@ class AttributeValueModel
            $select = $this->sql->select(); 
            $select->from($this->tableName.'_value_'.$this->type)
                    ->columns(['value_id' => 'id', 'value'])
-                   ->where(['entity_definition_id' => $this->entity_definition_id]);
+                   ->where([$this->reference_field => $this->reference_id]);
            $statement = $this->sql->prepareStatementForSqlObject($select);
            $results = $statement->execute();
            $row = $results->current();
@@ -252,7 +254,7 @@ class AttributeValueModel
             $insert->into($this->tableName.'_value_'.$this->type)
                     ->values([
                         'attribute_id' => $this->id,
-                        'entity_definition_id' => $this->entity_definition_id,
+                        $this->reference_field => $this->reference_id,
                         'value' => $this->value,
                     ]);
             $statement = $this->sql->prepareStatementForSqlObject($insert);
