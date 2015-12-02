@@ -14,7 +14,7 @@ return array(
             'Pms\Controller\Client' => 'Pms\Controller\ClientController',
             'Pms\Controller\Reservation' => 'Pms\Controller\ReservationController',   
             'Pms\Controller\Ajax' => 'Pms\Controller\AjaxController',  
-            'Pms\Model\EntityTypeModel' => 'Pms\Model\EntityTypeModel',
+            'Pms\Controller\Business' => 'Pms\Controller\BusinessController',  
         ),
     ),
     'router' => array(
@@ -144,6 +144,20 @@ return array(
                             ),
                             'defaults' => array(
                                 'controller' => 'Pms\Controller\Reservation',
+                                'action' => 'index',
+                            ),
+                        ),
+                    ),
+                    'business' => array(
+                        'type'    => 'Segment',
+                        'options' => array(
+                            'route'    => '/business[/:action[/:id]]',
+                            'constraints' => array(
+                                'action'     => '[a-zA-Z][a-zA-Z0-9_-]*',
+                                'id' => '[a-zA-Z0-9_-]*',
+                            ),
+                            'defaults' => array(
+                                'controller' => 'Pms\Controller\Business',
                                 'action' => 'index',
                             ),
                         ),

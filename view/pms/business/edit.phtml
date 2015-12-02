@@ -1,0 +1,56 @@
+<section class='business-edit'>
+    <?php 
+        $form = $this->form;
+        $form->setAttribute('action', $this->url('pms/business', [
+            'action' => 'process'
+        ]));
+        echo $this->form()->openTag($form);
+    ?>
+    <h2>Change business data</h2>
+    <dl>
+        <dt><?php echo $this->formLabel($form->get('name'))?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('name'))?>
+            <?php echo $this->formElementErrors($form->get('name'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('description'))?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('description'))?>
+            <?php echo $this->formElementErrors($form->get('description'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('company_name'))?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('company_name'))?>
+            <?php echo $this->formElementErrors($form->get('company_name'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('address'))?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('address'))?>
+            <?php echo $this->formElementErrors($form->get('address'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('phone'))?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('phone'))?>
+            <?php echo $this->formElementErrors($form->get('phone'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('email'))?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('email'))?>
+            <?php echo $this->formElementErrors($form->get('email'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('contact_first_name'))?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('contact_first_name'))?>
+            <?php echo $this->formElementErrors($form->get('contact_first_name'))?>
+        </dd>
+        <dt><?php echo $this->formLabel($form->get('contact_last_name'))?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('contact_last_name'))?>
+            <?php echo $this->formElementErrors($form->get('contact_last_name'))?>
+        </dd>
+        <dd>
+            <?php echo $this->formElement($form->get('submit'))?>
+        </dd>        
+    </dl>
+    <?php echo $this->form()->closeTag();?>
+</section>

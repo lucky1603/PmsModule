@@ -16,6 +16,8 @@ use Pms\Model\EntityType;
 use Pms\Model\User;
 use Pms\Model\Client;
 use Pms\Model\AttributeTable;
+use Pms\Model\BusinessModel;
+use Pms\Model\BusinessForm;
 use Pms\Model\EntityTable;
 use Pms\Model\EntityDefinitionTable;
 use Pms\Model\EntityTypeTable;
@@ -173,6 +175,10 @@ class Module implements AutoloaderProviderInterface
                     $form = new AttributeForm();
                     return $form;
                 },
+                'BusinessForm' => function($sm) {
+                    $form = new Form\BusinessForm();
+                    return $form;
+                },
                 'EntityDefinitionForm' => function($sm) {
                     $dbAdapter = $sm->get("Adapter");
                     $form = new EntityDefinitionForm('', ['adapter' => $dbAdapter]);
@@ -237,6 +243,11 @@ class Module implements AutoloaderProviderInterface
                     $dbAdapter = $sm->get('Adapter');
                     $eModel = new ReservationModel($dbAdapter);
                     return $eModel;
+                },
+                'BusinessModel' => function($sm) {
+                    $dbAdapter = $sm->get('Adapter');
+                    $model = new BusinessModel($dbAdapter);
+                    return $model;
                 },
                 // Authentication Services
                 'AuthenticationService' => function($sm) {
