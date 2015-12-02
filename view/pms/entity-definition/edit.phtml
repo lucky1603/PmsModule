@@ -31,6 +31,11 @@
             <?php echo $this->formElement($form->get('entity_type_id')) ?>
             <?php echo $this->formElementErrors($form->get('entity_type_id'))?>
         </dd>        
+        <dt><?php echo $this->formLabel($form->get('code')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('code')) ?>
+            <?php echo $this->formElementErrors($form->get('code'))?>
+        </dd>
         <dt><?php echo $this->formLabel($form->get('name')) ?></dt>
         <dd>
             <?php echo $this->formElement($form->get('name')) ?>

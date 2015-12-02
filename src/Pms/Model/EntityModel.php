@@ -379,8 +379,6 @@ class EntityModel
     public function getArrayCopy()
     {
         $data = [            
-//            'id' => $this->id,
-//            'definition_id' => $this->definition_id,
             'guid' => $this->guid,
             'status' => $this->status,
             'status_id' => $this->status_id,    

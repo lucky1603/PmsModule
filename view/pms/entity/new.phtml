@@ -1,0 +1,12 @@
+<section class='entity-new'>
+    <?php 
+        $entity_definitions = $this->entity_definitions;
+    ?>
+    <h2>Choose Object Definition</h2>
+    <p>Please, choose one of the basic object types.
+    <ul class="list-inline">
+        <?php foreach($entity_definitions as $entity_definition):?>
+            <li><a href='/pms/entity/processNew/<?php echo $entity_definition['id']?>'><?php echo $entity_definition['name']?> : <?php echo $entity_definition['type']?></a></li>
+        <?php endforeach;?>
+    </ul>
+</section>

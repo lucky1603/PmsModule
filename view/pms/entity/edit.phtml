@@ -2,8 +2,11 @@
     <?php 
         $this->headScript()->appendFile('/js/jquery-2.1.4.js');
         $this->headScript()->appendFile('/js/helper.js');        
-//        $this->addHelperPath("ZendX/JQuery/View/Helper", "ZendX_JQuery_View_Helper");
+        
         $form = $this->form;
+        $id = $this->id;
+        $attributes = $this->attributes;
+        
         if(isset($this->id))
         {
                 $form->setAttribute('action', $this->url('pms/entity', [
@@ -20,9 +23,8 @@
         
         echo $this->form()->openTag($form);
     ?>
-    <h3>Room Details</h3>
-    <dl>
-        
+    <h3>Object Details</h3>
+    <dl>        
         <dt><?php echo $this->formLabel($form->get('definition_id')) ?></dt>
         <dd>
             <?php echo $this->formElement($form->get('definition_id'));?>
@@ -43,6 +45,15 @@
             <?php echo $this->formElement($form->get('status_id'));?>
             <?php echo $this->formElementErrors($form->get('status_id'));?>
         </dd>
+        <?php if(isset($attributes)):?>
+            <?php foreach($attributes as $attribute):?>
+                <dt><?php echo $this->formLabel($form->get($attribute->code)) ?></dt>
+                <dd>
+                    <?php echo $this->formElement($form->get($attribute->code));?>
+                    <?php echo $this->formElementErrors($form->get($attribute->code));?>
+                </dd>
+            <?php endforeach;?>
+        <?php endif;?>
         <dd>
             <?php echo $this->formElement($form->get('submit'));?>
         </dd>
