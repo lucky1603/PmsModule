@@ -20,6 +20,7 @@ class EntityTypeModel
     public $id;
     public $name;
     public $description;
+    public $time_resolution;
     public $attributes;
     
     protected $sql;   
@@ -94,6 +95,11 @@ class EntityTypeModel
             $this->description = $data['description'];
         }
         
+        if(!empty($data['time_resolution']))
+        {
+            $this->time_resolution = $data['time_resolution'];
+        }
+        
         if(!empty($data['attributes']))
         {
             $this->attributes = array();
@@ -123,7 +129,8 @@ class EntityTypeModel
     {
         $data = [
             'name' => $this->name,
-            'description' => $this->description,            
+            'description' => $this->description,     
+            'time_resolution' => $this->time_resolution,
         ];
         
         if(isset($this->id))

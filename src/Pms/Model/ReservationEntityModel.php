@@ -28,6 +28,7 @@ class ReservationEntityModel
     public $ed_name;
     public $guid;
     public $entity_definition_id;
+    public $time_resolution;
     
     public $internal_id;
     
@@ -59,6 +60,35 @@ class ReservationEntityModel
     {
         $this->reservation_id = $reservationId;
     }
+    
+    public function getDuration()
+    {
+        $time_from = strtotime($this->date_from);
+        $time_to = strtotime($this->date_to);
+                
+        $retval = array();
+        switch($this->time_resolution)
+        {
+            case 1:
+                $retval['value'] = ($time_to - $time_from) / (60 * 60 * 24);
+                $retval['type'] = 'day(s)';
+                break;
+            case 2:
+                $retval['value'] = ($time_to - $time_from) / (60 * 60);
+                $retval['type'] = 'hour(s)';
+                break;
+            case 3: 
+                $retval['value'] = ($time_to - $time_from) / (60);
+                $retval['type'] = 'minute(s)';
+                break;
+            default:
+                $retval['value'] = $this->time_resolution;
+                $retval['type'] = 'Type';
+                break;
+        }
+        
+        return $retval;
+    }
         
     /**
      * Sets object data from outside.
@@ -75,7 +105,7 @@ class ReservationEntityModel
         {
             $this->internal_id = $data['internal_id'];
         }
-                        
+                                
         $this->guest_id = isset($data['guest_id']) ? $data['guest_id'] : null;
         $this->entity_id = isset($data['entity_id']) ? $data['entity_id'] : null;
         $this->reservation_id = isset($data['reservation_id']) ? $data['reservation_id'] : null;
@@ -92,6 +122,11 @@ class ReservationEntityModel
         if(isset($data['guid']))
         {
             $this->guid = $data['guid'];
+        }
+        
+        if(isset($data['time_resolution']))
+        {
+            $this->time_resolution = $data['time_resolution'];
         }
         
         $select = $this->sql->select();
@@ -175,10 +210,7 @@ class ReservationEntityModel
             // Set the mandatory entry values.
             $data['date_start'] = 0;
             $data['date_end'] = 0;
-            
-//            Debug::dump('Inserting ...');
-//            Debug::dump($data);
-            
+                       
             $insert->into('reservation_entity')
                     ->values($data);
             $statement = $this->sql->prepareStatementForSqlObject($insert);

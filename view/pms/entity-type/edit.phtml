@@ -37,7 +37,11 @@
             <?php echo $this->formElement($form->get('description')) ?>
             <?php echo $this->formElementErrors($form->get('description'))?>
         </dd>
-        
+        <dt><?php echo $this->formLabel($form->get('time_resolution')) ?></dt>
+        <dd>
+            <?php echo $this->formElement($form->get('time_resolution')) ?>
+            <?php echo $this->formElementErrors($form->get('time_resolution'))?>
+        </dd>
         <dd>
             <?php echo $this->formElement($form->get('submit')) ?>
         </dd>

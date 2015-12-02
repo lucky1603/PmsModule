@@ -157,15 +157,15 @@ class ReservationModel
         {
             $select = $this->sql->select();
             $select->from(['r' => 'reservation_entity'])
-                    ->join(['e' => 'entity'], 'r.entity_id = e.id', ['guid'])
+                    ->join(['e' => 'entity'], 'r.entity_id = e.id', ['guid'])                    
                     ->join(['c' => 'clients'], 'r.guest_id = c.id', ['first_name', 'last_name'])
                     ->join(['ed' => 'entity_definition'], 'e.definition_id = ed.id', ['ed_code' => 'code', 'ed_name' => 'name'])
+                    ->join(['et' => 'entity_type'], 'ed.entity_type_id=et.id', ['time_resolution'])
                     ->where(['r.reservation_id' => $this->id]);
             $statement = $this->sql->prepareStatementForSqlObject($select);
             $results = $statement->execute();
             foreach($results as $row)
             {
-//                \Zend\Debug\Debug::dump($row);
                 $reModel = new ReservationEntityModel($this->dbAdapter);
                 $reModel->setData($row);
                 $this->reservedEntities[$row['id']] = $reModel;
