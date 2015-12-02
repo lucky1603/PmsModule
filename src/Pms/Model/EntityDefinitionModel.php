@@ -401,7 +401,24 @@ class EntityDefinitionModel
      */
     public function getArrayCopy()
     {
-        return $this->getData();
+        //return $this->getData();
+        $data = [
+            'id' => $this->id,
+            'name' => $this->name,
+            'code' => $this->code,
+            'description' => $this->description,       
+            'entity_type_id' => $this->entity_type_id,
+        ];
+        
+        if(isset($this->attributes))
+        {
+            $data['attributes'] = array();
+            foreach($this->attributes as $attribute)
+            {
+                $data[$attribute->code] = $attribute->getData();
+            }
+        }
+        return $data;
     }
     
     /**

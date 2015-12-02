@@ -58,6 +58,7 @@ class EntityDefinitionController extends AbstractActionController
                 elseif ($attribute->type == 'select')
                 {
                     $attElement = new \Zend\Form\Element\Select($attribute->code);
+                    //$attElement->setAttribute('multiple', TRUE);
 //                    Debug::dump($attribute->getData());
                     $attElement->setValueOptions($attribute->optionValues);
                 }
@@ -69,7 +70,7 @@ class EntityDefinitionController extends AbstractActionController
                 $attElement->setValue($attribute->getValue());
                 $form->add($attElement);
             }
-            
+
             $viewModel = new ViewModel([
                 'form' => $form,
                 'id' => $id,
@@ -328,7 +329,7 @@ class EntityDefinitionController extends AbstractActionController
         $entityDefinitionModel = $this->getServiceLocator()->get('EntityDefinitionModel');
         $entityDefinitionModel->setId($id);
         $attributes = $entityDefinitionModel->getAttributes();
-        
+
         return new ViewModel([
             'model' => $entityDefinitionModel,
             'id' => $id,

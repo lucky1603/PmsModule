@@ -13,7 +13,8 @@ use Zend\View\Model\ViewModel;
 use Zend\Db\Sql\Sql;
 use Zend\Debug\Debug;
 use Pms\Model\Entity;
-
+use Pms\Model\EntityModel;
+use Zend\Session\Container;
 
 /**
  * EntityController class.
@@ -56,15 +57,69 @@ class EntityController extends AbstractActionController
         $id = (int)$id;
         $form = $this->getServiceLocator()->get('EntityForm');
         $entityModel = $this->getServiceLocator()->get('EntityModel');
-        $entityModel->setId($id);
-        $form->bind($entityModel);
+        $entityModel->setId($id);        
+        $form->setData($entityModel->getData());
+        
+        if(isset($entityModel->attributes))
+        {
+            foreach($entityModel->attributes as $attribute)
+            {
+                if($attribute->type == 'boolean')
+                {
+                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+                }
+                elseif ($attribute->type == 'text') {
+                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+                    $attElement->setAttribute('COLS', 40);
+                    $attElement->setAttribute('ROWS', 4);
+                }
+                elseif ($attribute->type == 'timestamp') {
+                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+                }
+                elseif ($attribute->type == 'select')
+                {
+                    $attElement = new \Zend\Form\Element\Select($attribute->code);
+                    $optionValues = array();
+                    if(isset($attribute->optionValues))
+                    {
+                        $optionValues = array();
+                        foreach($attribute->optionValues as $optionValue)
+                        {
+                            $optionValues[$optionValue['value']] = $optionValue['text'];
+                        }
+                        $attElement->setValueOptions($optionValues);
+                    }
+
+                }
+                else {
+                    $attElement = new \Zend\Form\Element\Text($attribute->code);
+                }
+
+                $attElement->setLabel($attribute->label);
+                $attElement->setValue($attribute->getValue());
+                $form->add($attElement);
+            }
+            
+        }
+//        $form->bind($entityModel);
         if($form->isValid())
         {
-            $viewModel = new ViewModel([
-                'form' => $form,
-                'id' => $id,
-            ]);
-            
+            if(isset($entityModel->attributes))
+            {
+                $viewModel = new ViewModel([
+                    'form' => $form,
+                    'id' => $id,
+                    'attributes' => $entityModel->attributes,
+                ]);
+            }
+            else 
+            {
+                $viewModel = new ViewModel([
+                    'form' => $form,
+                    'id' => $id,
+                ]);    
+            }
+                        
             return $viewModel;
         }
         
@@ -78,31 +133,149 @@ class EntityController extends AbstractActionController
     {
         $post = $this->request->getPost();
         $id = $this->params()->fromRoute('id');
-        $entityTable = $this->getServiceLocator()->get('EntityTable');
-        if(!isset($id))
+        $entityModel = $this->getServiceLocator()->get('EntityModel');        
+        $form = $this->getServiceLocator()->get('EntityForm');               
+        if(isset($id))
         {
-            $entity = new Entity();
-            $entity->exchangeArray($post);
-            $entityTable->saveEntity($entity);
-        }
-        else
-        {
-            $form = $this->getServiceLocator()->get("EntityForm");
-            $entity = $entityTable->getEntity($id);
-            Debug::dump($id);
-            $form->bind($entity);
-            $form->setData($post);
-            if($form->isValid())
+            $entityModel->setId($id);
+            $attributes = $entityModel->attributes;
+            if(isset($attributes))
             {
-                $entityTable->saveEntity($entity);
+                foreach($attributes as $attribute)
+                {                
+                    if($attribute->type == 'boolean')
+                    {
+                        $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+                    }
+                    elseif ($attribute->type == 'text') {
+                        $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+                        $attElement->setAttribute('COLS', 40);
+                        $attElement->setAttribute('ROWS', 4);
+                    }
+                    elseif ($attribute->type == 'timestamp') {
+                        $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+                    }
+                    elseif ($attribute->type == 'select')
+                    {
+                        $attElement = new \Zend\Form\Element\Select($attribute->code);
+                        $optionValues = array();
+                        if(isset($attribute->optionValues))
+                        {
+                            $optionValues = array();
+                            foreach($attribute->optionValues as $optionValue)
+                            {
+                                $optionValues[$optionValue['value']] = $optionValue['text'];
+                            }
+                            $attElement->setValueOptions($optionValues);
+                        }
+
+                    }
+                    else {
+                        $attElement = new \Zend\Form\Element\Text($attribute->code);
+                    }
+
+                    $attElement->setLabel($attribute->label);
+                    $attElement->setValue($attribute->getValue());
+                    $form->add($attElement);
+                }  
+                
+                $form->bind($entityModel);
+                $form->setData($post);
+                if($form->isValid())
+                {
+                    $entityModel->save();
+                }
             }
             else 
             {
-                throw new \Exception("Invalid form data!");
+
+            }
+            
+        }
+        else 
+        {
+            $session = new Container('models');
+            $entityModel->setData($session->entityData);
+            $attributes = $entityModel->attributes;
+            if(isset($attributes))
+            {
+                foreach($attributes as $attribute)
+                {                
+                    if($attribute->type == 'boolean')
+                    {
+                        $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+                    }
+                    elseif ($attribute->type == 'text') {
+                        $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+                        $attElement->setAttribute('COLS', 40);
+                        $attElement->setAttribute('ROWS', 4);
+                    }
+                    elseif ($attribute->type == 'timestamp') {
+                        $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+                    }
+                    elseif ($attribute->type == 'select')
+                    {
+                        $attElement = new \Zend\Form\Element\Select($attribute->code);
+                        $optionValues = array();
+                        if(isset($attribute->optionValues))
+                        {
+                            $optionValues = array();
+                            foreach($attribute->optionValues as $optionValue)
+                            {
+                                $optionValues[$optionValue['value']] = $optionValue['text'];
+                            }
+                            $attElement->setValueOptions($optionValues);
+                        }
+
+                    }
+                    else {
+                        $attElement = new \Zend\Form\Element\Text($attribute->code);
+                    }
+
+                    $attElement->setLabel($attribute->label);
+                    $attElement->setValue($attribute->getValue());
+                    $form->add($attElement);
+                }
+
+                $form->bind($entityModel);
+                $form->setData($post);
+                if($form->isValid())
+                {
+                    $entityModel->save();
+                }
             }
         }
         
-        return $this->redirect()->toRoute('pms/entity');        
+        //return $this->redirect()->toRoute()
+        
+
+//        $table = $this->getServiceLocator()->get('EntityTable');
+//        if(!isset($id))
+//        {
+//            $entity = new Entity();
+//            $entity->exchangeArray($post);
+//            $entityTable->saveEntity($entity);
+//        }
+//        else
+//        {
+//            $form = $this->getServiceLocator()->get("EntityForm");
+//            $entity = $entityTable->getEntity($id);
+//            Debug::dump($id);
+//            $form->bind($entity);
+//            $form->setData($post);
+//            if($form->isValid())
+//            {
+//                $entityTable->saveEntity($entity);
+//            }
+//            else 
+//            {
+//                throw new \Exception("Invalid form data!");
+//            }
+//        }
+//        
+        return $this->redirect()->toRoute('pms/entity', [
+            'action' => 'index'
+        ]);        
     }
     
     /**
@@ -136,5 +309,93 @@ class EntityController extends AbstractActionController
         $entityTable->deleteEntity($id);
         
         $this->redirect()->toRoute('pms/entity');        
+    }
+    
+    public function newAction()
+    {
+        $dbAdapter = $this->getServiceLocator()->get('Adapter');
+        $table = new \Zend\Db\TableGateway\TableGateway('entity_definition', $dbAdapter);
+        $sql = new Sql($dbAdapter);
+        $select = $sql->select();
+        $select->from(['ed' => "entity_definition"])
+                ->join(['et' =>'entity_type'], 'ed.entity_type_id=et.id', ['type' => 'name']);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $entity_definitions = $statement->execute();
+
+        return new ViewModel([
+            'entity_definitions' => $entity_definitions,
+        ]);
+    }
+    
+    public function processNewAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        $dbAdapter = $this->getServiceLocator()->get('Adapter');
+        $model = $this->getServiceLocator()->get('EntityModel');
+        $model->setEntityDefinitionId($id);
+        $session = new Container('models');
+        $session->entityData = $model->getData();    
+                
+        $form = $this->getServiceLocator()->get('EntityForm');
+        $form->setData($model->getData());
+        //$form->bind($model);      
+        $attributes = $model->attributes;
+        if(isset($attributes))
+        {
+            foreach($attributes as $attribute)
+            {                
+                if($attribute->type == 'boolean')
+                {
+                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+                }
+                elseif ($attribute->type == 'text') {
+                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+                    $attElement->setAttribute('COLS', 40);
+                    $attElement->setAttribute('ROWS', 4);
+                }
+                elseif ($attribute->type == 'timestamp') {
+                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+                }
+                elseif ($attribute->type == 'select')
+                {
+                    $attElement = new \Zend\Form\Element\Select($attribute->code);
+                    $optionValues = array();
+                    if(isset($attribute->optionValues))
+                    {
+                        $optionValues = array();
+                        foreach($attribute->optionValues as $optionValue)
+                        {
+                            $optionValues[$optionValue['value']] = $optionValue['text'];
+                        }
+                        $attElement->setValueOptions($optionValues);
+                    }
+                    
+                }
+                else {
+                    $attElement = new \Zend\Form\Element\Text($attribute->code);
+                }
+
+                $attElement->setLabel($attribute->label);
+                $attElement->setValue($attribute->getValue());
+                $form->add($attElement);
+            }
+            
+            $viewModel =  new ViewModel([
+                'form' => $form,
+                'model' => $model,
+                'attributes' => $attributes,
+            ]);
+            $viewModel->setTemplate('/pms/entity/edit');
+            return $viewModel;
+        }
+        
+        $viewModel =  new ViewModel([
+            'form' => $form,
+            'model' => $model,
+            'attributes' => array(),
+        ]);
+        $viewModel->setTemplate('/pms/entity/edit');              
+        return $viewModel;
+
     }
 }

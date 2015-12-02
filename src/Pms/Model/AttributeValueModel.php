@@ -22,6 +22,7 @@ class AttributeValueModel
     public $sort_order;
     public $value;
     public $optionValues;
+    public $unit;
     public $scope;
        
     protected $dbAdapter;
@@ -171,6 +172,7 @@ class AttributeValueModel
             'sort_order' => $this->sort_order,        
             'value' => $this->value,
             'scope' => $this->scope,
+            'unit'
         ];
         
         if(isset($this->optionValues))

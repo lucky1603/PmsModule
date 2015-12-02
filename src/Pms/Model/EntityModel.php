@@ -11,6 +11,7 @@ namespace Pms\Model;
 
 use Zend\Db\Sql\Sql;
 use Zend\Db\Adapter\Adapter;
+use Zend\Debug\Debug;
 
 /**
  * EntityModel class.
@@ -70,8 +71,39 @@ class EntityModel
         $this->getDefinitionModel()->setId($this->definition_id);
         
         // Init attribute values.
-        $this->getAttributes();
-                
+        $this->getAttributes();                
+    }
+    
+    public function setEntityDefinitionId($definition_id)
+    {
+        $this->definition_id = $definition_id;
+        $edefModel = new EntityDefinitionModel($this->dbAdapter);
+        $edefModel->setId($definition_id);
+        $typeId = $edefModel->entity_type_id;
+        $etypeModel = new EntityTypeModel($this->dbAdapter);
+        $etypeModel->setId($typeId);
+        $attributes = $etypeModel->attributes;
+        if(isset($attributes))
+        {
+            foreach($attributes as $attributeModel)
+            {
+                if($attributeModel->scope == 2)
+                {
+                    if(empty($this->attributes))
+                    {
+                        $this->attributes = array();
+                    }
+                    
+                    $avalModel = new AttributeValueModel($this->dbAdapter, 'entity', 'entity_id');
+                    $avalModel->from($attributeModel);
+                    if(isset($this->id))
+                    {
+                        $avalModel->setReferenceId($this->id); 
+                    }
+                    $this->attributes[$avalModel->code] = $avalModel;
+                }
+            }
+        }
     }
     
     /**
@@ -82,13 +114,44 @@ class EntityModel
     {
         if(isset($data['id']))
         {
-            $this->id = (int)$data['id'];
+            $this->id = $data['id'];
         }
         
-        $this->definition_id = isset($data['definition_id']) ? $data['definition_id'] : null;
-        $this->guid = isset($data['guid']) ? $data['guid'] : null;
-        $this->status = isset($data['status']) ? $data['status'] : null;
-        $this->status_id = isset($data['status_id']) ? $data['status_id'] : null;        
+        if(isset($data['definition_id']))
+        {
+            $this->definition_id = $data['definition_id'];
+        }
+        
+        if(isset($data['guid']))
+        {
+            $this->guid = $data['guid'];
+        }
+        
+        if(isset($data['status']))
+        {
+            $this->status = $data['status'];
+        }
+        
+        if(isset($data['SValue']))
+        {
+            $this->status = $data['SValue'];
+        }
+        
+        if(isset($data['status_id']))
+        {
+            $this->status_id = $data['status_id'];
+        }            
+                
+        if(isset($data['attributes']))
+        {
+            $this->attributes = array();
+            foreach($data['attributes'] as $attributeData)
+            {
+                $aModel = new AttributeValueModel($this->dbAdapter, 'entity', 'entity_id');
+                $aModel->setData($attributeData);
+                $this->attributes[$aModel->code] = $aModel;
+            }
+        }
     }
     
     /**
@@ -97,13 +160,24 @@ class EntityModel
      */
     public function getData()
     {
-        return [
+        $data = [
             'id' => $this->id,
             'definition_id' => $this->definition_id,
             'guid' => $this->guid,
             'status' => $this->status,
             'status_id' => $this->status_id,
         ];
+        
+        if(isset($this->attributes))
+        {
+            $data['attributes'] = array();
+            foreach($this->attributes as $attributeValueModel)
+            {
+                $data['attributes'][$attributeValueModel->code] = $attributeValueModel->getData();
+            }
+        }
+        
+        return $data;
     }
     /**
      * Returns the model of the belonging definition type.
@@ -125,6 +199,10 @@ class EntityModel
         return $this->entityDefinitionModel;
     }
     
+    /**
+     * Gets the attribute collection for the object.
+     * @return type
+     */
     public function getAttributes()
     {
         if(isset($this->attributes))
@@ -160,8 +238,8 @@ class EntityModel
                 do 
                 {
                     $row = $results->current();
-                    $attribute = new AttributeValueModel($this->dbAdapter, 'entity');
-                    $attribute->setEntityDefinitionId($this->id);                    
+                    $attribute = new AttributeValueModel($this->dbAdapter, 'entity', 'entity_id');
+                    $attribute->setReferenceId($this->id);                    
                     $attribute->setData($row);
                     if($attribute->type == 'select')
                     {
@@ -186,14 +264,136 @@ class EntityModel
         return $this->attributes;
     }
     
+    public function save()
+    {
+        $dataToSave = $this->getData();        
+        unset($dataToSave['id']);
+        unset($dataToSave['attributes']);
+        if(isset($this->id))
+        {
+            $update = $this->sql->update();
+            $update->table('entity')
+//                    ->set([
+//                            'status' => $this->status,
+//                            'guid' => $this->guid,
+//                            'status_id' => $this->status_id,  
+//                            'entity_type_id' => $this->entity_type_id,
+//                        ])
+                    ->set($dataToSave)
+                    ->where(['id' => $this->id]);
+            $statement = $this->sql->prepareStatementForSqlObject($update);
+            $results = $statement->execute();
+               
+            // Save attributes.
+            foreach ($this->attributes as $attribute)
+            {
+                $attribute->save();
+            }   
+        }
+        else 
+        {
+     
+            $insert = $this->sql->insert();
+            $insert->into('entity')
+                    ->values($dataToSave);
+//                    ->values([
+//                        'code' => $this->code,
+//                        'name' => $this->name,
+//                        'description' => $this->description,  
+//                        'entity_type_id' => $this->entity_type_id,
+//                    ]);
+            $statement = $this->sql->prepareStatementForSqlObject($insert);
+            $statement->execute();
+            $select = $this->sql->select();
+            $select->from('entity')
+                   ->order('id DESC')
+                   ->limit(1);
+            $statement = $this->sql->prepareStatementForSqlObject($select);
+            $results = $statement->execute();
+            $this->id = $results->current()['id'];
+            
+            if(isset($this->attributes))
+            {
+                foreach($this->attributes as $attribute)
+                {
+                    $attribute->setReferenceId($this->id);
+                    $attribute->save();
+                }
+            }
+        }
+    }
+    
     // Model interface for binding with forms.
     public function exchangeArray($data)
     {
-        $this->setData($data);
+//        $this->setData($data);
+        if(isset($data['id']))
+        {
+            $this->id = $data['id'];
+            unset($data['id']);
+        }
+        
+        if(isset($data['definition_id']))
+        {
+            $this->definition_id = $data['definition_id'];
+            unset($data['definition_id']);
+        }
+        
+        if(isset($data['guid']))
+        {
+            $this->guid = $data['guid'];
+            unset($data['guid']);
+        }
+        
+        if(isset($data['status']))
+        {
+            $this->status = $data['status'];
+            unset($data['status']);
+        }
+        
+        if(isset($data['status_id']))
+        {
+            $this->status_id = $data['status_id'];
+            unset($data['status_id']);
+        }  
+        
+        if(count($data) > 0)
+        {
+            foreach($data as $key=>$value)
+            {
+                if(isset($this->attributes) && array_key_exists($key, $this->attributes))
+                {
+                    $attribute = $this->attributes[$key];
+                    $attribute->setValue($data[$key]);
+                }
+//                else 
+//                {
+//                    $attribute = new AttributeValueModel($this->dbAdapter);
+//                    $attribute->setData($value);
+//                }
+            }
+        }
+        
     }
     
     public function getArrayCopy()
     {
-        return $this->getData();
+        $data = [            
+//            'id' => $this->id,
+//            'definition_id' => $this->definition_id,
+            'guid' => $this->guid,
+            'status' => $this->status,
+            'status_id' => $this->status_id,    
+        ];
+        
+        if($this->attributes)
+        {
+            foreach($this->attributes as $attributeModel)
+            {
+                $data[$attributeModel->code] = $attributeModel->getData();
+            }
+        }
+        
+        return $data;
     }
 }
