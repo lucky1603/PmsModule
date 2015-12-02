@@ -1,10 +1,9 @@
 <section class="reservation-entity">
     <?php        
-        $this->headLink()->setStylesheet('/js/jquery-ui/jquery-ui.css');
-        $this->headScript()->appendFile('/js/jquery-2.1.4.js');
-        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');
-        $this->headScript()->appendFile('/js/helper.js');       
-        
+        $this->headLink()->setStylesheet('/js/datetimepicker/jquery.datetimepicker.css');
+        $this->headScript()->appendFile('/js/datetimepicker/build/jquery.datetimepicker.full.js');
+        $this->headScript()->appendFile('/js/helper.js');      
+                
         $form = $this->form;
         $id = $this->id;
         if(isset($id))
