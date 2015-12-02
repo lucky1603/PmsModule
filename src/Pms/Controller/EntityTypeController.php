@@ -37,22 +37,6 @@ class EntityTypeController extends AbstractActionController
      */
     public function editAction()
     {
-//        $id = $this->params()->fromRoute('id');
-//        $form = $this->getServiceLocator()->get('EntityTypeForm');
-//        $table = $this->getServiceLocator()->get('EntityTypeTable');
-//        if($id)
-//        {
-//            $id = (int)$id;
-//            $entityType = $table->getEntityType($id);
-//            $form->setData($entityType->getArrayCopy());
-//            $viewModel = new ViewModel([
-//                'form' => $form,
-//                'id' => $id,
-//            ]);       
-//            return $viewModel;
-//        }
-//        
-//        return new ViewModel(['form' => $form]);
         $id = $this->params()->fromRoute('id');
         $form = $this->getServiceLocator()->get('EntityTypeForm');
         $entityTypeModel = $this->getServiceLocator()->get('EntityTypeModel');
@@ -68,7 +52,7 @@ class EntityTypeController extends AbstractActionController
                 $entity_id = $entityTypeData['id'];
                 if($id != $entity_id)
                 {
-                    \Zend\Debug\Debug::dump('razlicito ... id = '.$id.', entity_id = '.$entity_id);
+//                    \Zend\Debug\Debug::dump('razlicito ... id = '.$id.', entity_id = '.$entity_id);
                     $entityTypeModel->setId($id);
                     $session->entityTypeData = $entityTypeModel->getData();
                 }
@@ -76,10 +60,7 @@ class EntityTypeController extends AbstractActionController
                 {
                     $entityTypeModel->setData($entityTypeData);
                 }
-                
-//                \Zend\Debug\Debug::dump($entityTypeData);
-//                die();
-                
+                                
                 $form->bind($entityTypeModel);
                 return new ViewModel([
                     'form' => $form,
@@ -141,40 +122,11 @@ class EntityTypeController extends AbstractActionController
         $session = new Container('models');
         $entityTypeData = $session->entityTypeData;
         $model->setData($entityTypeData);
-//        \Zend\Debug\Debug::dump($model->getData());
-//            die();
-        
-//        if($id)
-//        {
-//            $id = (int)$id;
-//            $entityType = $table->getEntityType($id);
-//            $form->bind($entityType);
-//            $form->setData($post);
-//            if($form->isValid())
-//            {
-//                $table->saveEntityType($entityType);
-//            }
-//        }
-//        else 
-//        {            
-//            $form->bind($model);
-//            $form->setData($post);
-//            if($form->isValid())
-//            {                
-//                $entityType = new \Pms\Model\EntityType();
-//                $entityType->exchangeArray($form->getData());
-//                $table->saveEntityType($entityType);
-//                $model->save();
-//                unset($session->entityTypeData);
-//            }                        
-//        }
         
         $form->bind($model);
         $form->setData($post);
         if($form->isValid())
         {             
-//            \Zend\Debug\Debug::dump($model->getData());
-//            die();
             $model->save();
             unset($session->entityTypeData);
         } 

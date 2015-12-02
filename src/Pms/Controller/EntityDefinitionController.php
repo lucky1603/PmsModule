@@ -174,7 +174,6 @@ class EntityDefinitionController extends AbstractActionController
                 $entityDefinitionModel->save();
             }                        
         }
-        
         return $this->redirect()->toRoute('pms/entity-definition');
     }
         

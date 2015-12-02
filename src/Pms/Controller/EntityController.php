@@ -15,6 +15,7 @@ use Zend\Debug\Debug;
 use Pms\Model\Entity;
 use Pms\Model\EntityModel;
 use Zend\Session\Container;
+use Zend\Form\Exception\InvalidElementException;
 
 /**
  * EntityController class.
@@ -59,6 +60,8 @@ class EntityController extends AbstractActionController
         $entityModel = $this->getServiceLocator()->get('EntityModel');
         $entityModel->setId($id);        
         $form->setData($entityModel->getData());
+//        Debug::dump($entityModel->getData());
+//        die();
         
         if(isset($entityModel->attributes))
         {
@@ -79,17 +82,7 @@ class EntityController extends AbstractActionController
                 elseif ($attribute->type == 'select')
                 {
                     $attElement = new \Zend\Form\Element\Select($attribute->code);
-                    $optionValues = array();
-                    if(isset($attribute->optionValues))
-                    {
-                        $optionValues = array();
-                        foreach($attribute->optionValues as $optionValue)
-                        {
-                            $optionValues[$optionValue['value']] = $optionValue['text'];
-                        }
-                        $attElement->setValueOptions($optionValues);
-                    }
-
+                    $attElement->setValueOptions($attribute->optionValues);                    
                 }
                 else {
                     $attElement = new \Zend\Form\Element\Text($attribute->code);
@@ -101,29 +94,24 @@ class EntityController extends AbstractActionController
             }
             
         }
-//        $form->bind($entityModel);
-        if($form->isValid())
-        {
-            if(isset($entityModel->attributes))
-            {
-                $viewModel = new ViewModel([
-                    'form' => $form,
-                    'id' => $id,
-                    'attributes' => $entityModel->attributes,
-                ]);
-            }
-            else 
-            {
-                $viewModel = new ViewModel([
-                    'form' => $form,
-                    'id' => $id,
-                ]);    
-            }
-                        
-            return $viewModel;
-        }
         
-        return $this->redirect()->toRoute('pms/entity');        
+        if(isset($entityModel->attributes))
+        {
+            $viewModel = new ViewModel([
+                'form' => $form,
+                'id' => $id,
+                'attributes' => $entityModel->attributes,
+            ]);
+        }
+        else 
+        {
+            $viewModel = new ViewModel([
+                'form' => $form,
+                'id' => $id,
+            ]);    
+        }
+
+        return $viewModel;                        
     }
     
     /**
@@ -158,17 +146,7 @@ class EntityController extends AbstractActionController
                     elseif ($attribute->type == 'select')
                     {
                         $attElement = new \Zend\Form\Element\Select($attribute->code);
-                        $optionValues = array();
-                        if(isset($attribute->optionValues))
-                        {
-                            $optionValues = array();
-                            foreach($attribute->optionValues as $optionValue)
-                            {
-                                $optionValues[$optionValue['value']] = $optionValue['text'];
-                            }
-                            $attElement->setValueOptions($optionValues);
-                        }
-
+                        $attElement->setValueOptions($attribute->optionValues);                         
                     }
                     else {
                         $attElement = new \Zend\Form\Element\Text($attribute->code);
@@ -216,17 +194,7 @@ class EntityController extends AbstractActionController
                     elseif ($attribute->type == 'select')
                     {
                         $attElement = new \Zend\Form\Element\Select($attribute->code);
-                        $optionValues = array();
-                        if(isset($attribute->optionValues))
-                        {
-                            $optionValues = array();
-                            foreach($attribute->optionValues as $optionValue)
-                            {
-                                $optionValues[$optionValue['value']] = $optionValue['text'];
-                            }
-                            $attElement->setValueOptions($optionValues);
-                        }
-
+                        $attElement->setValueOptions($attribute->optionValues);                                                
                     }
                     else {
                         $attElement = new \Zend\Form\Element\Text($attribute->code);

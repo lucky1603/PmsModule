@@ -388,7 +388,7 @@ class EntityModel
         {
             foreach($this->attributes as $attributeModel)
             {
-                $data[$attributeModel->code] = $attributeModel->getData();
+                $data[$attributeModel->code] = $attributeModel->getValue();
             }
         }
         

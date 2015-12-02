@@ -244,8 +244,6 @@ class EntityDefinitionModel
      */
     public function save()
     {
-        \Zend\Debug\Debug::dump("About to be saved...");
-        \Zend\Debug\Debug::dump($this->getData());
         if($this->id != NULL)
         {
             // Save entity definition data.
@@ -286,7 +284,7 @@ class EntityDefinitionModel
             $statement = $this->sql->prepareStatementForSqlObject($select);
             $results = $statement->execute();
             $this->id = $results->current()['id'];
-            
+                       
             if(isset($this->attributes))
             {
                 foreach($this->attributes as $attribute)
@@ -322,6 +320,8 @@ class EntityDefinitionModel
                 }
             }
         }
+        
+        \Zend\Debug\Debug::dump("came to the end...");
     }
     
     /**

@@ -49,12 +49,17 @@
         <table class='table'>
             <tr>
                 <th>Parameter</th>
+                <th>Accessibility</th>
                 <th>Type</th>
                 <th>Action</th>
             </tr>
             <?php foreach($model->attributes as $attribute):?>
             <tr>
                 <td><?php echo $attribute->label?></td>
+                <td><?php 
+                    $values = ['GLOBAL', 'DEFINITION', 'OBJECT'];
+                    echo $values[$attribute->scope];
+                ?></td>
                 <td><?php echo $attribute->type?></td>
                 <td><a href='/pms/entity-type/editAttribute/<?php echo $attribute->internal_id?>'>Edit</a> | <a href=''>Delete</a></td>
             </tr>

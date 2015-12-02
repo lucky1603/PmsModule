@@ -9,6 +9,7 @@ namespace Pms\Model;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
+use Zend\Debug\Debug;
 
 /**
  * AttributeValueModel class.
@@ -172,7 +173,7 @@ class AttributeValueModel
             'sort_order' => $this->sort_order,        
             'value' => $this->value,
             'scope' => $this->scope,
-            'unit'
+            'unit' => $this->unit,
         ];
         
         if(isset($this->optionValues))
