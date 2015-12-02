@@ -17,7 +17,7 @@ use Pms\Model\User;
 use Pms\Model\Client;
 use Pms\Model\AttributeTable;
 use Pms\Model\BusinessModel;
-use Pms\Model\BusinessForm;
+use Pms\Form\BusinessForm;
 use Pms\Model\EntityTable;
 use Pms\Model\EntityDefinitionTable;
 use Pms\Model\EntityTypeTable;
