@@ -11,6 +11,7 @@ namespace Pms\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
+use Zend\Debug\Debug;
 
 /**
  * LoginController class.
@@ -46,7 +47,7 @@ class LoginController extends AbstractActionController
         
         if($result->isValid()) {
             $authService->getStorage()->write($this->request->getPost('email'));
-            return $this->redirect()->toRoute(NULL, ['controller' => 'login', 'action' => 'confirm']);
+            return $this->redirect()->toRoute(NULL);
         }
         
         return new ViewModel([
@@ -63,8 +64,14 @@ class LoginController extends AbstractActionController
         $user_email = $this->getAuthService()->getStorage()->read();
         $userTable = $this->getServiceLocator()->get('UserTable');
         $user = $userTable->getUserByEMail($user_email);
-        $results = $userTable->fetchView($user->id);
-        $viewModel = new ViewModel(['user' => $results[0]]);
+
+        if($user->role_id == 1)
+        {
+            $this->redirect()->toRoute(NULL, [
+                'controller' => 'admin',
+                'action' => 'index',
+            ]);
+        }
         return $viewModel;
     }
     

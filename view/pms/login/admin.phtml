@@ -1,8 +1,11 @@
-<section class="admin">
+<section class="login-admin">
+    <?php
+        $user = $this->username;
+    ?>
     <h1>
-        Welcome to Demo Page :)
+        Welcome <?php echo $user?> :)!
     </h1>
-    <p>On this page, you can choose to do following things...
+    <p>As the member of ADMIN group, you can choose to do following things...
     <h3>Define Business</h3>
     Here you can/should define your type of business. <a href='/pms/business'>Define business</a>
     <h3>Object Type Management</h3>
@@ -31,4 +34,3 @@
     <p>The clients list. As administrator, you shouldn't be dealing with it, but currently, until we define other users, it's here. 
     <p><p><a href='/pms/client'>To client preview and management >>>> </a>    
 </section>
-

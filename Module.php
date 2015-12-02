@@ -176,7 +176,7 @@ class Module implements AutoloaderProviderInterface
                     return $form;
                 },
                 'BusinessForm' => function($sm) {
-                    $form = new Form\BusinessForm();
+                    $form = new BusinessForm();
                     return $form;
                 },
                 'EntityDefinitionForm' => function($sm) {

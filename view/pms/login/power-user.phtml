@@ -1,0 +1,22 @@
+<section class="login-power-user">
+    <?php
+        $user = $this->username;
+    ?>
+    <h1>
+        Welcome <?php echo $user;?> :)!
+    </h1>
+    <p>As the member of POWER-USER group, you can choose to do following things...    
+    <h3>Object Management</h3>
+    Object is the final subject of our actions. It can be anything which can be reserved and used on defined period of time - hotel room, conference room,
+    office, gym, sport field, boat etc. Objects are defined by the object definitions and inherit of of their properties, having also some of their own, like 
+    <i>guid</i> and <i>status</i> properties, which help them differ one from another. You could define some of the parameters which are specific only to a particular 
+    entity. Example: Room 101 is single room, which means that it can receive max one person, it has bathroom, AC and TV appliances. But it could have a 'sea view' or 'rare view', 
+    which is not defined by a room definition. This property is specific to this particular room. <p><p><a href='/pms/entity'>On to entity management >>> </a>
+    <h3>Reservations</h3>
+    Here, you can make or cancel reservations. <a href='/pms/reservation'>Go to reservation page >>>> </a>        
+    <h3>Client Management</h3>
+    <p>The clients list. As administrator, you shouldn't be dealing with it, but currently, until we define other users, it's here. 
+    <p><p><a href='/pms/client'>To client preview and management >>>> </a>   
+    <h3>Create Reports</h3>
+    You can create different kind of reports. <a href="">Create reports >>>> </a>
+</section>
