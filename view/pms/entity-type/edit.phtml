@@ -61,7 +61,11 @@
                     echo $values[$attribute->scope];
                 ?></td>
                 <td><?php echo $attribute->type?></td>
-                <td><a href='/pms/entity-type/editAttribute/<?php echo $attribute->internal_id?>'>Edit</a> | <a href=''>Delete</a></td>
+                <td>
+                    <a href='/pms/entity-type/editAttribute/<?php echo $attribute->internal_id?>'>Edit</a> 
+                    | 
+                    <a href='/pms/entity-type/deleteAttribute/<?php echo $attribute->internal_id?>'>Delete</a>
+                </td>
             </tr>
             <?php endforeach;?>
         </table>   

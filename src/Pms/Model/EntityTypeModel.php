@@ -230,7 +230,7 @@ class EntityTypeModel
                 \Zend\Debug\Debug::dump("The following keys will be deleted...");
                 \Zend\Debug\Debug::dump($deleteAttributes);            
                 $delete = $this->sql->delete();
-                $delete->where->in('id', $deleteAttributes)
+                $delete->where->in('attribute_id', $deleteAttributes)
                         ->equalTo('entity_type_id', $this->id);            
                 $table->delete($delete);
             }
@@ -245,6 +245,7 @@ class EntityTypeModel
                     'attribute_id' => $attributeModel->id,
                     'entity_type_id' => $this->id,
                 ];
+
                 $results = $table->select($data);
                 if($results->count() == 0)
                 {

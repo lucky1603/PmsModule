@@ -49,7 +49,8 @@ class EntityTypeController extends AbstractActionController
             if(isset($id))
             {
                 $id = (int)$id;
-                $entity_id = $entityTypeData['id'];
+                $entity_id = isset($entityTypeData['id']) ? $entityTypeData['id'] : null;
+                
                 if($id != $entity_id)
                 {
 //                    \Zend\Debug\Debug::dump('razlicito ... id = '.$id.', entity_id = '.$entity_id);
@@ -281,6 +282,31 @@ class EntityTypeController extends AbstractActionController
             'action' => 'edit',
         ]);    
        
+    }
+    
+    public function deleteAttributeAction()
+    {
+        $id = $this->params()->fromRoute('id');
+        $session = new Container('models');
+        $modelData = $session->entityTypeData;
+        $model = $this->getServiceLocator()->get('EntityTypeModel');
+        $model->setData($modelData);
+        
+//        \Zend\Debug\Debug::dump($model->getData());
+//        die();
+        unset($model->attributes[$id]);
+        $session->entityTypeData = $model->getData();
+        if(isset($model->id))
+        {
+            return $this->redirect()->toRoute('pms/entity-type', [
+                'action' => 'edit', 
+                'id' => $model->id,
+            ]);
+        }
+        
+        return $this->redirect()->toRoute('pms/entity-type', [
+                'action' => 'edit', 
+        ]);
     }
 }
 
