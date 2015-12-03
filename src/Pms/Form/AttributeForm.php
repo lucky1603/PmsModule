@@ -18,7 +18,7 @@ class AttributeForm extends Form
             'boolean' => 'BOOLEAN',
             'character' => 'VARCHAR',
             'double' => 'DOUBLE', 
-            'integer' => 'INTENGER', 
+            'integer' => 'INTEGER', 
             'text' => 'TEXTAREA',
             'timestamp' => 'TIME',
             'select' => 'SELECT',
