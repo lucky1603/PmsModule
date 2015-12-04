@@ -14,7 +14,7 @@
 return array(
     'db' => [
         'driver' => 'Pdo',
-        'dsn' => 'pgsql:dbname=hotel;host=192.168.0.14',
+        'dsn' => 'pgsql:dbname=hotel;host=192.168.0.7',
         'username' => 'hotel',
         'password' => 'BiloKoji12',        
         'charset' => 'utf8',
