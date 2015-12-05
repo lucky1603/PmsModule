@@ -9,6 +9,9 @@ namespace Pms\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Pms\Model\Client;
+use Zend\Session\Container;
+use Zend\Debug\Debug;
+use Zend\Db\Sql\Sql;
 
 /**
  * ClientController class.
@@ -36,10 +39,10 @@ class ClientController extends AbstractActionController
     {
         $id = $this->params()->fromRoute('id');
         $form = $this->getServiceLocator()->get('ClientForm');
+        $clientTable = $this->getServiceLocator()->get('ClientTable');
         if(isset($id))
         {
-            // edit
-            $clientTable = $this->getServiceLocator()->get('ClientTable');
+            // edit            
             $client = $clientTable->getClient($id);
             $form->bind($client);
             $viewModel = new ViewModel([
@@ -84,6 +87,16 @@ class ClientController extends AbstractActionController
             $table->saveClient($client);            
         }
         
+        $session = new Container('models');
+        if(isset($session->reservationModel))
+        {
+            $lastId = $table->getLastId();
+            $session->reservationModel['client_id'] = $lastId;
+            return $this->redirect()->toRoute('pms/reservation', [
+                'action' => 'edit',
+            ]); 
+        }
+                
         $this->redirect()->toRoute('pms/client');
     }
     

@@ -1,9 +1,8 @@
 <section class="reservation-edit">
     <?php 
         $this->headLink()->setStylesheet('/js/jquery-ui/jquery-ui.css');
-        $this->headScript()->appendFile('/js/jquery-2.1.4.js');
         $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');
-        $this->headScript()->appendFile('/js/helper.js');   
+        $this->headScript()->appendFile('/js/helper.js');      
         $form = $this->form;
         $id = $this->id;
         $model = $this->model;
@@ -27,12 +26,14 @@
     <h2>Details <?php echo isset($id) ? 'Reservation ID: '. $model->reservation_id : 'New Reservation'?></h2>
     <br>
     <br>
+    
     <table class="table">
         <tr>
             <td style="width:100px"><?php echo $this->formLabel($form->get('client_id'))?></td>
             <td>
                 <?php echo $this->formElement($form->get('client_id'))?>
                 <?php echo $this->formElementErrors($form->get('client_id'))?>
+                
             </td>
         </tr>
         <tr>
@@ -86,6 +87,21 @@
     <?php endif;?>    
     <p><a href="/pms/reservation/entity">Add new entity</a><br>
     <span><?php echo $this->formElement($form->get('submit'))?><a href="/pms/reservation/reset" class='ui-button'>Back</a></span>
-    <?php echo $this->form()->closeTag()?>        
+    <?php echo $this->form()->closeTag()?>     
+    <button class='ui-button' id="button1">Click me</button>
+    <div id="dialog1"></div>
+    <script type="text/javascript">
+        $(function() {                        
+            $("#button1").on("click", function(evt){
+                $("#dialog1").dialog({
+                    autoOpen: false,
+                    modal: true
+                });
+                $(this).find("#dialog1").dialog("open");
+            });                   
+        });
+        
+    </script>
+    
 </section>
 

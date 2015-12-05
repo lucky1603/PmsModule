@@ -1,26 +1,12 @@
+<?php 
+    $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');
+    $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
+    $this->headScript()->appendFile('/js/helper.js');
+?>
 <h2>Welcome to PMS Manager</h2>
 <p>Our application is used to handle the reservations
-<p>Please <a href="/pms/login">sign in</a> or <a href="/pms/register">sign up as the new member</a>
-<!--    
-<h3>And here is the list of the current users:</h3>
-<table class='table'>
-    <tr>
-        <th>
-            Username
-        </th>
-        <th>
-            E-mail
-        </th>
-    </tr>
-    <?php foreach($users as $user) {?>
-    <tr>
-        <td>
-            <?php echo $user->username ?>
-        </td>
-        <td>
-            <?php echo $user->email ?>
-        </td>
-    </tr>
-    <?php } ?>
-</table>
--->
+    
+<p><a class='ui-button' href="/pms/login">Sign In</a> 
+<p> or <br>
+<a class='ui-button' href="/pms/register">Sign Up</a>
+

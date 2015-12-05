@@ -48,13 +48,11 @@ class ReservationController extends AbstractActionController
                 $reservation_id = (int)$reservationModelData['reservation_id'];
                 if($id != $reservation_id)
                 {
-//                    Debug::dump('They are not equal');
                     $model->setId($id);
                     $sessionModels->reservationModel = $model->getData();
                 }
                 else 
                 {
-//                    Debug::dump('They are equal');
                     $model->setData($reservationModelData);
                 }
                 
@@ -62,6 +60,17 @@ class ReservationController extends AbstractActionController
                 $viewModel = new ViewModel([
                     'form' => $form,
                     'id' => $id,
+                    'model' => $model,
+                ]);
+                return $viewModel;
+            }
+            else 
+            {
+                $model->setData($reservationModelData);
+                
+                $form->bind($model);
+                $viewModel = new ViewModel([
+                    'form' => $form,
                     'model' => $model,
                 ]);
                 return $viewModel;

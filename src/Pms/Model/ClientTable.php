@@ -7,7 +7,7 @@
 namespace Pms\Model;
 
 use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\Adapter\Adapter;
+use Zend\Db\Sql\Sql;
 use Pms\Model\Client;
 
 /**
@@ -101,6 +101,19 @@ class ClientTable
     public function deleteClient($id)
     {
         $this->tableGateway->delete(['id' => $id]);
+    }
+    
+    public function getLastId()
+    {        
+        $adapter = $this->tableGateway->getAdapter();        
+        $sql = new Sql($adapter);
+        $select = $sql->select();
+        $select->from('clients')
+                ->order('id DESC')
+                ->limit(1);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $rows = $statement->execute();        
+        return $rows->current()['id'];
     }
 }
 
