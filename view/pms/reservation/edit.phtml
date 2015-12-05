@@ -2,7 +2,7 @@
     <?php 
         $this->headLink()->setStylesheet('/js/jquery-ui/jquery-ui.css');
         $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');
-        $this->headScript()->appendFile('/js/helper.js');      
+//        $this->headScript()->appendFile('/js/helper.js');      
         $form = $this->form;
         $id = $this->id;
         $model = $this->model;
@@ -33,7 +33,7 @@
             <td>
                 <?php echo $this->formElement($form->get('client_id'))?>
                 <?php echo $this->formElementErrors($form->get('client_id'))?>
-                
+                <a href='' class='ui-button' id='button'>New User</a>
             </td>
         </tr>
         <tr>
@@ -88,20 +88,36 @@
     <p><a href="/pms/reservation/entity">Add new entity</a><br>
     <span><?php echo $this->formElement($form->get('submit'))?><a href="/pms/reservation/reset" class='ui-button'>Back</a></span>
     <?php echo $this->form()->closeTag()?>     
-    <button class='ui-button' id="button1">Click me</button>
-    <div id="dialog1"></div>
+    <div id="dialog"></div>
     <script type="text/javascript">
-        $(function() {                        
-            $("#button1").on("click", function(evt){
-                $("#dialog1").dialog({
+        $(function() {         
+            $('.ui-button').button();
+            $("#button").on("click", function(e){
+                e.preventDefault();
+                $("#dialog").dialog({
                     autoOpen: false,
                     modal: true
                 });
-                $(this).find("#dialog1").dialog("open");
-            });                   
+                $.get('/pms/client/edit', function(data) {
+                   var forma = $(data).find('form');
+                   $('#dialog').html(forma);
+                });
+                $("#dialog").dialog("open");
+            });
+            
+            $('#client_id').on('change', function() {
+                var id = $('select#client_id option:selected').val();
+                if(id) 
+                {
+                    $.get('/pms/client/preview/' + id, function(data) {
+                        var client = $(data).find('.client-preview');
+                        $('.client-content').html(client); 
+                    });    
+                }
+            }); 
         });
-        
     </script>
+    <script src='/js/testajax.js'></script>
     
 </section>
 
