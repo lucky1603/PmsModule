@@ -15,7 +15,7 @@ $(document).ready(function() {
         fill('#client_id');
     }); 
     
-    $('.ui-button').button();
+//    $('.ui-button').button();
     $('.reservation-date').datepicker();
         
     $('#entity_definition_id').on('change', function(evt) {
@@ -35,20 +35,22 @@ $(document).ready(function() {
         });        
     });
     
-//    $('#dialog').dialog({
-//        autoOpen: false,
-//        modal: true,
-//    });
+    $(function() {
+        $('.ui-button').button();
+        $("#button1").on("click", function(e){
+            e.preventDefault();
+            $("#dialog1").dialog({
+                autoOpen: false,
+                modal: true
+            });
+            $.get('/pms/client/edit', function(data) {
+               var forma = $(data).find('form');
+               $('#dialog1').html(forma);
+            });
+            $("#dialog1").dialog("open");
+        });
+    });
     
-//    $('#button').on('click', function(e) {
-//        e.preventDefault();
-//        alert('clicked');
-//        $.get('/pms/client/edit', function(data) {
-//            $('#dialog').html(data);
-//        });
-//        
-//        //$('#dialog').dialog("open");
-//    });
 });
 
 /**
