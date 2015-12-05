@@ -33,7 +33,7 @@ if(isset($date_from) && isset($date_to) && isset($today))
     }
 }
 
-$conn = pg_connect('host=192.168.0.14 port=5432 dbname=hotel user=hotel password=BiloKoji12');
+$conn = pg_connect('host=192.168.0.7 port=5432 dbname=hotel user=hotel password=BiloKoji12');
 $result = pg_query($conn, 'SELECT entity.id as index, entity.guid FROM entity 
                            JOIN entity_definition ON (entity_definition.id = entity.definition_id) 
                            JOIN reservations ON (reservations.entity_id = entity.id)

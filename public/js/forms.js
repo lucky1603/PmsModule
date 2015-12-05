@@ -1,3 +1,9 @@
+/**
+ * @description This file handles actions about the update and mangement of value options of a html form select element.
+ * @type String
+ * @author Sinisa
+ */
+
 var optionsArea;
 var counter = 1;
 var model;
