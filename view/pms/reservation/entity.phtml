@@ -41,14 +41,13 @@
         </dd>
         <dt><?php echo $this->formLabel($form->get('entity_id'))?><dt>
         <dd>
-            <?php echo $this->formElement($form->get('entity_id'))?>
+            <?php echo $this->formElement($form->get('entity_id'))?>            
             <?php echo $this->formElementErrors($form->get('entity_id'))?>
         </dd>
         <dt><?php echo $this->formLabel($form->get('guest_id'))?><dt>
         <dd>
             <?php echo $this->formElement($form->get('guest_id'))?>
             <?php echo $this->formElementErrors($form->get('guest_id'))?>
-            <a href='pms/client/edit'>New</a>
         </dd>
         <dd>
             <?php echo $this->formElement($form->get('submit'))?>

@@ -90,13 +90,28 @@
     <?php echo $this->form()->closeTag()?>     
     <div id="dialog"></div>
     <script type="text/javascript">
-        $(function() {         
+        $(function() {  
+            var fill = function(what) {
+                var id = $('select#client_id option:selected').val();
+                if(id) 
+                {
+                    $.get('/pms/client/preview/' + id, function(data) {
+                        var client = $(data).find('.client-preview');
+                        $('.client-content').html(client); 
+                    });    
+                }
+            };
+            
+            fill();
+            
             $('.ui-button').button();
             $("#button").on("click", function(e){
                 e.preventDefault();
                 $("#dialog").dialog({
                     autoOpen: false,
-                    modal: true
+                    modal: true, 
+                    width: 400,
+                    height: 600,
                 });
                 $.get('/pms/client/edit', function(data) {
                    var forma = $(data).find('form');
@@ -106,14 +121,7 @@
             });
             
             $('#client_id').on('change', function() {
-                var id = $('select#client_id option:selected').val();
-                if(id) 
-                {
-                    $.get('/pms/client/preview/' + id, function(data) {
-                        var client = $(data).find('.client-preview');
-                        $('.client-content').html(client); 
-                    });    
-                }
+                  fill();
             }); 
         });
     </script>
