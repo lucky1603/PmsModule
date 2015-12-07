@@ -1,9 +1,10 @@
 <section class="reservation-entity">
     <?php        
         $this->headLink()->setStylesheet('/js/datetimepicker/jquery.datetimepicker.css');
+        $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');        
         $this->headScript()->appendFile('/js/datetimepicker/build/jquery.datetimepicker.full.js');
-        $this->headScript()->appendFile('/js/helper.js');      
-                
+                       
         $form = $this->form;
         $id = $this->id;
         if(isset($id))
@@ -48,11 +49,43 @@
         <dd>
             <?php echo $this->formElement($form->get('guest_id'))?>
             <?php echo $this->formElementErrors($form->get('guest_id'))?>
+            <a href="" id="button" class="ui-button">New</a>
         </dd>
         <dd>
             <?php echo $this->formElement($form->get('submit'))?>
         </dd>
     </dl>
     <?php echo $this->form()->closeTag()?>
+    <div id="dialog"></div>
+    <script>
+    $(function() {
+        var dialog, form;
+        
+        $('.reservation-date').datetimepicker();
+//        $('.ui-button').button();
+        
+        dialog = $('#dialog').dialog({
+                autoOpen: false,
+                modal: true,
+                width: 400, 
+                height: 600,
+                
+        });
+            
+        $('#button').on('click', function(e) {
+            var formData = "";
+            e.preventDefault();
+            $.get('/pms/client/edit', function(data) {
+                formData = $(data).find('form');    
+                dialog.html(formData);
+            });
+            
+            $(dialog).find('form').on('submit', function(evt) {
+               alert('done');
+            })                                    
+            dialog.dialog('open');            
+        });
+    });
+    </script>
 </section>
 
