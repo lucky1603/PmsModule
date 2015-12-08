@@ -128,4 +128,5 @@ class ClientController extends AbstractActionController
             'client' => $client,
         ]);
     }
+    
 }

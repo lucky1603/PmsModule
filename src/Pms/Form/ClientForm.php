@@ -18,7 +18,7 @@ class ClientForm extends Form
            'name' => 'first_name',
            'attributes' => [
                'type' => 'text',
-               'required' => 'required',
+//               'required' => 'required',
            ],
            'options' => [
                'label' => 'First Name'
@@ -30,7 +30,7 @@ class ClientForm extends Form
            'name' => 'last_name',
            'attributes' => [
                'type' => 'text',
-               'required' => 'required',
+//               'required' => 'required',
            ],
            'options' => [
                'label' => 'Last Name'
@@ -42,7 +42,7 @@ class ClientForm extends Form
            'name' => 'address1',
            'attributes' => [
                'type' => 'textarea',
-               'required' => 'required',
+//               'required' => 'required',
            ],
            'options' => [
                'label' => 'Addres1'
@@ -65,7 +65,7 @@ class ClientForm extends Form
            'name' => 'city',
            'attributes' => [
                'type' => 'text',
-               'required' => 'required',
+//               'required' => 'required',
            ],
            'options' => [
                'label' => 'City'
@@ -77,7 +77,7 @@ class ClientForm extends Form
            'name' => 'zipcode',
            'attributes' => [
                'type' => 'text',
-               'required' => 'required',
+//               'required' => 'required',
            ],
            'options' => [
                'label' => 'Zip Code'
@@ -89,7 +89,7 @@ class ClientForm extends Form
            'name' => 'country',
            'attributes' => [
                'type' => 'text',
-               'required' => 'required',
+//               'required' => 'required',
            ],
            'options' => [
                'label' => 'Country'
@@ -101,7 +101,7 @@ class ClientForm extends Form
            'name' => 'phone',
            'attributes' => [
                'type' => 'text',
-               'required' => 'required',
+//               'required' => 'required',
            ],
            'options' => [
                'label' => 'Phone'
@@ -135,7 +135,7 @@ class ClientForm extends Form
            'name' => 'email',
            'attributes' => [
                'type' => 'text',
-               'required' => 'required',
+//               'required' => 'required',
            ],
            'options' => [
                'label' => 'E-Mail'

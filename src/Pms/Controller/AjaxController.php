@@ -132,4 +132,39 @@ class AjaxController extends AbstractActionController
         $this->viewModel->setVariable('response', json_encode($keys));
         return $this->viewModel;
     }
+    
+    /**
+     * Get the client id of the last written client.
+     * @return type
+     */
+    public function getLastClientAction()
+    {
+        $client_table = $this->getServiceLocator()->get('ClientTable');
+        return $this->viewModel->setVariable('response', json_encode($client_table->getLastId()));
+    }
+    
+    /**
+     * Write new client to the database and return its id.
+     * @return type
+     */
+    public function writeNewClientAction()
+    {
+        $post = $this->request->getPost();
+        $form = $this->getServiceLocator()->get("ClientForm");
+        $table = $this->getServiceLocator()->get("ClientTable");
+        
+        $form->setData($post);
+        if($form->isValid())
+        {
+            $client = new \Pms\Model\Client();    
+            $client->exchangeArray($post);
+            $table->saveClient($client);
+        }
+        
+        $data = array();
+        $id = $table->getLastId();
+        $data['client'] = $table->getClient($id);
+        $data['lastId'] = $id;
+        return $this->viewModel->setVariable('response', json_encode($data));
+    }        
 }
