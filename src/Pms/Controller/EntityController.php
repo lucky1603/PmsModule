@@ -11,11 +11,7 @@ namespace Pms\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Db\Sql\Sql;
-use Zend\Debug\Debug;
-use Pms\Model\Entity;
-use Pms\Model\EntityModel;
 use Zend\Session\Container;
-use Zend\Form\Exception\InvalidElementException;
 
 /**
  * EntityController class.
