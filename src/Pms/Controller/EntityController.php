@@ -173,6 +173,8 @@ class EntityController extends AbstractActionController
         else 
         {
             $session = new Container('models');
+//            Debug::dump($session->entityData);
+//            die();
             $entityModel->setData($session->entityData);
             $attributes = $entityModel->attributes;
             if(isset($attributes))
@@ -203,14 +205,14 @@ class EntityController extends AbstractActionController
                     $attElement->setLabel($attribute->label);
                     $attElement->setValue($attribute->getValue());
                     $form->add($attElement);
-                }
-
-                $form->bind($entityModel);
-                $form->setData($post);
-                if($form->isValid())
-                {
-                    $entityModel->save();
-                }
+                }                
+            }
+            
+            $form->bind($entityModel);
+            $form->setData($post);
+            if($form->isValid())
+            {
+                $entityModel->save();
             }
         }
         
