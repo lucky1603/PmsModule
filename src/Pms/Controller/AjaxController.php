@@ -166,5 +166,27 @@ class AjaxController extends AbstractActionController
         $data['client'] = $table->getClient($id);
         $data['lastId'] = $id;
         return $this->viewModel->setVariable('response', json_encode($data));
-    }        
+    }       
+    
+    /**
+     * Updates the session data of the reservation model.
+     * @return type
+     */
+    public function updateReservationModelAction()
+    {
+        $client_id = $this->params()->fromQuery('client_id');
+        $status_id = $this->params()->fromQuery('status_id');
+        $session = new \Zend\Session\Container('models');
+        if(isset($session->reservationModel))
+        {
+            $session->reservationModel['client_id'] = $client_id;
+            $session->reservationModel['status_id'] = $status_id;    
+            $response = "Succeded";
+        }
+        else {
+            $response = "Failed";
+        }
+        
+        return $this->viewModel->setVariable($response, json_encode($response));
+    }
 }

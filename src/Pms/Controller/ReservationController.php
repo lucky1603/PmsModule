@@ -109,7 +109,6 @@ class ReservationController extends AbstractActionController
     {
         $form = $this->getServiceLocator()->get('ReservationForm');
         $post = $this->request->getPost();
-//        Debug::dump($post);
         $model = $this->getServiceLocator()->get("ReservationModel");
         $sessionModels = new Container('models');
         if(isset($sessionModels->reservationModel))
@@ -120,8 +119,6 @@ class ReservationController extends AbstractActionController
             $form->setData($post);
             if($form->isValid())
             {
-//                Debug::dump($model->getData());
-//                Debug::dump("guest is ".$model->client_id.' '.$model->first_name);
                 $model = $form->getData();
                 $model->save();
                 unset($sessionModels->reservationModel);

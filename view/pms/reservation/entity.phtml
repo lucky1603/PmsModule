@@ -105,7 +105,7 @@
             e.preventDefault();
             $.get('/pms/client/edit', function(data) {
                 formData = $(data).find('form');    
-                $(formData).attr('action', '/pms/client/processFromEntity');
+                //$(formData).attr('action', '/pms/client/processFromEntity');
                 $(formData).on('submit', function(evt) {
                     evt.preventDefault();
                     fields = $(formData).serialize();                    

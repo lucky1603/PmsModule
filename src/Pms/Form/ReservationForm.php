@@ -51,6 +51,7 @@ class ReservationForm extends Form
         {
             $options[$row['id']] = $row['statustext'];
         }        
+        $status->setAttribute('id', 'status_id');
         $status->setValueOptions($options);
 //        $status->setAttribute('style', [
 //            'width' => '100px',

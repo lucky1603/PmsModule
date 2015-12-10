@@ -23,9 +23,6 @@ class ReservationModel
     public $modified_at;
     public $client_id;
     public $status_id;
-//    public $pax_a;
-//    public $pax_y;
-//    public $pax_c;
     public $comment;
     public $clientName;
     public $reservedEntities;
@@ -253,7 +250,8 @@ class ReservationModel
             unset($dataToUpdate['reservedEntities']);
             
             // Set mandatory entry values.
-            $dataToUpdate['modified_at'] = date('m/d/Y', time());
+//            $dataToUpdate['modified_at'] = date('m/d/Y', time());
+            $dataToUpdate['modified_at'] = date('Y-m-d', time());
             
             // Now update.
             $update = $this->sql->update();
