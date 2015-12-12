@@ -41,35 +41,36 @@ class EntityDefinitionController extends AbstractActionController
             $entityDefModel->setId($id);
             $form->setData($entityDefModel->getData());
             $attributes = $entityDefModel->getAttributes();
-            foreach($attributes as $attribute)
-            {                
-                if($attribute->type == 'boolean')
-                {
-                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
-                }
-                elseif ($attribute->type == 'text') {
-                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
-                    $attElement->setAttribute('COLS', 40);
-                    $attElement->setAttribute('ROWS', 4);
-                }
-                elseif ($attribute->type == 'timestamp') {
-                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
-                }
-                elseif ($attribute->type == 'select')
-                {
-                    $attElement = new \Zend\Form\Element\Select($attribute->code);
-                    //$attElement->setAttribute('multiple', TRUE);
-//                    Debug::dump($attribute->getData());
-                    $attElement->setValueOptions($attribute->optionValues);
-                }
-                else {
-                    $attElement = new \Zend\Form\Element\Text($attribute->code);
-                }
-                
-                $attElement->setLabel($attribute->label);
-                $attElement->setValue($attribute->getValue());
-                $form->add($attElement);
-            }
+//            foreach($attributes as $attribute)
+//            {                
+//                if($attribute->type == 'boolean')
+//                {
+//                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+//                }
+//                elseif ($attribute->type == 'text') {
+//                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+//                    $attElement->setAttribute('COLS', 40);
+//                    $attElement->setAttribute('ROWS', 4);
+//                }
+//                elseif ($attribute->type == 'timestamp') {
+//                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+//                }
+//                elseif ($attribute->type == 'select')
+//                {
+//                    $attElement = new \Zend\Form\Element\Select($attribute->code);
+//                    //$attElement->setAttribute('multiple', TRUE);
+////                    Debug::dump($attribute->getData());
+//                    $attElement->setValueOptions($attribute->optionValues);
+//                }
+//                else {
+//                    $attElement = new \Zend\Form\Element\Text($attribute->code);
+//                }
+//                
+//                $attElement->setLabel($attribute->label);
+//                $attElement->setValue($attribute->getValue());
+//                $form->add($attElement);
+//            }
+            $this->addAttributesToForm($attributes, $form);
 
             $viewModel = new ViewModel([
                 'form' => $form,
@@ -102,31 +103,32 @@ class EntityDefinitionController extends AbstractActionController
             
             $entityDefinitionModel->setId($id);
             $attributes = $entityDefinitionModel->getAttributes();
-            foreach($attributes as $attribute)
-            {                
-                if($attribute->type == 'boolean')
-                {
-                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
-                }
-                elseif ($attribute->type == 'text') {
-                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
-                }
-                elseif ($attribute->type == 'timestamp') {
-                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
-                }
-                elseif ($attribute->type == 'select')
-                {
-                    $attElement = new \Zend\Form\Element\Select($attribute->code);
-                    $attElement->setValueOptions($attribute->optionValues);
-                }
-                else {
-                    $attElement = new \Zend\Form\Element\Text($attribute->code);
-                }
-                
-                $attElement->setLabel($attribute->label);
-                $attElement->setValue($attribute->getValue());
-                $form->add($attElement);
-            }
+//            foreach($attributes as $attribute)
+//            {                
+//                if($attribute->type == 'boolean')
+//                {
+//                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+//                }
+//                elseif ($attribute->type == 'text') {
+//                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+//                }
+//                elseif ($attribute->type == 'timestamp') {
+//                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+//                }
+//                elseif ($attribute->type == 'select')
+//                {
+//                    $attElement = new \Zend\Form\Element\Select($attribute->code);
+//                    $attElement->setValueOptions($attribute->optionValues);
+//                }
+//                else {
+//                    $attElement = new \Zend\Form\Element\Text($attribute->code);
+//                }
+//                
+//                $attElement->setLabel($attribute->label);
+//                $attElement->setValue($attribute->getValue());
+//                $form->add($attElement);
+//            }
+            $this->addAttributesToForm($attributes, $form);
             
             $form->bind($entityDefinitionModel);
             $form->setData($post);
@@ -142,31 +144,32 @@ class EntityDefinitionController extends AbstractActionController
             $session = new Container('models');
             $entityDefinitionModel->setData($session->entityDefinitionData);
             $attributes = $entityDefinitionModel->getAttributes();
-            foreach($attributes as $attribute)
-            {                
-                if($attribute->type == 'boolean')
-                {
-                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
-                }
-                elseif ($attribute->type == 'text') {
-                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
-                }
-                elseif ($attribute->type == 'timestamp') {
-                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
-                }
-                elseif ($attribute->type == 'select')
-                {
-                    $attElement = new \Zend\Form\Element\Select($attribute->code);
-                    $attElement->setValueOptions($attribute->optionValues);
-                }
-                else {
-                    $attElement = new \Zend\Form\Element\Text($attribute->code);
-                }
-                
-                $attElement->setLabel($attribute->label);
-                $attElement->setValue($attribute->getValue());
-                $form->add($attElement);
-            }
+//            foreach($attributes as $attribute)
+//            {                
+//                if($attribute->type == 'boolean')
+//                {
+//                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+//                }
+//                elseif ($attribute->type == 'text') {
+//                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+//                }
+//                elseif ($attribute->type == 'timestamp') {
+//                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+//                }
+//                elseif ($attribute->type == 'select')
+//                {
+//                    $attElement = new \Zend\Form\Element\Select($attribute->code);
+//                    $attElement->setValueOptions($attribute->optionValues);
+//                }
+//                else {
+//                    $attElement = new \Zend\Form\Element\Text($attribute->code);
+//                }
+//                
+//                $attElement->setLabel($attribute->label);
+//                $attElement->setValue($attribute->getValue());
+//                $form->add($attElement);
+//            }
+            $this->addAttributesToForm($attributes, $form);
             $form->bind($entityDefinitionModel);
             $form->setData($post);
             if($form->isValid())
@@ -210,43 +213,44 @@ class EntityDefinitionController extends AbstractActionController
         $attributes = $model->attributes;
         if(isset($attributes))
         {
-            foreach($attributes as $attribute)
-            {                
-                if($attribute->type == 'boolean')
-                {
-                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
-                }
-                elseif ($attribute->type == 'text') {
-                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
-                    $attElement->setAttribute('COLS', 40);
-                    $attElement->setAttribute('ROWS', 4);
-                }
-                elseif ($attribute->type == 'timestamp') {
-                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
-                }
-                elseif ($attribute->type == 'select')
-                {
-                    $attElement = new \Zend\Form\Element\Select($attribute->code);
-                    $optionValues = array();
-                    if(isset($attribute->optionValues))
-                    {
-                        $optionValues = array();
-                        foreach($attribute->optionValues as $optionValue)
-                        {
-                            $optionValues[$optionValue['value']] = $optionValue['text'];
-                        }
-                        $attElement->setValueOptions($optionValues);
-                    }
-                    
-                }
-                else {
-                    $attElement = new \Zend\Form\Element\Text($attribute->code);
-                }
-
-                $attElement->setLabel($attribute->label);
-                $attElement->setValue($attribute->getValue());
-                $form->add($attElement);
-            }  
+//            foreach($attributes as $attribute)
+//            {                
+//                if($attribute->type == 'boolean')
+//                {
+//                    $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+//                }
+//                elseif ($attribute->type == 'text') {
+//                    $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+//                    $attElement->setAttribute('COLS', 40);
+//                    $attElement->setAttribute('ROWS', 4);
+//                }
+//                elseif ($attribute->type == 'timestamp') {
+//                    $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+//                }
+//                elseif ($attribute->type == 'select')
+//                {
+//                    $attElement = new \Zend\Form\Element\Select($attribute->code);
+//                    $optionValues = array();
+//                    if(isset($attribute->optionValues))
+//                    {
+//                        $optionValues = array();
+//                        foreach($attribute->optionValues as $optionValue)
+//                        {
+//                            $optionValues[$optionValue['value']] = $optionValue['text'];
+//                        }
+//                        $attElement->setValueOptions($optionValues);
+//                    }
+//                    
+//                }
+//                else {
+//                    $attElement = new \Zend\Form\Element\Text($attribute->code);
+//                }
+//
+//                $attElement->setLabel($attribute->label);
+//                $attElement->setValue($attribute->getValue());
+//                $form->add($attElement);
+//            }  
+            $this->addAttributesToForm($attributes, $form);
             
             $viewModel =  new ViewModel([
                 'form' => $form,
@@ -360,6 +364,53 @@ class EntityDefinitionController extends AbstractActionController
         }
         
         die();
+    }
+    
+    /**
+     * Sccans the attributes collection and adds coresponding fields to the form.
+     * @param type $attributes
+     * @param type $form
+     */
+    protected function addAttributesToForm($attributes, $form)
+    {
+        foreach($attributes as $attribute)
+        {                
+            if($attribute->type == 'boolean')
+            {
+                $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+            }
+            elseif ($attribute->type == 'text') {
+                $attElement = new \Zend\Form\Element\Textarea($attribute->code);
+                $attElement->setAttribute('COLS', 40);
+                $attElement->setAttribute('ROWS', 4);
+            }
+            elseif ($attribute->type == 'timestamp') {
+                $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+            }
+            elseif ($attribute->type == 'select')
+            {
+                $attElement = new \Zend\Form\Element\Select($attribute->code);
+                //$attElement->setAttribute('multiple', TRUE);
+//                    Debug::dump($attribute->getData());
+                $attElement->setValueOptions($attribute->optionValues);
+            }
+            else {
+                $attElement = new \Zend\Form\Element\Text($attribute->code);
+                if($attribute->type == "integer")
+                {
+                    $attElement->setAttribute('class', 'integer_spin');
+                }
+                
+                if($attribute->type == 'double')
+                {
+                    $attElement->setAttribute('class', 'double_spin');
+                }
+            }
+
+            $attElement->setLabel($attribute->label);
+            $attElement->setValue($attribute->getValue());
+            $form->add($attElement);
+        }
     }
 }
 
