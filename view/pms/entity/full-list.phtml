@@ -1,0 +1,21 @@
+<section class="entity-full-list">
+    <?php
+        $lines = $this->data;        
+        $keys = array_keys($lines[0]);
+    ?>
+    <h3>Available Rooms</h3>
+    <table class="table">
+        <tr>
+            <?php foreach($keys as $key):?>
+            <th><?php echo $key?></th>
+            <?php endforeach;?>
+        </tr>
+        <?php foreach($lines as $line):?>
+        <tr>
+            <?php foreach($keys as $key):?>
+            <td><?php echo $line[$key]?></td>
+            <?php endforeach;?>
+        </tr>
+        <?php endforeach;?>
+    </table>        
+</section>

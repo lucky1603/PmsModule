@@ -57,10 +57,10 @@ class EntityDefinitionController extends AbstractActionController
                 }
                 elseif ($attribute->type == 'select')
                 {
-                    $attElement = new \Zend\Form\Element\Select($attribute->code);
-                    //$attElement->setAttribute('multiple', TRUE);
-//                    Debug::dump($attribute->getData());
+                    $attElement = new \Zend\Form\Element\Select($attribute->code);                    
                     $attElement->setValueOptions($attribute->optionValues);
+                    Debug::dump($attribute->optionValues);
+                    die();
                 }
                 else {
                     $attElement = new \Zend\Form\Element\Text($attribute->code);
@@ -236,7 +236,7 @@ class EntityDefinitionController extends AbstractActionController
                             $optionValues[$optionValue['value']] = $optionValue['text'];
                         }
                         $attElement->setValueOptions($optionValues);
-                    }
+                    }                    
                     
                 }
                 else {

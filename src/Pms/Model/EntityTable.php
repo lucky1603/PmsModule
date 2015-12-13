@@ -91,15 +91,20 @@ class EntityTable
      * Fetches combined view of the own table joined to the definition table, in order to get the definition code.
      * @return type
      */
-    public function fetchView()
+    public function fetchView($typeId = NULL)
     {
         $dbAdapter = $this->tableGateway->getAdapter();
         $sql = new Sql($dbAdapter);
         $select = $sql->select();
         $select->from('entity')
-                ->join(['e' => 'entity_definition'], 'definition_id = e.id', ['code'])
-                ->join(['s' => 'status'], 'status_id = s.id', ['SValue' => 'value'])
+                ->join(['e' => 'entity_definition'], 'definition_id = e.id', ['code', 'TypeId' => 'entity_type_id'])
+                ->join(['s' => 'status'], 'status_id = s.id', ['SValue' => 'value'])        
                 ->order(['guid ASC']);
+        if(isset($typeId))
+        {
+            $select->where(['e.entity_type_id' => $typeId]);
+        }
+        
         $statement = $sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
         return $results;

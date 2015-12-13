@@ -264,6 +264,17 @@ class EntityModel
         return $this->attributes;
     }
     
+    /** 
+     * Returns all attributes, both own and from the definition model.
+     * @return array All attribute model values.
+     */
+    public function getAllAttributes()
+    {        
+        $attributes = $this->entityDefinitionModel->getAttributes();
+        $attributes = array_merge($attributes, $this->getAttributes());
+        return $attributes;
+    }
+    
     public function save()
     {
         $dataToSave = $this->getData();        

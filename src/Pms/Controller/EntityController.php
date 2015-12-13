@@ -12,6 +12,7 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Db\Sql\Sql;
 use Zend\Session\Container;
+use Pms\Model\EntityModel;
 
 /**
  * EntityController class.
@@ -34,6 +35,51 @@ class EntityController extends AbstractActionController
                 
         $viewModel = new ViewModel([
             'entities' => $entities, 
+        ]);
+        
+        return $viewModel;
+    }
+    
+    public function fullListAction()
+    {
+        $typeId = $this->params()->fromRoute('id');
+        $table = $this->getServiceLocator()->get('EntityTable');
+        $results = $table->fetchView(22);
+        $adapter = $this->getServiceLocator()->get('Adapter');
+        
+        $lines = array();
+        foreach($results as $row)
+        {
+            $line = array();
+            $id = $row['id'];
+            $model = new EntityModel($adapter);
+            $model->setId($id);
+//            $line['id'] = $model->id;
+            $line['Room Nr.'] = $model->guid;
+//            $line['Typeid'] = $row['TypeId'];
+            $line['Room Type'] = $row['code'];
+            $line['Status'] = $model->status;
+            $attributes = $model->getAllAttributes();
+            foreach($attributes as $attribute)
+            {
+                if($attribute->type == "boolean")
+                {
+                    $line[$attribute->code] = $attribute->value == 1 ? "Yes" : "No";
+                }
+                else if($attribute->type == "select")
+                {
+                    $line[$attribute->code] = $attribute->optionValues[$attribute->value];
+                }
+                else 
+                {
+                    $line[$attribute->code] = $attribute->value;
+                }                
+            }
+            $lines[] = $line;
+        }
+        
+        $viewModel = new ViewModel([
+            'data' => $lines,
         ]);
         
         return $viewModel;
