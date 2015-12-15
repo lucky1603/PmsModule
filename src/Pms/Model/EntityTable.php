@@ -98,8 +98,10 @@ class EntityTable
         $select = $sql->select();
         $select->from('entity')
                 ->join(['e' => 'entity_definition'], 'definition_id = e.id', ['code', 'TypeId' => 'entity_type_id'])
-                ->join(['s' => 'status'], 'status_id = s.id', ['SValue' => 'value'])        
-                ->order(['guid ASC']);
+                ->join(['s' => 'status'], 'status_id = s.id', ['SValue' => 'value']);
+
+        $select->order(['guid ASC']);
+        
         if(isset($typeId))
         {
             $select->where(['e.entity_type_id' => $typeId]);

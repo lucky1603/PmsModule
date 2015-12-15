@@ -189,4 +189,16 @@ class AjaxController extends AbstractActionController
         
         return $this->viewModel->setVariable($response, json_encode($response));
     }
+    
+    public function testDaysAction()
+    {
+        $start = '2015-12-15';
+        $end = '2015-12-20';
+        while(strtotime($start) <= strtotime($end)) 
+        {
+            \Zend\Debug\Debug::dump($start);
+            $start = date('Y-m-d', strtotime('+1 day', strtotime($start)));
+        }
+        die();
+    }
 }

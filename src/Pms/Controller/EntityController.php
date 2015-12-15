@@ -13,6 +13,7 @@ use Zend\View\Model\ViewModel;
 use Zend\Db\Sql\Sql;
 use Zend\Session\Container;
 use Pms\Model\EntityModel;
+use Pms\Model\EntityReservationModel;
 
 /**
  * EntityController class.
@@ -40,28 +41,71 @@ class EntityController extends AbstractActionController
         return $viewModel;
     }
     
+    public function testSortAction()
+    {
+        
+    }
+    
+    /**
+     * Returns the room list with attribute values.
+     * @return ViewModel
+     */
     public function fullListAction()
     {
+        $attList = [
+            'guid',
+            'code',
+            'status',
+//            'clima', 
+//            'floor',
+        ];
+        
         $typeId = $this->params()->fromRoute('id');
+        if(empty($typeId))
+        {
+            $typeId = $this->params()->fromQuery('id');
+        }
+        
         $table = $this->getServiceLocator()->get('EntityTable');
-        $results = $table->fetchView(22);
+        
+        $sort = $this->params()->fromQuery('sort');
+        if(isset($sort))
+        {
+            $results = $table->fetchView($typeId, $sort);
+        }
+        else 
+        {
+            $results = $table->fetchView($typeId);
+        }
+        
+        $startDate = $this->params()->fromQuery('startDate');
+        $endDate = date('Y-m-d', strtotime('+6 days', strtotime($startDate)));
+        
         $adapter = $this->getServiceLocator()->get('Adapter');
         
         $lines = array();
+        $index = array();
         foreach($results as $row)
         {
             $line = array();
             $id = $row['id'];
-            $model = new EntityModel($adapter);
+            $model = new EntityReservationModel($adapter);
             $model->setId($id);
-//            $line['id'] = $model->id;
-            $line['Room Nr.'] = $model->guid;
-//            $line['Typeid'] = $row['TypeId'];
-            $line['Room Type'] = $row['code'];
-            $line['Status'] = $model->status;
+            if(isset($startDate) && isset($endDate))
+            {
+                $model->setPeriod($startDate, $endDate);
+            }
+            $line['guid'] = $model->guid;
+            $line['code'] = $row['code'];
+            $line['status'] = $model->status;
             $attributes = $model->getAllAttributes();
             foreach($attributes as $attribute)
             {
+                if(!in_array($attribute->code, $attList))
+                {
+                    continue;
+                }
+                
                 if($attribute->type == "boolean")
                 {
                     $line[$attribute->code] = $attribute->value == 1 ? "Yes" : "No";
@@ -75,11 +119,39 @@ class EntityController extends AbstractActionController
                     $line[$attribute->code] = $attribute->value;
                 }                
             }
-            $lines[] = $line;
+            
+            $reservations = $model->getReservations();
+            $current = strtotime($startDate);
+            foreach($reservations as $key=>$value)
+            {
+                $line[$key] = $value;
+            }
+            
+            if(isset($sort))
+            {
+                $key = $line[$sort];
+                $index[$line['guid']] = $key;
+            }
+            else 
+            {
+                $key = $line['guid'];
+                $index[$line['guid']] = $key;
+            }
+            
+            
+            $lines[$line['guid']] = $line;
         }
         
+//        \ksort($lines);        
+        asort($index);
+        $ilines = array();
+        foreach($index as $key => $value)
+        {
+            $ilines[] = $lines[$key];
+        }
+                
         $viewModel = new ViewModel([
-            'data' => $lines,
+            'data' => $ilines,
         ]);
         
         return $viewModel;

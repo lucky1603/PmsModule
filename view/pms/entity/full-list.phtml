@@ -1,7 +1,7 @@
 <section class="entity-full-list">
     <?php
         $lines = $this->data;        
-        $keys = array_keys($lines[0]);
+        $keys = array_keys(array_values($lines)[0]);
     ?>
     <h3>Available Rooms</h3>
     <table class="table">
