@@ -2,8 +2,24 @@
     <?php
         $lines = $this->data;        
         $keys = array_keys(array_values($lines)[0]);
+        $startDate = $this->startDate;
+        $endDate = $this->endDate;
+        $typeName = $this->typeName;
     ?>
-    <h3>Available Rooms</h3>
+    <style>
+        .reserved {
+            color: red;
+        }
+        .free {
+            color: lightgreen;
+        }
+    </style>
+    <h3><?php echo isset($this->typeName) ? $this->typeName : "Room";?> Availability Status <?php 
+        if(isset($startDate) && isset($endDate))
+        {
+            echo 'for period from '.date('d.m.Y.', strtotime($startDate)).' to '.date('d.m.Y.', strtotime($endDate));
+        }
+    ?></h3>
     <table class="table">
         <tr>
             <?php foreach($keys as $key):?>
@@ -12,9 +28,24 @@
         </tr>
         <?php foreach($lines as $line):?>
         <tr>
-            <?php foreach($keys as $key):?>
-            <td><?php echo $line[$key]?></td>
-            <?php endforeach;?>
+            <?php 
+                foreach($keys as $key)
+                {
+                    $content = $line[$key];
+                    if($content == 'reserved')
+                    {
+                        echo '<td class="reserved">'.$content.'</td>';
+                    }
+                    else if ($content == 'free')
+                    {
+                        echo '<td class="free">'.$content.'</td>';
+                    }
+                    else 
+                    {
+                        echo '<td>'.$content.'</td>';
+                    }
+                }
+            ?>
         </tr>
         <?php endforeach;?>
     </table>        

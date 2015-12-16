@@ -12,7 +12,6 @@ use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Db\Sql\Sql;
 use Zend\Session\Container;
-use Pms\Model\EntityModel;
 use Pms\Model\EntityReservationModel;
 
 /**
@@ -64,6 +63,9 @@ class EntityController extends AbstractActionController
         if(empty($typeId))
         {
             $typeId = $this->params()->fromQuery('id');
+            $table = $this->getServiceLocator()->get('EntityTypeTable');
+            $entity = $table->getEntityType($typeId);
+            $typeName = $entity->name;            
         }
         
         $table = $this->getServiceLocator()->get('EntityTable');
@@ -140,20 +142,28 @@ class EntityController extends AbstractActionController
             
             
             $lines[$line['guid']] = $line;
-        }
-        
+        }        
 //        \ksort($lines);        
         asort($index);
         $ilines = array();
         foreach($index as $key => $value)
         {
             $ilines[] = $lines[$key];
-        }
-                
+        }                
         $viewModel = new ViewModel([
             'data' => $ilines,
-        ]);
-        
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);        
+        if(isset($startDate) && isset($endDate))
+        {
+            $viewModel->setVariable('startDate', $startDate);
+            $viewModel->setVariable('endDate', $endDate);
+        }        
+        if(isset($typeName))
+        {
+            $viewModel->setVariable('typeName', $typeName);
+        }                
         return $viewModel;
     }
     
