@@ -56,8 +56,8 @@ class EntityController extends AbstractActionController
             'guid',
             'code',
             'status',
-//            'clima', 
-//            'floor',
+            'clima', 
+            'floor',
         ];
         
         $typeId = $this->params()->fromRoute('id');
