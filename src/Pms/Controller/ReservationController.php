@@ -23,10 +23,16 @@ class ReservationController extends AbstractActionController
      */
     public function indexAction() {
         $model = $this->getServiceLocator()->get('ReservationModel');        
-        $reservations = $model->fetchAll();        
-        return new ViewModel([
+        $reservations = $model->fetchAll();      
+        $id = $this->params()->fromRoute('id');
+        $viewModel = new ViewModel([
             'reservations' => $reservations,
-        ]);
+        ]);        
+        if(isset($id))
+        {
+            $viewModel->setVariable('id', $id);
+        }       
+        return $viewModel;
     }
     
     /**

@@ -1,5 +1,8 @@
 <section class="entity-full-list">
     <?php
+        $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');        
+        
         $lines = $this->data;        
         $keys = array_keys(array_values($lines)[0]);
         $startDate = $this->startDate;
@@ -19,7 +22,7 @@
         {
             echo 'for period from '.date('d.m.Y.', strtotime($startDate)).' to '.date('d.m.Y.', strtotime($endDate));
         }
-    ?></h3>
+        ?><br><br><br></h3>
     <table class="table">
         <tr>
             <?php foreach($keys as $key):?>
@@ -27,26 +30,83 @@
             <?php endforeach;?>
         </tr>
         <?php foreach($lines as $line):?>
-        <tr>
+        <tr data-object-id="<?php echo $line['guid']?>">
             <?php 
                 foreach($keys as $key)
                 {
                     $content = $line[$key];
-                    if($content == 'reserved')
+                    if(is_array($content))
                     {
-                        echo '<td class="reserved">'.$content.'</td>';
-                    }
-                    else if ($content == 'free')
-                    {
-                        echo '<td class="free">'.$content.'</td>';
+                        $value = $content['status'];
+                        $reservation_id = $content['id'];
                     }
                     else 
                     {
-                        echo '<td>'.$content.'</td>';
+                        $value = $content;
+                    }
+                    
+                    if($value == 'reserved')
+                    {                        
+                        if(isset($reservation_id))
+                        {
+                            echo '<td class="reserved" data-reservation-id="'.$reservation_id.'" data-reservation-contents="">'.$value.'</td>';
+                        }
+                        else 
+                        {
+                            echo '<td class="reserved" data-reservation-id="none">'.$value.'</td>';
+                        }
+                        
+                    }
+                    else if ($value == 'free')
+                    {
+                        echo '<td class="free" data-reservation-id="none" title="this is free">'.$value.'</td>';
+                    }
+                    else 
+                    {
+                        echo '<td>'.$value.'</td>';
                     }
                 }
             ?>
         </tr>
         <?php endforeach;?>
     </table>        
+    <script>
+        $(function() {
+            $('td.reserved').tooltip({    
+                items: '[data-reservation-contents]',
+                content: "aaa",
+                open: function(evt, ui) {
+                    var id = $(this).data().reservationId;            
+                    $.get('/pms/ajax/reservationDetails?id='+id, function(data){
+                        data = JSON.parse(data);
+                        var html = "<table>";
+                        $.each(data, function(idx, val) {
+                            html += "<tr><td style='font-weight: bold'>"+idx+":&nbsp;</td><td>"+val+"</td></tr>"
+                        })
+                        html += "</table>";
+                        $(evt.target).tooltip('option', 'content', html);
+                    });                                    
+               }
+            });
+ 
+            
+//            $('td.reserved').on('mouseenter', function(evt) {
+//                var me = evt.target;
+//                var id = $(me).data().reservationId;
+//                var details = new Array();
+//                $.get('/pms/ajax/reservationDetails?id='+id, function(data) {             
+//                    data = JSON.parse(data);
+//                    details['Reservation Id'] = data['ReservationId'];
+//                    details['Reserved By'] = data.ReservedBy;
+//                    details['Created At'] = data.CreatedAt;     
+//                });
+//                $(me).data().reservationContents = details;                
+//              //  $(me).attr('title', '<b>AAAAa<b><p>bbbb');                
+//            });    
+            $('td.reserved').on('dblclick', function(evt) {
+                var id = $(evt.target).data().reservationId;                                
+                window.location.href = "/pms/reservation/edit/"+id;
+            });
+        });
+    </script>
 </section>

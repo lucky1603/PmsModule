@@ -86,7 +86,11 @@ class EntityReservationModel extends EntityModel
             $date = $this->startDate;
             while(strtotime($date) <= strtotime($this->endDate))
             {
-                $reservations[$date] = 'free';
+                $reservations[$date] = [
+                    'status' => 'free',
+                    'id' => null,
+                ];
+                
                 $date = date('Y-m-d', strtotime('+ 1 day', strtotime($date)));
             }
             
@@ -130,6 +134,7 @@ class EntityReservationModel extends EntityModel
                 
                 $start = date('Y-m-d', strtotime($row['date_from']));
                 $end = date('Y-m-d', strtotime($row['date_to']));
+                $reservation_id = $row['reservation_id'];
                 
                 
                 $current = strtotime($this->startDate);
@@ -138,11 +143,13 @@ class EntityReservationModel extends EntityModel
                 {
                     if($current >= strtotime($start) && $current <= strtotime($end))
                     {
-                        $reservations[date('Y-m-d', $current)] = 'reserved';
+                        $reservations[date('Y-m-d', $current)]['status'] = 'reserved';
+                        $reservations[date('Y-m-d', $current)]['id'] = $reservation_id;
                     }
                     else 
                     {
-                        $reservations[date('Y-m-d', $current)] = 'free';
+                        $reservations[date('Y-m-d', $current)]['status'] = 'free';
+                        $reservations[date('Y-m-d', $current)]['id'] = null;
                     }
                     
                     $current = strtotime('+1 day', $current);

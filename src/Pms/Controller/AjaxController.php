@@ -5,8 +5,8 @@ namespace Pms\Controller;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Mvc\MvcEvent;
-use Zend\Dd\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
+use Pms\Model\ReservationModel;
 
 class AjaxController extends AbstractActionController
 {
@@ -188,6 +188,22 @@ class AjaxController extends AbstractActionController
         }
         
         return $this->viewModel->setVariable($response, json_encode($response));
+    }
+    
+    public function reservationDetailsAction()
+    {
+        $id = $this->params()->fromQuery('id');
+        $dbAdapter = $this->getServiceLocator()->get("Adapter");
+        $model = new ReservationModel($dbAdapter);
+        $model->setId($id);
+        
+        $out = [
+            'ReservationId' => $id,
+            'ReservedBy' => $model->clientName,
+            'CreatedAt' => $model->created_at,
+        ];
+        
+        return $this->viewModel->setVariable('response', json_encode($out));
     }
     
     public function testDaysAction()

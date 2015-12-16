@@ -79,6 +79,16 @@ class ReservationModel
         $this->modified_at = isset($data['modified_at']) ? $data['modified_at'] : null;
         $this->client_id = isset($data['client_id']) ? $data['client_id'] : null;
         
+        if(isset($data['first_name']))
+        {
+            $this->clientName = $data['first_name'];
+        }
+        
+        if(isset($data['last_name']))
+        {
+            $this->clientName .= ' '.$data['last_name'];
+        }
+        
         // Set Status
         if(isset($data['status_id']))
         {
@@ -121,6 +131,7 @@ class ReservationModel
             'modified_at' => $this->modified_at,
             'client_id' => $this->client_id,
             'status_id' => $this->status_id,
+            'clientName' => $this->clientName,
         ]; 
         
         if(isset($this->id))

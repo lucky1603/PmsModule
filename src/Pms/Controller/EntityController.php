@@ -65,7 +65,7 @@ class EntityController extends AbstractActionController
             $typeId = $this->params()->fromQuery('id');
             $table = $this->getServiceLocator()->get('EntityTypeTable');
             $entity = $table->getEntityType($typeId);
-            $typeName = $entity->name;            
+            $typeName = $entity->name;         
         }
         
         $table = $this->getServiceLocator()->get('EntityTable');
@@ -126,7 +126,7 @@ class EntityController extends AbstractActionController
             $current = strtotime($startDate);
             foreach($reservations as $key=>$value)
             {
-                $line[$key] = $value;
+                $line[$key] = $value;                                
             }
             
             if(isset($sort))
@@ -139,8 +139,7 @@ class EntityController extends AbstractActionController
                 $key = $line['guid'];
                 $index[$line['guid']] = $key;
             }
-            
-            
+                        
             $lines[$line['guid']] = $line;
         }        
 //        \ksort($lines);        
