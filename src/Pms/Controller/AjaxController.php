@@ -198,9 +198,10 @@ class AjaxController extends AbstractActionController
         $model->setId($id);
         
         $out = [
-            'ReservationId' => $id,
-            'ReservedBy' => $model->clientName,
-            'CreatedAt' => $model->created_at,
+            'Reservation Id' => $id,
+            'Reserved By' => $model->clientName,
+            'Created At' => $model->created_at,
+            'Status' => $model->status,
         ];
         
         return $this->viewModel->setVariable('response', json_encode($out));

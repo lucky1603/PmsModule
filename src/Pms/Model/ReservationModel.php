@@ -224,6 +224,7 @@ class ReservationModel
             
             // Unse entity collection, the table doesn't recognize it.
             unset($dataToUpdate['reservedEntities']);
+            unset($dataToUpdate['clientName']);
             
             // Set mandatory entry values.
             $dataToUpdate['created_at'] = date('m/d/Y', time());
@@ -259,6 +260,7 @@ class ReservationModel
             
             // Unse entity collection, the table doesn't recognize it.
             unset($dataToUpdate['reservedEntities']);
+            unset($dataToUpdate['clientName']);
             
             // Set mandatory entry values.
 //            $dataToUpdate['modified_at'] = date('m/d/Y', time());
