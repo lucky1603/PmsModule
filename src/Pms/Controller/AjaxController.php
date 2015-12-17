@@ -210,12 +210,14 @@ class AjaxController extends AbstractActionController
     public function testDaysAction()
     {
         $start = '2015-12-15';
-        $end = '2015-12-20';
+        $end = '2015-12-25';
         while(strtotime($start) <= strtotime($end)) 
         {
             \Zend\Debug\Debug::dump($start);
-            $start = date('Y-m-d', strtotime('+1 day', strtotime($start)));
+            $start = date('Y-m-d h:i:s', strtotime('+ 1 day + 2 hours', strtotime($start)));
         }
+        
+        \Zend\Debug\Debug::dump(date('s', 0));
         die();
     }
 }

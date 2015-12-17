@@ -188,13 +188,46 @@ class ReservationController extends AbstractActionController
                \Zend\Debug\Debug::dump("Wrong input format, check the form data...");
 //               \Zend\Debug\Debug::dump($entity);
                \Zend\Debug\Debug::dump($form);
-            }
-            
-            
+            }                        
         }
         return new ViewModel([
             'form' => $form,
         ]);
+    }
+    
+    /**
+     * This action is called from avalability control.
+     */
+    public function newEntityAction()
+    {
+        $dbAdapter = $this->getServiceLocator()->get('Adapter');
+        $reservationModel = new \Pms\Model\ReservationModel($dbAdapter);
+        $session = new Container('models');
+        $session->reservationModel = $reservationModel->getData();
+        
+        $guid = $this->params()->fromQuery('guid');       
+        $data['date_from'] = date('Y-m-d h:i:s', strtotime("+ 12 hours", strtotime($this->params()->fromQuery('startDate'))));        
+        $data['date_to'] = date('Y-m-d h:i:s', strtotime('+ 1 day', strtotime($data['date_from'])));
+        
+        $sql = new Sql($dbAdapter);
+        $select = $sql->select();
+        $select->from(['e' =>'entity'])
+               ->join(['ed' => 'entity_definition'], 'e.definition_id=ed.id', ['code'])
+               ->where(['e.guid' => $guid]);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+        $row = $results->current();        
+        $data['entity_definition_id'] = $row['code'];
+        $data['entity_id'] = $row['id'];
+        
+        $form = $this->getServiceLocator()->get('ReservationEntityForm');
+        $form->setData($data);
+        
+        $viewModel = new ViewModel([
+            'form' => $form,
+        ]);
+        $viewModel->setTemplate('/pms/reservation/entity');
+        return $viewModel;
     }
     
     /**
