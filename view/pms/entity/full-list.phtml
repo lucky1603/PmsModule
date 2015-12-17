@@ -63,7 +63,7 @@
                     }
                     else if ($value == 'free')
                     {
-                        echo '<td class="free" data-reservation-id="none" title="this is free">'.$value.'</td>';
+                        echo '<td class="free" data-reservation-date="'.$key.'" title="this is free">'.$value.'</td>';
                     }
                     else 
                     {
@@ -103,6 +103,13 @@
             $('td.reserved').on('dblclick', function(evt) {
                 var id = $(evt.target).data().reservationId;                                
                 window.location.href = "/pms/reservation/edit/"+id;
+            });
+            
+            $('td.free').on('dblclick', function(evt) {
+                var startDate = $(evt.target).data().reservationDate;
+                var guid = $(evt.target).parent('tr').data().objectId;
+                //alert("Start date is " + startDate + ", room number is " + guid);
+                window.location.href = "/pms/reservation/newEntity?guid="+guid+"&startDate="+startDate;
             });
         });
     </script>

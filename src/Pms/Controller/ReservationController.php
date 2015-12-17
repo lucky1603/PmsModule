@@ -174,7 +174,6 @@ class ReservationController extends AbstractActionController
             $reservedEntities = $reservationModel->getReservedEntities();
             $entity = $reservedEntities[$id];
             $form->bind($entity);
-
             if($form->isValid())
             {
                 $viewModel = new ViewModel([

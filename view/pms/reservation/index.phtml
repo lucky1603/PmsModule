@@ -22,11 +22,11 @@
                 <td><?php echo $reservation['created_at']?></td>
                 <td><?php echo $reservation['modified_at']?></td>
                 <td><?php echo $reservation['statustext']?></td>
-                <td><a href="/pms/reservation/edit/<?php echo $reservation['id']?>">Edit</a> | <a href="/pms/reservation/delete/<?php echo $reservation['id']?>">Delete</a></td>
+                <td><a href="/pms/reservation/edit/<?php echo $reservation['id']?>">Edit</a>&nbsp;|&nbsp;<a href="/pms/reservation/delete/<?php echo $reservation['id']?>">Delete</a></td>
             </tr>
         <?php endforeach;?>
         </table>
     <?php endif;?>
-    <a href="/pms/reservation/edit">Add new</a> | <a href='/pms/admin'>Home</a>
+        <a href="/pms/reservation/edit">Add new</a>&nbsp;|&nbsp;<a href='/pms/admin'>Home</a>&nbsp;|&nbsp;<a href="/pms/entity/fullList?id=22&sort=guid&startDate=<?php echo date('Y-m-d', time());?>">Check Avalability >>> </a> 
 </section>
 

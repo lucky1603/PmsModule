@@ -25,6 +25,11 @@ class EntityTypeController extends AbstractActionController
      */
     public function indexAction()
     {
+        // Reset session data.
+        $session = new Container('models');
+        unset($session->entityTypeData);
+        
+        // Now get types.
         $table = $this->getServiceLocator()->get('EntityTypeTable');
         $types = $table->fetchAll()->toArray();
         return $viewModel = new ViewModel([
@@ -198,6 +203,8 @@ class EntityTypeController extends AbstractActionController
     {
         $id = $this->params()->fromRoute('id');
         $post = $this->request->getPost();
+//        Debug::dump($post);
+//        die();
         $form = $this->getServiceLocator()->get('AttributeForm');
         $session = new Container('models');
         $entityTypeData = $session->entityTypeData;
@@ -230,12 +237,10 @@ class EntityTypeController extends AbstractActionController
 
             $form->setData($post);
             if($form->isValid())
-            {
+            {                
                 $model->attributes[$id] = $aModel;                
                 $session->entityTypeData = $model->getData();
-            }
-            
-            
+            }                        
         }
         else 
         {
