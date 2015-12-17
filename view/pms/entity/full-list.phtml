@@ -16,6 +16,10 @@
         .free {
             color: lightgreen;
         }
+        
+        .tooltip {
+            font-size: 0.5em;
+        }
     </style>
     <h3><?php echo isset($this->typeName) ? $this->typeName : "Room";?> Availability Status <?php 
         if(isset($startDate) && isset($endDate))
@@ -74,12 +78,13 @@
         $(function() {
             $('td.reserved').tooltip({    
                 items: '[data-reservation-contents]',
-                content: "aaa",
-                open: function(evt, ui) {
+                show: {effect: "blind", duration:400},
+                content: "loading...",
+                create: function(evt, ui) {
                     var id = $(this).data().reservationId;            
                     $.get('/pms/ajax/reservationDetails?id='+id, function(data){
                         data = JSON.parse(data);
-                        var html = "<table>";
+                        var html = "<table style='font-size:0.75em'>";
                         $.each(data, function(idx, val) {
                             html += "<tr><td style='font-weight: bold'>"+idx+":&nbsp;</td><td>"+val+"</td></tr>"
                         })
@@ -88,21 +93,13 @@
                     });                                    
                }
             });
- 
             
-//            $('td.reserved').on('mouseenter', function(evt) {
-//                var me = evt.target;
-//                var id = $(me).data().reservationId;
-//                var details = new Array();
-//                $.get('/pms/ajax/reservationDetails?id='+id, function(data) {             
-//                    data = JSON.parse(data);
-//                    details['Reservation Id'] = data['ReservationId'];
-//                    details['Reserved By'] = data.ReservedBy;
-//                    details['Created At'] = data.CreatedAt;     
-//                });
-//                $(me).data().reservationContents = details;                
-//              //  $(me).attr('title', '<b>AAAAa<b><p>bbbb');                
-//            });    
+            $('td.reserved').on('mouseleave', function(evt) {
+                setTimeout(function() {
+                    $(evt.target).tooltip('close');
+                });                
+            });            
+             
             $('td.reserved').on('dblclick', function(evt) {
                 var id = $(evt.target).data().reservationId;                                
                 window.location.href = "/pms/reservation/edit/"+id;
