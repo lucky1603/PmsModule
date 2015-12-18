@@ -68,8 +68,7 @@ class EntityController extends AbstractActionController
             $typeName = $entity->name;         
         }
         
-        $table = $this->getServiceLocator()->get('EntityTable');
-        
+        $table = $this->getServiceLocator()->get('EntityTable');    
         $sort = $this->params()->fromQuery('sort');
         if(isset($sort))
         {
@@ -81,8 +80,9 @@ class EntityController extends AbstractActionController
         }
         
         $startDate = $this->params()->fromQuery('startDate');
-        $endDate = date('Y-m-d', strtotime('+6 days', strtotime($startDate)));
-        
+        $startTime = $this->params()->fromQuery('startTime');
+
+//        $endDate = date('Y-m-d', strtotime('+6 days', strtotime($startDate)));        
         $adapter = $this->getServiceLocator()->get('Adapter');
         
         $lines = array();
@@ -93,6 +93,23 @@ class EntityController extends AbstractActionController
             $id = $row['id'];
             $model = new EntityReservationModel($adapter);
             $model->setId($id);
+            $time_resolution = $model->getTimeResolution();
+            switch ($time_resolution) {
+                case 1:
+                    $endDate = date('Y-m-d', strtotime('+6 days', strtotime($startDate)));      
+                    break;
+                default:
+                    if(isset($startTime))
+                    {
+                        $startDate = $startDate.' '.$startTime;
+                    }
+                    else 
+                    {
+                        $startDate = date('Y-m-d h:i:s', strtotime($startDate));
+                    }                    
+                    $endDate = date('Y-m-d h:i:s', strtotime('+23 hours', strtotime($startDate)));      
+                    break;
+            }
             if(isset($startDate) && isset($endDate))
             {
                 $model->setPeriod($startDate, $endDate);
@@ -123,6 +140,10 @@ class EntityController extends AbstractActionController
             }
             
             $reservations = $model->getReservations();
+            
+//            \Zend\Debug\Debug::dump($reservations);
+//            die();
+            
             $current = strtotime($startDate);
             foreach($reservations as $key=>$value)
             {
@@ -141,7 +162,7 @@ class EntityController extends AbstractActionController
             }
                         
             $lines[$line['guid']] = $line;
-        }        
+        }     
 //        \ksort($lines);        
         asort($index);
         $ilines = array();

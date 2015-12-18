@@ -16,6 +16,7 @@ class EntityType
     public $id;
     public $name;
     public $description;
+    public $time_resolution;
     
     /**
      * Updates the entity type with the data from outside.
@@ -30,6 +31,7 @@ class EntityType
         
         $this->name = (isset($data['name'])) ? $data['name'] : null;
         $this->description = (isset($data['description'])) ? $data['description'] : null;
+        $this->time_resolution = (isset($data['time_resolution'])) ? $data['time_resolution'] : null;
     }
     
     /**
@@ -42,6 +44,7 @@ class EntityType
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
+            'time_resolution' => $this->time_resolution,
         ];
     }
 }

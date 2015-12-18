@@ -28,6 +28,7 @@ class EntityModel
     
     protected $dbAdapter;
     protected $sql;
+    protected $time_resolution = 1;
     
     /**
      * Constructor
@@ -58,14 +59,16 @@ class EntityModel
         $select = $this->sql->select();
         $select->from(['a' => 'entity'])
                 ->join(['e' => 'entity_definition'], 'a.definition_id = e.id', ['code'])
+                ->join(['t' => 'entity_type'], 'e.entity_type_id=t.id', ['time_resolution'])
                 ->join(['s' => 'status'], 'a.status_id = s.id', ['SValue' => 'value'])
                 ->where(['a.id' => $id]);
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
-        $data = $results->current();
+        $data = $results->current();        
 
         // Set local data.
         $this->setData($data);
+        $this->time_resolution = $data['time_resolution'];
         
         // Update definition model.
         $this->getDefinitionModel()->setId($this->definition_id);
@@ -74,6 +77,19 @@ class EntityModel
         $this->getAttributes();                
     }
     
+    /**
+     * Returns the time resolution of the referent entity type.
+     * @return type
+     */
+    public function getTimeResolution()
+    {
+        return $this->time_resolution;
+    }
+    
+    /**
+     * Sets entity definition id.
+     * @param type $definition_id
+     */
     public function setEntityDefinitionId($definition_id)
     {
         $this->definition_id = $definition_id;
@@ -275,6 +291,9 @@ class EntityModel
         return $attributes;
     }
     
+    /**
+     * Saves the entity to the database.
+     */
     public function save()
     {
         $dataToSave = $this->getData();        
@@ -284,12 +303,6 @@ class EntityModel
         {
             $update = $this->sql->update();
             $update->table('entity')
-//                    ->set([
-//                            'status' => $this->status,
-//                            'guid' => $this->guid,
-//                            'status_id' => $this->status_id,  
-//                            'entity_type_id' => $this->entity_type_id,
-//                        ])
                     ->set($dataToSave)
                     ->where(['id' => $this->id]);
             $statement = $this->sql->prepareStatementForSqlObject($update);
@@ -302,17 +315,10 @@ class EntityModel
             }   
         }
         else 
-        {
-     
+        {     
             $insert = $this->sql->insert();
             $insert->into('entity')
                     ->values($dataToSave);
-//                    ->values([
-//                        'code' => $this->code,
-//                        'name' => $this->name,
-//                        'description' => $this->description,  
-//                        'entity_type_id' => $this->entity_type_id,
-//                    ]);
             $statement = $this->sql->prepareStatementForSqlObject($insert);
             $statement->execute();
             $select = $this->sql->select();
@@ -334,40 +340,37 @@ class EntityModel
         }
     }
     
-    // Model interface for binding with forms.
+    /**
+     * Sets the object data from the side of bindable object.
+     * @param type $data
+     */
     public function exchangeArray($data)
     {
-//        $this->setData($data);
         if(isset($data['id']))
         {
             $this->id = $data['id'];
             unset($data['id']);
-        }
-        
+        }        
         if(isset($data['definition_id']))
         {
             $this->definition_id = $data['definition_id'];
             unset($data['definition_id']);
-        }
-        
+        }        
         if(isset($data['guid']))
         {
             $this->guid = $data['guid'];
             unset($data['guid']);
-        }
-        
+        }        
         if(isset($data['status']))
         {
             $this->status = $data['status'];
             unset($data['status']);
-        }
-        
+        }        
         if(isset($data['status_id']))
         {
             $this->status_id = $data['status_id'];
             unset($data['status_id']);
-        }  
-        
+        }          
         if(count($data) > 0)
         {
             foreach($data as $key=>$value)
@@ -383,26 +386,27 @@ class EntityModel
 //                    $attribute->setData($value);
 //                }
             }
-        }
-        
+        }        
     }
     
+    /**
+     * Returns the array of object data, needed by the bindable object.
+     * @return type
+     */
     public function getArrayCopy()
     {
         $data = [            
             'guid' => $this->guid,
             'status' => $this->status,
             'status_id' => $this->status_id,    
-        ];
-        
+        ];        
         if($this->attributes)
         {
             foreach($this->attributes as $attributeModel)
             {
                 $data[$attributeModel->code] = $attributeModel->getValue();
             }
-        }
-        
+        }        
         return $data;
     }
 }

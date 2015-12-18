@@ -33,7 +33,7 @@ class EntityReservationModel extends EntityModel
      * @var type 
      */
     protected $reservations;
-    
+        
     /**
      * Constructor
      * @param \Zend\Db\Adapter\Adapter $dbAdapter Database adapter.
@@ -80,43 +80,57 @@ class EntityReservationModel extends EntityModel
     protected function initReservations()
     {
         $reservations = array();
-        
+                
         if(isset($this->id) && isset($this->startDate) && isset($this->endDate))
-        {
-            $date = $this->startDate;
-            while(strtotime($date) <= strtotime($this->endDate))
+        {        
+            $startDate = $this->startDate;
+            if($this->time_resolution == 2)
+            {
+                $startDate = date('Y-m-d H:i:s', strtotime($startDate));
+            }
+            $endDate = $this->endDate;
+            if($this->time_resolution == 2)
+            {
+                $endDate = date('Y-m-d H:i:s', strtotime($endDate));
+            }
+                   
+            $date = $startDate;
+            while(strtotime($date) <= strtotime($endDate))
             {
                 $reservations[$date] = [
                     'status' => 'free',
                     'id' => null,
                 ];
-                
-                $date = date('Y-m-d', strtotime('+ 1 day', strtotime($date)));
-            }
-            
-//            \Zend\Debug\Debug::dump($reservations);
-//            die();
-            
+                if($this->time_resolution == 1)
+                {
+                    $date = date('Y-m-d', strtotime('+ 1 day', strtotime($date)));
+                }
+                else 
+                {
+                    $date = date('Y-m-d H:i:s', strtotime('+ 1 hour', strtotime($date)));
+                }               
+            }       
+                        
             $sql = new Sql($this->dbAdapter);
             $select = $sql->select();     
             $select->from('reservation_entity')
                    ->where->NEST
                         ->NEST
-                            ->lessThanOrEqualTo('date_to', $this->endDate)
+                            ->lessThanOrEqualTo('date_to', $endDate)
                             ->AND
-                            ->greaterThanOrEqualTo('date_from', $this->startDate)
+                            ->greaterThanOrEqualTo('date_from', $startDate)
                         ->UNNEST
                         ->OR
                         ->NEST
-                            ->lessThan('date_from', $this->startDate)
+                            ->lessThan('date_from', $startDate)
                             ->AND
-                            ->greaterThan('date_to', $this->startDate)
+                            ->greaterThan('date_to', $startDate)
                         ->UNNEST
                         ->OR
                         ->NEST
-                            ->lessThan('date_from', $this->endDate)
+                            ->lessThan('date_from', $endDate)
                             ->AND
-                            ->greaterThan('date_to', $this->endDate)
+                            ->greaterThan('date_to', $endDate)
                         ->UNNEST
                     ->UNNEST
                     ->AND
@@ -132,31 +146,47 @@ class EntityReservationModel extends EntityModel
 //                $start = date('Y-m-d', strtotime($reservation->date_from));
 //                $end = date('Y-m-d', strtotime($reservation->date_to));
                 
-                $start = date('Y-m-d', strtotime($row['date_from']));
-                $end = date('Y-m-d', strtotime($row['date_to']));
-                $reservation_id = $row['reservation_id'];
-                
-                
-                $current = strtotime($this->startDate);
-                $counter = 0;
-                while($current <= strtotime($this->endDate))
+                if($this->time_resolution == 1)
                 {
-                    if($current >= strtotime($start) && $current <= strtotime($end))
+                    $increment_format = "+ 1 day";
+                    $date_format = "Y-m-d";                    
+                }
+                else 
+                {
+                    $increment_format = "+ 1 hour";
+                    $date_format = "Y-m-d H:i:s";                    
+                }
+                $start = date($date_format, strtotime($row['date_from']));
+                $end = date($date_format, strtotime($row['date_to']));
+                $increment = $increment_format;                    
+                $reservation_id = $row['reservation_id'];                       
+                $current = strtotime($startDate);                                                
+                $counter = 0;
+                while($current <= strtotime($endDate))
+                {
+                    if($current >= strtotime($start) && $current < strtotime($end))
                     {
-                        $reservations[date('Y-m-d', $current)]['status'] = 'reserved';
-                        $reservations[date('Y-m-d', $current)]['id'] = $reservation_id;
+                        $reservations[date($date_format, $current)]['status'] = 'reserved';
+                        $reservations[date($date_format, $current)]['id'] = $reservation_id;
+                        $reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;
+                        
                     }
                     else 
                     {
-                        $reservations[date('Y-m-d', $current)]['status'] = 'free';
-                        $reservations[date('Y-m-d', $current)]['id'] = null;
+                        $reservations[date($date_format, $current)]['status'] = 'free';
+                        $reservations[date($date_format, $current)]['id'] = null;
+                        $reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;
                     }
                     
-                    $current = strtotime('+1 day', $current);
+                    $current = strtotime($increment, $current);
                     $counter++;
                 }                                
             }
         }
+        
+        
+//        \Zend\Debug\Debug::dump($reservations);
+//        die();
         
         return $reservations;
     }

@@ -204,10 +204,18 @@ class ReservationController extends AbstractActionController
         $session = new Container('models');
         $session->reservationModel = $reservationModel->getData();
         
-        $guid = $this->params()->fromQuery('guid');       
-        $data['date_from'] = date('Y-m-d h:i:s', strtotime("+ 12 hours", strtotime($this->params()->fromQuery('startDate'))));        
-        $data['date_to'] = date('Y-m-d h:i:s', strtotime('+ 1 day', strtotime($data['date_from'])));
-        
+        $time = $this->params()->fromQuery('time');
+        $guid = $this->params()->fromQuery('guid');
+        if($time == 1)
+        {
+            $data['date_from'] = date('Y-m-d h:i:s', strtotime("+ 12 hours", strtotime($this->params()->fromQuery('startDate'))));        
+            $data['date_to'] = date('Y-m-d h:i:s', strtotime('+ 1 day', strtotime($data['date_from'])));
+        }
+        else 
+        {
+            $data['date_from'] = $this->params()->fromQuery('startDate'); 
+            $data['date_to'] = date('Y-m-d H:i:s', strtotime('+ 1 hour', strtotime($data['date_from'])));
+        }        
         $sql = new Sql($dbAdapter);
         $select = $sql->select();
         $select->from(['e' =>'entity'])
