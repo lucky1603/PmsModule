@@ -100,6 +100,7 @@ class EntityReservationModel extends EntityModel
                 $reservations[$date] = [
                     'status' => 'free',
                     'id' => null,
+                    'time_resolution' => $this->time_resolution,
                 ];
                 if($this->time_resolution == 1)
                 {
@@ -110,7 +111,7 @@ class EntityReservationModel extends EntityModel
                     $date = date('Y-m-d H:i:s', strtotime('+ 1 hour', strtotime($date)));
                 }               
             }       
-                        
+                                    
             $sql = new Sql($this->dbAdapter);
             $select = $sql->select();     
             $select->from('reservation_entity')

@@ -139,11 +139,7 @@ class EntityController extends AbstractActionController
                 }                
             }
             
-            $reservations = $model->getReservations();
-            
-//            \Zend\Debug\Debug::dump($reservations);
-//            die();
-            
+            $reservations = $model->getReservations();                        
             $current = strtotime($startDate);
             foreach($reservations as $key=>$value)
             {
@@ -169,11 +165,16 @@ class EntityController extends AbstractActionController
         foreach($index as $key => $value)
         {
             $ilines[] = $lines[$key];
-        }                
+        }              
+        
+        $form = $this->getServiceLocator()->get('AvailabilityForm');
+        $formData = array();
+        $formData['date_from'] = $startDate;
+        $formData['entity_type_id'] = $typeId;
+        $form->setData($formData);
         $viewModel = new ViewModel([
             'data' => $ilines,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
+            'form' => $form,
         ]);        
         if(isset($startDate) && isset($endDate))
         {

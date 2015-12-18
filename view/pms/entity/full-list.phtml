@@ -1,13 +1,18 @@
 <section class="entity-full-list">
     <?php
         $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
-        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');        
+        $this->headLink()->appendStylesheet('/js/datetimepicker/jquery.datetimepicker.css');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');     
+        $this->headScript()->appendFile('/js/datetimepicker/build/jquery.datetimepicker.full.js');
         
         $lines = $this->data;        
         $keys = array_keys(array_values($lines)[0]);
         $startDate = $this->startDate;
         $endDate = $this->endDate;
         $typeName = $this->typeName;
+        $form = $this->form;
+        
+        
     ?>
     <style>
         .reserved {
@@ -27,6 +32,12 @@
             echo 'for period from '.date('d.m.Y.', strtotime($startDate)).' to '.date('d.m.Y.', strtotime($endDate));
         }
         ?><br><br><br></h3>
+    <div class="filter-form">        
+        <?php echo $this->form()->openTag($form);?>
+        <?php echo $this->formLabel($form->get('entity_type_id'));?><?php echo $this->formElement($form->get('entity_type_id'))?>
+        <?php echo $this->formLabel($form->get('date_from'));?><?php echo $this->formElement($form->get('date_from'))?>
+        <?php echo $this->form()->closeTag();?>
+    </div>
     <table class="table">
         <tr>
             <?php foreach($keys as $key):?>
@@ -67,7 +78,15 @@
                     }
                     else if ($value == 'free')
                     {
-                        echo '<td class="free" data-reservation-date="'.$key.'" data-time-resolution="'.$time_resolution.'" title="this is free">'.$value.'</td>';
+                        if(isset($time_resolution))
+                        {
+                            echo '<td class="free" data-reservation-date="'.$key.'" data-time-resolution="'.$time_resolution.'" title="this is free">'.$value.'</td>';
+                        }
+                        else 
+                        {
+                            echo '<td class="free" data-reservation-date="'.$key.'" title="this is free">'.$value.'</td>';
+                        }
+                        
                     }
                     else 
                     {
@@ -80,6 +99,21 @@
     </table>        
     <script>
         $(function() {
+            
+            $.urlParam = function(name){
+                var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                if (results==null){
+                   return null;
+                }
+                else{
+                   return results[1] || 0;
+                }
+            }
+            
+            $("#date_from").datetimepicker({
+                format: 'Y-m-d H:i:s'
+            });
+            
             $('td.reserved').tooltip({    
                 items: '[data-reservation-contents]',
                 show: {effect: "blind", duration:400},
@@ -115,6 +149,33 @@
                 var guid = $(evt.target).parent('tr').data().objectId;
                 //alert("Start date is " + startDate + ", room number is " + guid);
                 window.location.href = "/pms/reservation/newEntity?guid="+guid+"&startDate="+startDate+"&time="+time;
+            });
+            
+            $('#entity_type_id').on('change', function(evt) {
+                var start_date = $.urlParam('startDate');                
+                var start_time = $.urlParam('startTime');                
+                var entity_type_id = $(evt.target).val();
+                var params = "id="+entity_type_id;
+                params += "&startDate="+start_date;
+                if(start_time != null)
+                {
+                    params += "&startTime="+start_time;
+                }
+                window.location.href = '/pms/entity/fullList?' + params;                
+            });
+            
+            $('#date_from').on('change', function(evt) {
+                var date = $(evt.target).val();
+                var timeline = date.split(' ');
+                var entity_type_id = $('#entity_type_id').val();
+                var params = "id="+entity_type_id;
+                params += "&startDate="+timeline[0];
+                if(timeline.length == 2)
+                {
+                    params += "&startTime="+timeline[1];
+                }
+                //alert(params);
+                window.location.href = '/pms/entity/fullList?' + params;                
             });
         });
     </script>

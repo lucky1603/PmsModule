@@ -37,6 +37,7 @@ use Pms\Form\RegisterFilter;
 use Pms\Form\AttributeForm;
 use Pms\Form\EntityDefinitionForm;
 use Pms\Form\ClientForm;
+use Pms\Form\AvailabilityForm;
 use Zend\ModuleManager\Feature\AutoloaderProviderInterface;
 use Zend\Mvc\ModuleRouteListener;
 use Zend\Mvc\MvcEvent;
@@ -202,6 +203,11 @@ class Module implements AutoloaderProviderInterface
                 'ReservationEntityForm' => function($sm) {
                     $dbAdapter = $sm->get('Adapter');
                     $form = new \Pms\Form\ReservationEntityForm('ReservationEntity', ['adapter' => $dbAdapter]);
+                    return $form;
+                },
+                'AvailabilityForm' => function($sm) {
+                    $dbAdapter = $sm->get('Adapter');
+                    $form = new AvailabilityForm('Availability', ['adapter' => $dbAdapter]);
                     return $form;
                 },
                 // Filters
