@@ -59,8 +59,6 @@ class EntityDefinitionController extends AbstractActionController
                 {
                     $attElement = new \Zend\Form\Element\Select($attribute->code);                    
                     $attElement->setValueOptions($attribute->optionValues);
-                    Debug::dump($attribute->optionValues);
-                    die();
                 }
                 else {
                     $attElement = new \Zend\Form\Element\Text($attribute->code);

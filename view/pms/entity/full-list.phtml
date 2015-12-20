@@ -12,22 +12,8 @@
         $startDate = $this->startDate;
         $endDate = $this->endDate;
         $typeName = $this->typeName;
-        $form = $this->form;
-        
-        
+        $form = $this->form;                
     ?>
-    <style>
-        .reserved {
-            color: red;
-        }
-        .free {
-            color: lightgreen;
-        }
-        
-        .tooltip {
-            font-size: 0.5em;
-        }
-    </style>
     <h3><?php echo isset($this->typeName) ? $this->typeName : "Room";?> Availability Status <?php 
         if(isset($startDate) && isset($endDate))
         {
@@ -120,7 +106,21 @@
                 format: 'Y-m-d H:i:s'
             });
             
-            $('#myTable').tablesorter({sortList: [[0,0], [1,0]]});
+            $('#myTable').tablesorter({
+                sortList: [[0,0], [1,0]],
+                widgetOptions : {
+                   scroller_height : 300,
+                   // scroll tbody to top after sorting
+                   scroller_upAfterSort: true,
+                   // pop table header into view while scrolling up the page
+                   scroller_jumpToHeader: true,
+                   // In tablesorter v2.19.0 the scroll bar width is auto-detected
+                   // add a value here to override the auto-detected setting
+                   scroller_barWidth : null
+                   // scroll_idPrefix was removed in v2.18.0
+                   // scroller_idPrefix : 's_'
+                }
+            });
             
             $('td.reserved').tooltip({    
                 items: '[data-reservation-contents]',
@@ -187,4 +187,16 @@
             });
         });
     </script>
+    <style>
+        table.tablesorter td.reserved{
+            background: orange;
+        }
+        table.tablesorter td.free {
+            background: #00cccc;
+        }
+        
+        .tooltip {
+            font-size: 0.5em;
+        }
+    </style>
 </section>
