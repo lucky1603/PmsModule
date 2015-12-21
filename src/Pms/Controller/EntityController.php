@@ -50,24 +50,29 @@ class EntityController extends AbstractActionController
      * @return ViewModel
      */
     public function fullListAction()
-    {
-        $attList = [
-            'guid',
-            'code',
-            'status',
-            'clima', 
-            'floor',
-        ];
-        
-        $typeId = $this->params()->fromRoute('id');
-        if(empty($typeId))
+    {                 
+        if($this->request->isPost())
         {
-            $typeId = $this->params()->fromQuery('id');
+            $post = $this->request->getPost();
+//            \Zend\Debug\Debug::dump($post);
+//            die();
+            $typeId = $post('entity_type_id');
             $table = $this->getServiceLocator()->get('EntityTypeTable');
             $entity = $table->getEntityType($typeId);
-            $typeName = $entity->name;         
+            $typeName = $entity->name;                                        
         }
-        
+        else 
+        {
+            $typeId = $this->params()->fromRoute('id');
+            if(empty($typeId))
+            {
+                $typeId = $this->params()->fromQuery('id');
+                $table = $this->getServiceLocator()->get('EntityTypeTable');
+                $entity = $table->getEntityType($typeId);
+                $typeName = $entity->name;         
+            }
+        }
+                        
         $table = $this->getServiceLocator()->get('EntityTable');    
         $sort = $this->params()->fromQuery('sort');
         if(isset($sort))
@@ -87,6 +92,7 @@ class EntityController extends AbstractActionController
         
         $lines = array();
         $index = array();
+        $attList = array();
         foreach($results as $row)
         {
             $line = array();
@@ -118,9 +124,15 @@ class EntityController extends AbstractActionController
             $line['code'] = $row['code'];
             $line['status'] = $model->status;
             $attributes = $model->getAllAttributes();
+            $mAttList = $model->getAttributesList();
             foreach($attributes as $attribute)
             {
-                if(!in_array($attribute->code, $attList))
+                if(!isset($attList[$attribute->code]))
+                {
+                    $attList[$attribute->code] = $attribute->label;
+                }
+                
+                if(!in_array($attribute->code, $mAttList))
                 {
                     continue;
                 }
@@ -168,9 +180,15 @@ class EntityController extends AbstractActionController
         }              
         
         $form = $this->getServiceLocator()->get('AvailabilityForm');
+        $mcheckbox = $form->get('multi-checkbox');
+        $mcheckbox->setValueOptions($attList);
         $formData = array();
         $formData['date_from'] = $startDate;
         $formData['entity_type_id'] = $typeId;
+        $formData['multi-checkbox'] = [
+            'clima', 'floor',
+        ];
+       
         $form->setData($formData);
         $viewModel = new ViewModel([
             'data' => $ilines,

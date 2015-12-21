@@ -29,6 +29,7 @@ class AvailabilityForm extends Form
         $select->setValueOptions($options);
         $select->setAttribute('id', 'entity_type_id');
         $select->setAttribute('class' , 'form-entry');
+        $select->setLabelAttributes(['class' => 'form-entry']);
         $this->add($select);
         
         // datum_start
@@ -48,13 +49,25 @@ class AvailabilityForm extends Form
             ],
         ]);
         
+        $multiCheckbox = new \Zend\Form\Element\MultiCheckbox('multi-checkbox');
+        $multiCheckbox->setLabel('Show/Hide Attributes ?');
+        $multiCheckbox->setValueOptions(array(
+                '0' => 'Apple',
+                '1' => 'Orange',
+                '2' => 'Lemon'
+        ));
+        $multiCheckbox->setLabelAttributes(['class' => 'form-entry']);
+        $multiCheckbox->setAttribute('class', 'form-entry');
+        $this->add($multiCheckbox);
+        
         // Submit.
         $this->add([
            'name' => 'submit',
            'attributes' => [
                'type' => 'submit',
-               'value' => 'Save',
+               'value' => 'Refresh',
                'id' => 'submit', 
+               //'class' => 'form-entry'
            ],
        ]);   
     }

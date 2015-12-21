@@ -33,6 +33,12 @@ class EntityReservationModel extends EntityModel
      * @var type 
      */
     protected $reservations;
+    
+    /**
+     * Remembers the list of attributes to be shown in availability form.
+     * @var type 
+     */
+    protected $attributesList;
         
     /**
      * Constructor
@@ -40,7 +46,10 @@ class EntityReservationModel extends EntityModel
      * @param type $id Entity id.
      */
     public function __construct(\Zend\Db\Adapter\Adapter $dbAdapter, $id = NULL) {
-        parent::__construct($dbAdapter, $id);        
+        parent::__construct($dbAdapter, $id);    
+        // Test
+        $this->attributesList = ['clima', 'floor'];
+        // End test
     }
     
     /**
@@ -75,6 +84,24 @@ class EntityReservationModel extends EntityModel
             $this->reservations = $this->initReservations();
         }
         return $this->reservations;
+    }
+    
+    /**
+     * Returns the list of attributes to be shown in form.
+     * @return type
+     */
+    public function getAttributesList()
+    {
+        return $this->attributesList;
+    }
+    
+    /**
+     * Sets the list of attributes to be shown in the form.
+     * @param type $attributesList
+     */
+    public function setAttributesList($attributesList)
+    {
+        $this->attributesList = $attributesList;
     }
     
     protected function initReservations()
@@ -169,8 +196,7 @@ class EntityReservationModel extends EntityModel
                     {
                         $reservations[date($date_format, $current)]['status'] = 'reserved';
                         $reservations[date($date_format, $current)]['id'] = $reservation_id;
-                        $reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;
-                        
+                        $reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;                        
                     }
                     else 
                     {
