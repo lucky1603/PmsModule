@@ -70,8 +70,11 @@ class EntityController extends AbstractActionController
             {
                 $attrs = array();
             }
-            
-            
+            $sort = $post['sort'];
+            if(!isset($sort))
+            {            
+                $sort = 'guid';
+            }                        
         }
         else 
         {
@@ -96,6 +99,10 @@ class EntityController extends AbstractActionController
                 $entity = $table->getEntityType($typeId);
                 $typeName = $entity->name;         
                 $sort = $this->params()->fromQuery('sort'); 
+                if(!isset($sort))
+                {
+                    $sort = 'guid';
+                }
                 $startDate = $this->params()->fromQuery('startDate');
                 if(!isset($startDate))
                 {                    
@@ -191,7 +198,8 @@ class EntityController extends AbstractActionController
             {
                 $line[$key] = $value;                                
             }
-            
+//            die($sort);
+//            \Zend\Debug\Debug::dump($sort);
             if(isset($sort))
             {
                 $key = $line[$sort];
@@ -211,16 +219,27 @@ class EntityController extends AbstractActionController
         foreach($index as $key => $value)
         {
             $ilines[] = $lines[$key];
-        }              
+        }           
+//        \Zend\Debug\Debug::dump($ilines);
+        
         
         $form = $this->getServiceLocator()->get('AvailabilityForm');
         $mcheckbox = $form->get('multi-checkbox');
         $mcheckbox->setValueOptions($attList);
+        $sorter = $form->get('sort');
+        $sortAttrs = array('guid' => 'guid', 'code' => 'code', 'status' => 'status');
+        foreach($attrs as $attr)
+        {
+            $sortAttrs[$attr] = $attr;
+        }
+        $sorter->setValueOptions($sortAttrs);
+        
         $formData = array();
         $formData['date_from'] = $startDate;
         $formData['entity_type_id'] = $typeId;
         $formData['multi-checkbox'] = $attrs;
-       
+        $formData['sort'] = $sort;
+                
         $form->setData($formData);
         $viewModel = new ViewModel([
             'data' => $ilines,

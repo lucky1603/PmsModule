@@ -49,6 +49,7 @@ class AvailabilityForm extends Form
             ],
         ]);
         
+        // Show / hide attributes.
         $multiCheckbox = new \Zend\Form\Element\MultiCheckbox('multi-checkbox');
         $multiCheckbox->setLabel('Show/Hide Attributes ?');
         $multiCheckbox->setValueOptions(array(
@@ -59,6 +60,13 @@ class AvailabilityForm extends Form
         $multiCheckbox->setLabelAttributes(['class' => 'form-entry']);
         $multiCheckbox->setAttribute('class', 'form-entry');
         $this->add($multiCheckbox);
+        
+        // Attributes to sort by.
+        $sort = new \Zend\Form\Element\Select('sort');
+        $sort->setLabel('Sort by attribute:');
+        $sort->setLabelAttributes(['class' => 'form-entry']);
+        $sort->setAttribute('class', 'form-entry');
+        $this->add($sort);        
         
         // Submit.
         $this->add([
