@@ -7,6 +7,7 @@ use Zend\View\Model\ViewModel;
 use Zend\Mvc\MvcEvent;
 use Zend\Db\Sql\Sql;
 use Pms\Model\ReservationModel;
+use Zend\Session\Container;
 
 class AjaxController extends AbstractActionController
 {
@@ -219,5 +220,13 @@ class AjaxController extends AbstractActionController
         
         \Zend\Debug\Debug::dump(date('s', 0));
         die();
+    }
+    
+    public function rememberAction()
+    {
+        $mark = $this->params()->fromQuery('mark');
+        $session = new Container('models');
+        $session->direction = $mark;
+        die($mark);
     }
 }

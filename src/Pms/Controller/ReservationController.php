@@ -40,6 +40,12 @@ class ReservationController extends AbstractActionController
      * @return ViewModel Default view model.
      */
     public function editAction() {
+        $session = new Container('models');
+        if(!isset($session->direction))
+        {
+            $session->direction = 'edit';
+        }
+                
         $form = $this->getServiceLocator()->get('ReservationForm');
         $id = $this->params()->fromRoute('id');     
         $model = $this->getServiceLocator()->get("ReservationModel");
@@ -161,9 +167,8 @@ class ReservationController extends AbstractActionController
      */
     public function entityAction()
     {
-        $sessionModels = new Container('models');
+        $sessionModels = new Container('models');        
         $reservationModelData = $sessionModels->reservationModel;
-
         $reservationModel = $this->getServiceLocator()->get('ReservationModel');
         $reservationModel->setData($reservationModelData);
         
@@ -203,6 +208,7 @@ class ReservationController extends AbstractActionController
         $reservationModel = new \Pms\Model\ReservationModel($dbAdapter);
         $session = new Container('models');
         $session->reservationModel = $reservationModel->getData();
+        $session->direction = 'newentity';
         
         $time = $this->params()->fromQuery('time');
         $guid = $this->params()->fromQuery('guid');
@@ -372,6 +378,24 @@ class ReservationController extends AbstractActionController
         }
         
         return $this->redirect()->toRoute('pms/reservation');
+    }
+    
+    public function backAction()
+    {
+        $session = new Container('models');
+        if($session->direction == 'edit')
+        {
+            unset($session->direction);
+            return $this->redirect()->toRoute('pms/reservation');
+        }
+        else {
+            unset($session->direction);
+            return $this->redirect()->toRoute('pms/entity', [
+                'action' => 'fullList',
+            ]);
+        }
+        
+        die();                
     }
     
     /**

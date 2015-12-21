@@ -54,8 +54,6 @@ class EntityController extends AbstractActionController
         if($this->request->isPost())
         {
             $post = $this->request->getPost();
-//            \Zend\Debug\Debug::dump($post);
-//            die();
             $typeId = $post['entity_type_id'];
             $table = $this->getServiceLocator()->get('EntityTypeTable');
             $entity = $table->getEntityType($typeId);
@@ -65,16 +63,21 @@ class EntityController extends AbstractActionController
             if(isset($post['multi-checkbox']))
             {
                 $attrs = $post['multi-checkbox']; 
+               
             }
             else 
             {
                 $attrs = array();
             }
+            
+            $session = new Container('models');
+            $session->attrs = $attrs;
+                
             $sort = $post['sort'];
             if(!isset($sort))
             {            
                 $sort = 'guid';
-            }                        
+            }                  
         }
         else 
         {
@@ -113,8 +116,15 @@ class EntityController extends AbstractActionController
                 {                
                     $startTime = date('H:i:s', time());
                 }
-                
-                $attrs = ['clima', 'floor'];
+                $session = new Container('models');
+                if(isset($session->attrs))
+                {
+                    $attrs = $session->attrs;
+                }          
+                else 
+                {
+                    $attrs = [];
+                }
             }
         }
                         
@@ -152,9 +162,9 @@ class EntityController extends AbstractActionController
                     }
                     else 
                     {
-                        $startDate = date('Y-m-d h:i:s', strtotime($startDate));
+                        $startDate = date('Y-m-d H:i:s', strtotime($startDate));
                     }                    
-                    $endDate = date('Y-m-d h:i:s', strtotime('+23 hours', strtotime($startDate)));      
+                    $endDate = date('Y-m-d H:i:s', strtotime('+23 hours', strtotime($startDate)));      
                     break;
             }
             if(isset($startDate) && isset($endDate))
