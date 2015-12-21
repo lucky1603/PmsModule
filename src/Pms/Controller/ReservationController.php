@@ -214,24 +214,25 @@ class ReservationController extends AbstractActionController
         $guid = $this->params()->fromQuery('guid');
         if($time == 1)
         {
-            $data['date_from'] = date('Y-m-d h:i:s', strtotime("+ 12 hours", strtotime($this->params()->fromQuery('startDate'))));      
+            $data['date_from'] = date('Y-m-d H:i:s', strtotime("+ 12 hours", strtotime($this->params()->fromQuery('startDate'))));      
             $endDate = $this->params()->fromQuery('endDate');
             if(isset($endDate))
             {
-                $data['date_to'] = date('Y-m-d h:i:s', strtotime($endDate)); 
+                $data['date_to'] = date('Y-m-d H:i:s', strtotime($endDate)); 
             }
             else 
             {
-               $data['date_to'] = date('Y-m-d h:i:s', strtotime('+ 1 day', strtotime($data['date_from']))); 
+               $data['date_to'] = date('Y-m-d H:i:s', strtotime('+ 1 day', strtotime($data['date_from']))); 
             }
             
         }
         else 
         {
             $data['date_from'] = $this->params()->fromQuery('startDate'); 
+            $endDate = $this->params()->fromQuery('endDate');
             if(isset($endDate))
             {
-                $data['date_to'] = date('Y-m-d h:i:s', strtotime($endDate)); 
+                $data['date_to'] = date('Y-m-d H:i:s', strtotime($endDate)); 
             }
             else 
             {
