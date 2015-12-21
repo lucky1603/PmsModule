@@ -295,7 +295,10 @@ class ReservationController extends AbstractActionController
                 $entity->setReservationId($reservationModel->reservation_id);
                 // create internal id....
 //                $entity->internal_id = $reservationModel->getNewInternalId();
-                $reservationModel->addEntity($entity);                
+                $reservationModel->addEntity($entity);        
+                if(empty($reservationModel->client_id)) {
+                    $reservationModel->client_id = $entity->guest_id;
+                }
             }
             else 
             {
