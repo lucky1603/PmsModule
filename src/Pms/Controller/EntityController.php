@@ -56,10 +56,22 @@ class EntityController extends AbstractActionController
             $post = $this->request->getPost();
 //            \Zend\Debug\Debug::dump($post);
 //            die();
-            $typeId = $post('entity_type_id');
+            $typeId = $post['entity_type_id'];
             $table = $this->getServiceLocator()->get('EntityTypeTable');
             $entity = $table->getEntityType($typeId);
-            $typeName = $entity->name;                                        
+            $typeName = $entity->name;           
+            $startDate = date('Y-m-d', strtotime($post['date_from']));
+            $startTime = date('H:i:s', strtotime($post['date_from']));      
+            if(isset($post['multi-checkbox']))
+            {
+                $attrs = $post['multi-checkbox']; 
+            }
+            else 
+            {
+                $attrs = array();
+            }
+            
+            
         }
         else 
         {
@@ -68,13 +80,38 @@ class EntityController extends AbstractActionController
             {
                 $typeId = $this->params()->fromQuery('id');
                 $table = $this->getServiceLocator()->get('EntityTypeTable');
+                if(empty($typeId))
+                {
+                    $entityType = $table->getEntityTypeByName('ACUNIT');
+                    if(isset($entityType))
+                    {
+                        $typeId = $entityType->id;
+                    }
+                    else 
+                    {
+                        $typeId = $table->fetchAll()->current()->id;
+                    }                    
+                }
+                
                 $entity = $table->getEntityType($typeId);
                 $typeName = $entity->name;         
+                $sort = $this->params()->fromQuery('sort'); 
+                $startDate = $this->params()->fromQuery('startDate');
+                if(!isset($startDate))
+                {                    
+                    $startDate = date('Y-m-d', time());
+                }
+                $startTime = $this->params()->fromQuery('startTime');
+                if(!isset($startTime))
+                {                
+                    $startTime = date('H:i:s', time());
+                }
+                
+                $attrs = ['clima', 'floor'];
             }
         }
                         
         $table = $this->getServiceLocator()->get('EntityTable');    
-        $sort = $this->params()->fromQuery('sort');
         if(isset($sort))
         {
             $results = $table->fetchView($typeId, $sort);
@@ -84,9 +121,6 @@ class EntityController extends AbstractActionController
             $results = $table->fetchView($typeId);
         }
         
-        $startDate = $this->params()->fromQuery('startDate');
-        $startTime = $this->params()->fromQuery('startTime');
-
 //        $endDate = date('Y-m-d', strtotime('+6 days', strtotime($startDate)));        
         $adapter = $this->getServiceLocator()->get('Adapter');
         
@@ -132,7 +166,7 @@ class EntityController extends AbstractActionController
                     $attList[$attribute->code] = $attribute->label;
                 }
                 
-                if(!in_array($attribute->code, $mAttList))
+                if(!in_array($attribute->code, $attrs))
                 {
                     continue;
                 }
@@ -185,9 +219,7 @@ class EntityController extends AbstractActionController
         $formData = array();
         $formData['date_from'] = $startDate;
         $formData['entity_type_id'] = $typeId;
-        $formData['multi-checkbox'] = [
-            'clima', 'floor',
-        ];
+        $formData['multi-checkbox'] = $attrs;
        
         $form->setData($formData);
         $viewModel = new ViewModel([
