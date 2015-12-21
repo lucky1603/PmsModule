@@ -28,6 +28,7 @@ class AvailabilityForm extends Form
         }
         $select->setValueOptions($options);
         $select->setAttribute('id', 'entity_type_id');
+        $select->setAttribute('class' , 'form-entry');
         $this->add($select);
         
         // datum_start
@@ -37,10 +38,13 @@ class AvailabilityForm extends Form
                 'type' => 'text',
                 'required' => 'required',
                 'id' => 'date_from',
-                'class' => 'reservation-date'
+                'class' => 'reservation-date form-entry'
             ],
             'options' => [
                 'label' => "From",
+                'label_attributes' => [
+                    'class' => 'form-entry',
+                ],
             ],
         ]);
         
@@ -50,7 +54,7 @@ class AvailabilityForm extends Form
            'attributes' => [
                'type' => 'submit',
                'value' => 'Save',
-               'id' => 'submit'
+               'id' => 'submit', 
            ],
        ]);   
     }
