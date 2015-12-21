@@ -97,8 +97,9 @@
         </tbody>
     </table>        
     <script>
-        $(function() {
-            
+        var lista = [];
+        var rowId = -1;
+        $(function() {                
             $.urlParam = function(name){
                 var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
                 if (results==null){
@@ -154,14 +155,25 @@
             });            
              
             $('td.reserved').on('dblclick', function(evt) {
-                var id = $(evt.target).data().reservationId;                                
-                window.location.href = "/pms/reservation/edit/"+id;
+                var id = $(evt.target).data().reservationId;     
+                $.ajax({
+                    url: '/pms/ajax/remember?mark=control',
+                    async: false
+                }).done(function(data) {
+//                    alert(data);
+                }).fail(function(xhr) {
+                    //alert('failed');
+                });
+               window.location.href = "/pms/reservation/edit/"+id;
             });
             
             $('td.free').on('dblclick', function(evt) {
                 var startDate = $(evt.target).data().reservationDate;
                 var time = $(evt.target).data().timeResolution;
                 var guid = $(evt.target).parent('tr').data().objectId;
+                $.get('pms/ajax/remember?mark=control', function(data) {
+                    alert(data);
+                });
                 //alert("Start date is " + startDate + ", room number is " + guid);
                 window.location.href = "/pms/reservation/newEntity?guid="+guid+"&startDate="+startDate+"&time="+time;
             });
@@ -193,9 +205,54 @@
 //                window.location.href = '/pms/entity/fullList?' + params;            
                 $(document).find('form#AvailabilityForm').submit();
             });
-//            $('form#AvailabilityForm').submit(function(evt) {
-//                alert('submited');
-//            });
+
+            $('td.free').on('mouseenter', function(evt) {         
+                evt.preventDefault();
+                if(evt.type === 'mouseenter' && evt.which == 1 && evt.button == 0) {
+                    var date = $(evt.target).data().reservationDate;
+                    lista[lista.length] = date;
+                    $(evt.target).css("color", "white");
+                    $(evt.target).css("background", "#3056A0");
+                }	
+                
+            });
+            
+            $('td.free').on("mousedown mouseup", function(e) {
+                e.preventDefault();
+                if(e.type == 'mousedown')
+                {                 
+                    var date = $(e.target).data().reservationDate;
+                    rowId = $(e.target).parent('tr').data().objectId;
+                    lista[lista.length] = date;
+                    $(e.target).css("color", "white");
+                    $(e.target).css("background", "#3056A0");
+                }
+                
+                if(e.type == 'mouseup')
+                {
+                    $.each(lista, function(idx, value) {
+                        $('td.free').parent('tr').filter('[data-object-id = "'+rowId+'"]').removeAttr('style');
+                    });
+                    
+                    var first = lista[0];
+                    var last = lista[lista.length - 1];
+                    
+                    var startDate = first;
+                    var endDate = last;                    
+                    var guid = rowId;
+                    var time = $(e.target).data().timeResolution;
+                    
+                    rowId = -1;
+                    lista = [];
+                    
+                    $.get('pms/ajax/remember?mark=control', function(data) {
+                        alert(data);
+                    });
+                    //alert("Start date is " + startDate + ", room number is " + guid);
+                    window.location.href = "/pms/reservation/newEntity?guid="+guid+"&startDate="+startDate+"&endDate="+endDate+"&time="+time;                    
+                }
+            });
+            
         });
     </script>
     <style>
@@ -205,6 +262,11 @@
         }
         table.tablesorter td.free {
             background: #00cccc;
+            box-shadow: inset 1px 1px 3px #999;
+        }
+        
+        table.tablesorter td.selected {
+            background: #ffff33;
             box-shadow: inset 1px 1px 3px #999;
         }
         
