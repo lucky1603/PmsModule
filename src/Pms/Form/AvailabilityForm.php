@@ -28,8 +28,8 @@ class AvailabilityForm extends Form
         }
         $select->setValueOptions($options);
         $select->setAttribute('id', 'entity_type_id');
-        $select->setAttribute('class' , 'form-entry');
-        $select->setLabelAttributes(['class' => 'form-entry']);
+        $select->setAttribute('class' , 'form-entry ui-button');
+        $select->setLabelAttributes(['class' => 'form-entry ui-button']);
         $this->add($select);
         
         // datum_start
@@ -39,12 +39,12 @@ class AvailabilityForm extends Form
                 'type' => 'text',
                 'required' => 'required',
                 'id' => 'date_from',
-                'class' => 'reservation-date form-entry'
+                'class' => 'reservation-date form-entry ui-button'
             ],
             'options' => [
                 'label' => "From",
                 'label_attributes' => [
-                    'class' => 'form-entry',
+                    'class' => 'form-entry ui-button',
                 ],
             ],
         ]);
@@ -52,13 +52,14 @@ class AvailabilityForm extends Form
         // Show / hide attributes.
         $multiCheckbox = new \Zend\Form\Element\MultiCheckbox('multi-checkbox');
         $multiCheckbox->setLabel('Show/Hide Attributes ?');
+        $multiCheckbox->setLabelAttributes(['class' => 'ui-button']);
         $multiCheckbox->setValueOptions(array(
                 '0' => 'Apple',
                 '1' => 'Orange',
                 '2' => 'Lemon'
         ));
         $multiCheckbox->setLabelAttributes(['class' => 'form-entry']);
-        $multiCheckbox->setAttribute('class', 'form-entry');
+        $multiCheckbox->setAttribute('class', 'form-entry ui-button');
         $this->add($multiCheckbox);
         
         // Attributes to sort by.
@@ -75,6 +76,7 @@ class AvailabilityForm extends Form
                'type' => 'submit',
                'value' => 'Refresh',
                'id' => 'submit', 
+               'class' => 'ui-button',
                //'class' => 'form-entry'
            ],
        ]);   

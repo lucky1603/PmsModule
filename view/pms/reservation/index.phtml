@@ -7,6 +7,7 @@
         <p class="error">No current reservations!
     <?php else: ?>
         <table class="table">
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>Client</th>
@@ -15,6 +16,8 @@
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
+            </thead>
+            <tbody>
         <?php foreach($reservations as $reservation):?>
             <tr>
                 <td><?php echo $reservation['reservation_id']?></td>
@@ -25,6 +28,7 @@
                 <td><a href="/pms/reservation/edit/<?php echo $reservation['id']?>">Edit</a>&nbsp;|&nbsp;<a href="/pms/reservation/delete/<?php echo $reservation['id']?>">Delete</a></td>
             </tr>
         <?php endforeach;?>
+            </tbody>
         </table>
     <?php endif;?>
         <a href="/pms/reservation/edit">Add new</a>&nbsp;|&nbsp;<a href='/pms/admin'>Home</a>&nbsp;|&nbsp;<a href="/pms/entity/fullList?id=22&sort=guid&startDate=<?php echo date('Y-m-d', time());?>">Check Avalability >>> </a> 

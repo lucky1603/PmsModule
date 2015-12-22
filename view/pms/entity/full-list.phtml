@@ -2,10 +2,21 @@
     <?php
         $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
         $this->headLink()->appendStylesheet('/js/datetimepicker/jquery.datetimepicker.css');
-        $this->headLink()->appendStylesheet('/js/tablesorter-master/themes/blue/style.css');
-        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');     
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.blue.css');
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.bootstrap.css');
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.jui.css');
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.ice.css');
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.dark.css');
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.default.css');
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.dropbox.css');
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.grey.css');
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.metro-dark.css');
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/high-specificity/theme.blue.specific.css');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');          
         $this->headScript()->appendFile('/js/datetimepicker/build/jquery.datetimepicker.full.js');
-        $this->headScript()->appendFile('/js/tablesorter-master/jquery.tablesorter.js');
+        $this->headScript()->appendFile('/tablesorter-master/js/jquery.tablesorter.js');
+        $this->headScript()->appendFile('/tablesorter-master/js/jquery.tablesorter.widgets.js');
+        $this->headScript()->appendFile('/tablesorter-master/js/widgets/widget-scroller.js');
         
         $lines = $this->data;        
         $keys = array_keys(array_values($lines)[0]);
@@ -22,18 +33,26 @@
         {
             echo 'for period from '.date('d.m.Y.', strtotime($startDate)).' to '.date('d.m.Y.', strtotime($endDate));
         }
-        ?><br><br><br></h3>
-    <div class="filter-form">        
-        <?php echo $this->form()->openTag($form);?>
-        <?php echo $this->formLabel($form->get('entity_type_id'));?><?php echo $this->formElement($form->get('entity_type_id'))?>
-        <?php echo $this->formLabel($form->get('date_from'));?><?php echo $this->formElement($form->get('date_from'))?>
-        <!-- <?php echo $this->formLabel($form->get('sort'));?><?php echo $this->formElement($form->get('sort'))?>-->
-        <p>
-        <?php echo $this->formLabel($form->get('multi-checkbox'));?><?php echo $this->formElement($form->get('multi-checkbox'))?>
-        <?php echo $this->formElement($form->get('submit'));?>
-        <?php echo $this->form()->closeTag();?>
+        ?></h3>
+    <div id="upper">
+        <div id="left">       
+            <?php echo $this->form()->openTag($form);?>
+            <?php echo $this->formLabel($form->get('entity_type_id'));?><?php echo $this->formElement($form->get('entity_type_id'))?>
+            <?php echo $this->formLabel($form->get('date_from'));?><?php echo $this->formElement($form->get('date_from'))?>
+            <!-- <?php echo $this->formLabel($form->get('sort'));?><?php echo $this->formElement($form->get('sort'))?>-->
+            <br><br>
+            <!-- <?php echo $this->formLabel($form->get('multi-checkbox'));?>-->
+            <p>
+            <?php echo $this->formElement($form->get('multi-checkbox'))?>
+            <br><br>
+            <?php echo $this->formElement($form->get('submit'));?>
+            <?php echo $this->form()->closeTag();?>
+        </div>
+        <div id="right">            
+        </div>
     </div>
-    <table class="tablesorter" id="myTable">
+    <div id="lower">
+        <table class="tablesorter" id="myTable">
         <thead>
         <tr>
             <?php foreach($keys as $key):?>
@@ -61,7 +80,7 @@
                     {
                         $value = $content;
                     }
-                    
+
                     if($value == 'reserved')
                     {                        
                         if(isset($reservation_id))
@@ -72,7 +91,7 @@
                         {
                             echo '<td class="reserved" data-reservation-id="none">'.$value.'</td>';
                         }
-                        
+
                     }
                     else if ($value == 'free')
                     {
@@ -84,7 +103,7 @@
                         {
                             echo '<td class="free" data-reservation-date="'.$key.'" title="this is free">'.$value.'</td>';
                         }
-                        
+
                     }
                     else 
                     {
@@ -95,7 +114,9 @@
         </tr>
         <?php endforeach;?>
         </tbody>
-    </table>        
+        </table>  
+    </div>
+          
     <script>
         var lista = [];
         var rowId = -1;
@@ -110,24 +131,59 @@
                 }
             }
             
+            $.getReservations = function() {                
+                $.ajax({
+                    url: '/pms/reservation',
+                    async: true
+                }).done(function(data) {
+                    var table = $(data).find('table');
+                    $(table).attr('class', 'tablesorter');
+                    $('div#right').html(table);
+                    $('div#right').find('table').attr('class', 'tablesorter');
+                    $('.tablesorter').tablesorter({
+                            theme: 'metro-dark',
+                            showProcessing: true,
+                            headerTemplate : '{content} {icon}',
+                            widgets: [ 'zebra', 'columns', 'stickyHeaders', 'scroller' ],
+                            widgetOptions : {
+                                    scroller_height : 200,
+                                    // scroll tbody to top after sorting
+                                    scroller_upAfterSort: true,
+                                    // pop table header into view while scrolling up the page
+                                    scroller_jumpToHeader: true,
+                                    // In tablesorter v2.19.0 the scroll bar width is auto-detected
+                                    // add a value here to override the auto-detected setting
+                                    scroller_barWidth : null
+                                    // scroll_idPrefix was removed in v2.18.0
+                                    // scroller_idPrefix : 's_'
+                            }
+                    });
+                }).fail(function(xhr) {
+                    //alert('failed');
+                });
+            }
+            
             $("#date_from").datetimepicker({
                 format: 'Y-m-d H:i:s'
             });
             
-            $('#myTable').tablesorter({
-                sortList: [[0,0], [1,0]],
+            $('#myTable').tablesorter({               
+                theme: 'metro-dark',
+                showProcessing: true,
+                headerTemplate : '{content} {icon}',
+                widgets: [ 'zebra', 'columns', 'stickyHeaders', 'scroller' ],
                 widgetOptions : {
-                   scroller_height : 300,
-                   // scroll tbody to top after sorting
-                   scroller_upAfterSort: true,
-                   // pop table header into view while scrolling up the page
-                   scroller_jumpToHeader: true,
-                   // In tablesorter v2.19.0 the scroll bar width is auto-detected
-                   // add a value here to override the auto-detected setting
-                   scroller_barWidth : null
-                   // scroll_idPrefix was removed in v2.18.0
-                   // scroller_idPrefix : 's_'
-                }
+                        scroller_height : 400,
+                        // scroll tbody to top after sorting
+                        scroller_upAfterSort: true,
+                        // pop table header into view while scrolling up the page
+                        scroller_jumpToHeader: true,
+                        // In tablesorter v2.19.0 the scroll bar width is auto-detected
+                        // add a value here to override the auto-detected setting
+                        scroller_barWidth : null
+                        // scroll_idPrefix was removed in v2.18.0
+                        // scroller_idPrefix : 's_'
+                }                   
             });
             
             $('td.reserved').tooltip({    
@@ -253,14 +309,16 @@
                 }
             });
             
+            $.getReservations();
+                        
         });
     </script>
     <style>
-        table.tablesorter td.reserved{
+        table.tablesorter tbody td.reserved{
             background: orange;
             box-shadow: inset 1px 1px 3px #999;
         }
-        table.tablesorter td.free {
+        table.tablesorter tbody td.free {
             background: #00cccc;
             box-shadow: inset 1px 1px 3px #999;
         }
@@ -277,6 +335,45 @@
         .form-entry {
             margin-left: 10px;
             margin-right: 10px;
+            font-size: 0.75em;
         }
+        div #upper {
+            height: 200px;
+            /*border: 2px solid #0000FF;*/
+            display: block;
+        }
+        div #lower {
+            height: 420px;
+            display: block;
+        }
+        #left {
+            height: 100%;
+            width: 40%;
+            border: 1px dashed #AAAAAA;
+            border-radius: 15px;
+            display: inline-block;
+            vertical-align: top;
+        }
+        #right {
+            height: 100%;
+            width: 59.5%;
+            /*border: 1px dashed #00FF00;*/
+            display: inline-block;
+            /*background: #ffff33;*/        
+            vertical-align: top;
+            overflow: hidden;
+            
+        }
+        
+        form {
+            margin-top: 10px;
+        }
+        
+        #submit {
+            text-align: center;
+            width: 20%;
+            margin-left: 40%;
+        }
+        
     </style>
 </section>
