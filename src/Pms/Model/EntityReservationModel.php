@@ -107,7 +107,6 @@ class EntityReservationModel extends EntityModel
     protected function initReservations()
     {
         $reservations = array();
-                
         if(isset($this->id) && isset($this->startDate) && isset($this->endDate))
         {        
             $startDate = $this->startDate;
@@ -124,7 +123,16 @@ class EntityReservationModel extends EntityModel
             $date = $startDate;
             while(strtotime($date) <= strtotime($endDate))
             {
-                $reservations[$date] = [
+                if($this->time_resolution != 1)
+                {
+                    $key = date('Y-m-d H:i', strtotime($date));
+                }
+                else 
+                {
+                    $key = date('Y-m-d', strtotime($date));
+                }
+                
+                $reservations[$key] = [
                     'status' => 'free',
                     'id' => null,
                     'time_resolution' => $this->time_resolution,
@@ -138,7 +146,6 @@ class EntityReservationModel extends EntityModel
                     $date = date('Y-m-d H:i:s', strtotime('+ 1 hour', strtotime($date)));
                 }               
             }       
-                                    
             $sql = new Sql($this->dbAdapter);
             $select = $sql->select();     
             $select->from('reservation_entity')
@@ -166,14 +173,9 @@ class EntityReservationModel extends EntityModel
             
             $statement = $this->sql->prepareStatementForSqlObject($select);
             $results = $statement->execute();
+            
             foreach($results as $row)
-            {
-//                $reservation = new ReservationEntityModel($this->dbAdapter);
-//                $reservation->setData($row);
-                
-//                $start = date('Y-m-d', strtotime($reservation->date_from));
-//                $end = date('Y-m-d', strtotime($reservation->date_to));
-                
+            {                
                 if($this->time_resolution == 1)
                 {
                     $increment_format = "+ 1 day";
@@ -182,7 +184,7 @@ class EntityReservationModel extends EntityModel
                 else 
                 {
                     $increment_format = "+ 1 hour";
-                    $date_format = "Y-m-d H:i:s";                    
+                    $date_format = "Y-m-d H:i";                    
                 }
                 $start = date($date_format, strtotime($row['date_from']));
                 $end = date($date_format, strtotime($row['date_to']));
@@ -191,16 +193,16 @@ class EntityReservationModel extends EntityModel
                 $current = strtotime($startDate);                                                
                 $counter = 0;
                 while($current <= strtotime($endDate))
-                {
+                {                    
                     if($current >= strtotime($start) && $current < strtotime($end))
                     {
                         $reservations[date($date_format, $current)]['status'] = 'reserved';
                         $reservations[date($date_format, $current)]['id'] = $reservation_id;
-                        $reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;                        
+                        $reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;          
                     }
                     else 
                     {
-                        $reservations[date($date_format, $current)]['status'] = 'free';
+//                        $reservations[date($date_format, $current)]['status'] = 'free';  // commented, because the will overwrite the previous reservations.
                         $reservations[date($date_format, $current)]['id'] = null;
                         $reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;
                     }
@@ -208,13 +210,9 @@ class EntityReservationModel extends EntityModel
                     $current = strtotime($increment, $current);
                     $counter++;
                 }                                
-            }
+            }           
         }
-        
-        
-//        \Zend\Debug\Debug::dump($reservations);
-//        die();
-        
+         
         return $reservations;
     }
         

@@ -28,7 +28,7 @@ class EntityType
         {
             $this->id = $data['id'];
         }
-        
+    
         $this->name = (isset($data['name'])) ? $data['name'] : null;
         $this->description = (isset($data['description'])) ? $data['description'] : null;
         $this->time_resolution = (isset($data['time_resolution'])) ? $data['time_resolution'] : null;

@@ -145,7 +145,7 @@ class EntityController extends AbstractActionController
         $index = array();
         $attList = array();
         foreach($results as $row)
-        {
+        {                        
             $line = array();
             $id = $row['id'];
             $model = new EntityReservationModel($adapter);
@@ -202,7 +202,7 @@ class EntityController extends AbstractActionController
                 }                
             }
             
-            $reservations = $model->getReservations();                        
+            $reservations = $model->getReservations();                     
             $current = strtotime($startDate);
             foreach($reservations as $key=>$value)
             {

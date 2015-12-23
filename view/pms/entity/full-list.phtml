@@ -4,12 +4,12 @@
         $this->headLink()->appendStylesheet('/js/datetimepicker/jquery.datetimepicker.css');
         $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.blue.css');
         $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.bootstrap.css');
-        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.jui.css');
-        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.ice.css');
-        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.dark.css');
-        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.default.css');
-        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.dropbox.css');
-        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.grey.css');
+//        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.jui.css');
+//        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.ice.css');
+//        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.dark.css');
+//        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.default.css');
+//        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.dropbox.css');
+//        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.grey.css');
         $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.metro-dark.css');
         $this->headLink()->appendStylesheet('/tablesorter-master/css/high-specificity/theme.blue.specific.css');
         $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');          
@@ -133,7 +133,7 @@
             
             $.getReservations = function() {                
                 $.ajax({
-                    url: '/pms/reservation',
+                    url: '/pms/ajax/getAvailability?type=22',
                     async: true
                 }).done(function(data) {
                     var table = $(data).find('table');
@@ -173,7 +173,7 @@
                 headerTemplate : '{content} {icon}',
                 widgets: [ 'zebra', 'columns', 'stickyHeaders', 'scroller' ],
                 widgetOptions : {
-                        scroller_height : 400,
+                        scroller_height : 320,
                         // scroll tbody to top after sorting
                         scroller_upAfterSort: true,
                         // pop table header into view while scrolling up the page
@@ -260,7 +260,7 @@
 //                //alert(params);
 //                window.location.href = '/pms/entity/fullList?' + params;            
                 $(document).find('form#AvailabilityForm').submit();
-            });
+            });            
 
             $('td.free').on('mouseenter', function(evt) {         
                 evt.preventDefault();
@@ -297,12 +297,15 @@
                     var endDate = last;                    
                     var guid = rowId;
                     var time = $(e.target).data().timeResolution;
+                    if(time == 1)
+                    {
+                        endDate += ' 12:00';
+                    }
                     
                     rowId = -1;
                     lista = [];
                     
                     $.get('pms/ajax/remember?mark=control', function(data) {
-                        alert(data);
                     });
                     //alert("Start date is " + startDate + ", room number is " + guid);
                     window.location.href = "/pms/reservation/newEntity?guid="+guid+"&startDate="+startDate+"&endDate="+endDate+"&time="+time;                    
@@ -315,11 +318,11 @@
     </script>
     <style>
         table.tablesorter tbody td.reserved{
-            background: orange;
+            background: #f44a6e;
             box-shadow: inset 1px 1px 3px #999;
         }
         table.tablesorter tbody td.free {
-            background: #00cccc;
+            background: #8eddca;
             box-shadow: inset 1px 1px 3px #999;
         }
         
@@ -343,8 +346,9 @@
             display: block;
         }
         div #lower {
-            height: 420px;
+            height: 350px;
             display: block;
+            overflow: hidden;
         }
         #left {
             height: 100%;
@@ -373,6 +377,14 @@
             text-align: center;
             width: 20%;
             margin-left: 40%;
+        }
+        
+        .today {
+            color:red;
+        }
+        
+        .tablesorter {
+            font-size: smaller;
         }
         
     </style>

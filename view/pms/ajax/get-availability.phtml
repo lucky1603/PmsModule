@@ -1,0 +1,39 @@
+<?php
+    $guests = $this->incomming;
+?>
+<table class="tablesorter">
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>Arrival</th>
+            <th>Guest</th>
+            <th>Accommodation</th>
+            <th>Number</th>
+            <th>Status</th>            
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($guests as $guest):?>
+        <?php
+            $date = date('Y-m-d', strtotime($guest['Arrival']));
+            $today = date('Y-m-d', time());
+            if($date == $today)
+            {
+                echo '<tr class="today">';
+            }
+            else 
+            {
+                echo '<tr>';
+            }
+        ?>
+        
+            <td><?php echo $guest['Reservation']?></td>
+            <td><?php echo $guest['Arrival']?></td>
+            <td><?php echo $guest['Guest_FirstName'].' '.$guest['Guest_LastName']?></td>
+            <td><?php echo $guest['Object Name']?></td>
+            <td><?php echo $guest['Number']?></td>
+            <td><?php echo $guest['Room Status']?></td>                                
+        </tr>
+        <?php endforeach;?>
+    </tbody>
+</table>

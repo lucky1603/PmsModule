@@ -208,6 +208,71 @@ class AjaxController extends AbstractActionController
         return $this->viewModel->setVariable('response', json_encode($out));
     }
     
+    /**
+     * Gets the list of upcomming guests
+     * @return ViewModel
+     */
+    public function getAvailabilityAction()
+    {
+        $startDate = $this->params()->fromQuery('startDate');
+        $endDate = $this->params()->fromQuery('endDate');
+        $type = $this->params()->fromQuery('type');
+        $entityTypeTable = $this->getServiceLocator()->get("EntityTypeTable");
+        $entityType = $entityTypeTable->getEntityType($type);
+        $time_resolution = $entityType->time_resolution;
+        
+        $dbAdapter = $this->getServiceLocator()->get('Adapter');
+        $sql = new Sql($dbAdapter);
+        $select = $sql->select();
+        $select->from(['re' => 'reservation_entity'])
+               ->columns(['Arrival' => 'date_from', 'Leaving' => 'date_to'])
+               ->join(['e' => "entity"], 're.entity_id=e.id', ['Number' => 'guid', 'Room Status' => 'status'])
+               ->join(['ed' => 'entity_definition'], 'e.definition_id=ed.id', ['Object Class' => 'code', 'Object Name' => 'name'])
+               ->join(['et' => 'entity_type'], 'ed.entity_type_id=et.id', ['Object Type' => 'name'])
+               ->join(['r' => 'reservations'], 're.reservation_id=r.id', ['Reservation' => 'reservation_id'])
+               ->join(['c' => 'clients'], 're.guest_id=c.id', ['Guest_FirstName' => 'first_name', 'Guest_LastName' => 'last_name'])
+               ->join(['d' => 'clients'], 'r.client_id=d.id', ['Client_FirstName' => 'first_name', 'Client_LastName' => 'last_name']);
+        
+        if(empty($startDate))
+        {
+            if($time_resolution == 1 /* days */)
+            {
+                $format = 'Y-m-d';
+            }
+            else 
+            {
+                $format = 'Y-m-d H:i:s';
+            }
+            
+            $startDate = date($format, time());
+        }
+        
+        if(empty($endDate))
+        {
+           if($time_resolution == 1 /* Days */)
+           {
+               $increment = '+ 6 days';
+               $format = 'Y-m-d';
+           }
+           else 
+           {
+               $increment = '+ 23 hours';
+               $format = 'Y-m-d H:i:s';
+           }
+
+           $endDate = date($format, strtotime($increment, strtotime($startDate)));
+        }
+        
+        $select->where->between('re.date_from', $startDate, $endDate);
+        $select->where->equalTo('et.id', $type);
+        
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $results = $statement->execute();
+        return new ViewModel([
+            'incomming' => $results
+        ]);
+    }
+    
     public function testDaysAction()
     {
         $start = '2015-12-15';
