@@ -19,7 +19,11 @@
         $this->headScript()->appendFile('/tablesorter-master/js/widgets/widget-scroller.js');
         
         $lines = $this->data;        
-        $keys = array_keys(array_values($lines)[0]);
+        if(isset($lines) && count($lines) > 0)
+        {
+            $keys = array_keys(array_values($lines)[0]);
+        }
+        
         $startDate = $this->startDate;
         $endDate = $this->endDate;
         $typeName = $this->typeName;
@@ -44,7 +48,7 @@
             <!-- <?php echo $this->formLabel($form->get('multi-checkbox'));?>-->
             <p>
             <?php echo $this->formElement($form->get('multi-checkbox'))?>
-            <br><br>
+            <br>
             <?php echo $this->formElement($form->get('submit'));?>
             <?php echo $this->form()->closeTag();?>
         </div>
@@ -52,6 +56,9 @@
         </div>
     </div>
     <div id="lower">
+        <?php if(empty($keys)):?>
+        <h3 class="error">No defined object types.</h3>
+        <?php else: ?>
         <table class="tablesorter" id="myTable">
         <thead>
         <tr>
@@ -115,6 +122,7 @@
         <?php endforeach;?>
         </tbody>
         </table>  
+        <?php endif;?>
     </div>
           
     <script>
@@ -352,7 +360,7 @@
         }
         #left {
             height: 100%;
-            width: 40%;
+            width: 35%;
             border: 1px dashed #AAAAAA;
             border-radius: 15px;
             display: inline-block;
@@ -360,7 +368,7 @@
         }
         #right {
             height: 100%;
-            width: 59.5%;
+            width: 64.5%;
             /*border: 1px dashed #00FF00;*/
             display: inline-block;
             /*background: #ffff33;*/        
@@ -383,8 +391,8 @@
             color:red;
         }
         
-        .tablesorter {
-            font-size: smaller;
+        table.tablesorter td, table.tablesorter th {
+            font-size: 0.75em;
         }
         
     </style>
