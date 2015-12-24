@@ -78,6 +78,8 @@
                 //alert('no value');
             }
             else {
+                var id = <?php echo $id;?>;
+                console.log(id);
                 oldValue = $('#entity_id').val();            
                 oldText = $('#entity_id option[value='+oldValue+']').text();
             }
