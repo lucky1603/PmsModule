@@ -283,6 +283,26 @@ class AjaxController extends AbstractActionController
         ]);
     }
     
+    /**
+     * Determines, where will the application go back.
+     * @return type
+     */
+    public function whereToAction()
+    {
+        $session = new Container('models');
+        if($session->direction == 'edit')
+        {
+            unset($session->direction);
+            unset($session->reservationModel);
+            return $this->viewModel->setVariable('response', '/pms/reservation');
+        }
+        else {
+            unset($session->direction);
+            unset($session->reservationModel);
+            return $this->viewModel->setVariable('response', '/pms/entity/fullList');
+        }
+    }
+    
     public function testDaysAction()
     {
         $start = '2015-12-15';
