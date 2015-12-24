@@ -153,23 +153,24 @@ class EntityController extends AbstractActionController
             $time_resolution = $model->getTimeResolution();
             switch ($time_resolution) {
                 case 1:
-                    $endDate = date('Y-m-d', strtotime('+6 days', strtotime($startDate)));      
+                    $startPeriod = $startDate;
+                    $endPeriod = date('Y-m-d', strtotime('+6 days', strtotime($startDate)));      
                     break;
                 default:
                     if(isset($startTime))
                     {
-                        $startDate = $startDate.' '.$startTime;
+                        $startPeriod = $startDate.' '.$startTime;
                     }
                     else 
                     {
-                        $startDate = date('Y-m-d H:i:s', strtotime($startDate));
+                        $startPeriod = date('Y-m-d H:i:s', strtotime($startDate));
                     }                    
-                    $endDate = date('Y-m-d H:i:s', strtotime('+23 hours', strtotime($startDate)));      
+                    $endPeriod = date('Y-m-d H:i:s', strtotime('+23 hours', strtotime($startDate)));      
                     break;
             }
-            if(isset($startDate) && isset($endDate))
+            if(isset($startPeriod) && isset($endPeriod))
             {
-                $model->setPeriod($startDate, $endDate);
+                $model->setPeriod($startPeriod, $endPeriod);
             }
             $line['guid'] = $model->guid;
             $line['code'] = $row['code'];
@@ -236,6 +237,8 @@ class EntityController extends AbstractActionController
         $form = $this->getServiceLocator()->get('AvailabilityForm');
         $mcheckbox = $form->get('multi-checkbox');
         $mcheckbox->setValueOptions($attList);
+        $mselect = $form->get('multi-select');
+        $mselect->setValueOptions($attList);
         $sorter = $form->get('sort');
         $sortAttrs = array('guid' => 'guid', 'code' => 'code', 'status' => 'status');
         foreach($attrs as $attr)
@@ -248,6 +251,7 @@ class EntityController extends AbstractActionController
         $formData['date_from'] = $startDate;
         $formData['entity_type_id'] = $typeId;
         $formData['multi-checkbox'] = $attrs;
+        $formData['multi-select'] = $attrs;
         $formData['sort'] = $sort;
                 
         $form->setData($formData);
@@ -255,10 +259,10 @@ class EntityController extends AbstractActionController
             'data' => $ilines,
             'form' => $form,
         ]);        
-        if(isset($startDate) && isset($endDate))
+        if(isset($startPeriod) && isset($endPeriod))
         {
-            $viewModel->setVariable('startDate', $startDate);
-            $viewModel->setVariable('endDate', $endDate);
+            $viewModel->setVariable('startDate', $startPeriod);
+            $viewModel->setVariable('endDate', $endPeriod);
         }        
         if(isset($typeName))
         {

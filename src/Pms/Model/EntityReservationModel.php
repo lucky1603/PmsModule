@@ -108,7 +108,7 @@ class EntityReservationModel extends EntityModel
     {
         $reservations = array();
         if(isset($this->id) && isset($this->startDate) && isset($this->endDate))
-        {        
+        {                    
             $startDate = $this->startDate;
             if($this->time_resolution == 2)
             {

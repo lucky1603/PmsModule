@@ -28,8 +28,8 @@ class AvailabilityForm extends Form
         }
         $select->setValueOptions($options);
         $select->setAttribute('id', 'entity_type_id');
-        $select->setAttribute('class' , 'form-entry ui-button');
-        $select->setLabelAttributes(['class' => 'form-entry ui-button']);
+        $select->setAttribute('class' , 'form-entry');
+        $select->setLabelAttributes(['class' => 'form-entry']);
         $this->add($select);
         
         // datum_start
@@ -39,12 +39,12 @@ class AvailabilityForm extends Form
                 'type' => 'text',
                 'required' => 'required',
                 'id' => 'date_from',
-                'class' => 'reservation-date form-entry ui-button'
+                'class' => 'reservation-date form-entry'
             ],
             'options' => [
                 'label' => "From",
                 'label_attributes' => [
-                    'class' => 'form-entry ui-button',
+                    'class' => 'form-entry',
                 ],
             ],
         ]);
@@ -52,15 +52,26 @@ class AvailabilityForm extends Form
         // Show / hide attributes.
         $multiCheckbox = new \Zend\Form\Element\MultiCheckbox('multi-checkbox');
         $multiCheckbox->setLabel('Show/Hide Attributes ?');
-        $multiCheckbox->setLabelAttributes(['class' => 'ui-button']);
+//        $multiCheckbox->setLabelAttributes(['class' => 'ui-button']);
         $multiCheckbox->setValueOptions(array(
                 '0' => 'Apple',
                 '1' => 'Orange',
                 '2' => 'Lemon'
         ));
         $multiCheckbox->setLabelAttributes(['class' => 'form-entry']);
-        $multiCheckbox->setAttribute('class', 'form-entry ui-button');
+        $multiCheckbox->setAttribute('class', 'form-entry');
         $this->add($multiCheckbox);
+        
+        $multiselect = new \Zend\Form\Element\Select('multi-select');
+        $multiselect->setLabel('Show/Hide Attributes');
+                $multiCheckbox->setValueOptions(array(
+                '0' => 'Apple',
+                '1' => 'Orange',
+                '2' => 'Lemon'
+        ));
+        $multiselect->setLabelAttributes(['class' => 'form-entry']);
+        $multiselect->setAttribute('class', 'form-entry');
+        $this->add($multiselect);
         
         // Attributes to sort by.
         $sort = new \Zend\Form\Element\Select('sort');

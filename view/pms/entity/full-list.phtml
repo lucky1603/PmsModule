@@ -19,6 +19,7 @@
         $this->headScript()->appendFile('/tablesorter-master/js/widgets/widget-scroller.js');
         
         $lines = $this->data;        
+//        \Zend\Debug\Debug::dump($lines);
         if(isset($lines) && count($lines) > 0)
         {
             $keys = array_keys(array_values($lines)[0]);
