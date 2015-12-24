@@ -214,9 +214,19 @@ class AjaxController extends AbstractActionController
      */
     public function getAvailabilityAction()
     {
-        $startDate = $this->params()->fromQuery('startDate');
-        $endDate = $this->params()->fromQuery('endDate');
-        $type = $this->params()->fromQuery('type');
+        if($this->request->isPost())
+        {
+            $post = $this->request->getPost();
+            $type = $post['entity_type_id'];
+            $startDate = $post['date_from'];
+        }
+        else 
+        {
+            $startDate = $this->params()->fromQuery('startDate');
+            $endDate = $this->params()->fromQuery('endDate');
+            $type = $this->params()->fromQuery('type');
+        }
+                
         $entityTypeTable = $this->getServiceLocator()->get("EntityTypeTable");
         $entityType = $entityTypeTable->getEntityType($type);
         $time_resolution = $entityType->time_resolution;
