@@ -28,7 +28,7 @@ class AvailabilityForm extends Form
         }
         $select->setValueOptions($options);
         $select->setAttribute('id', 'entity_type_id');
-        $select->setAttribute('class' , 'form-entry');
+        $select->setAttribute('class' , 'ui-select ui-widget ui-state-default ui-corner-all ui-state-active');
         $select->setLabelAttributes(['class' => 'form-entry']);
         $this->add($select);
         
@@ -39,7 +39,7 @@ class AvailabilityForm extends Form
                 'type' => 'text',
                 'required' => 'required',
                 'id' => 'date_from',
-                'class' => 'reservation-date form-entry'
+                'class' => 'reservation-date'
             ],
             'options' => [
                 'label' => "From",
@@ -71,6 +71,8 @@ class AvailabilityForm extends Form
         ));
         $multiselect->setLabelAttributes(['class' => 'form-entry']);
         $multiselect->setAttribute('class', 'form-entry');
+        $multiselect->setAttribute('id', 'multi-select');
+        $multiselect->setAttribute('multiple', true);
         $this->add($multiselect);
         
         // Attributes to sort by.

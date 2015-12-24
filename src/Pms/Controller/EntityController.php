@@ -60,9 +60,9 @@ class EntityController extends AbstractActionController
             $typeName = $entity->name;           
             $startDate = date('Y-m-d', strtotime($post['date_from']));
             $startTime = date('H:i:s', strtotime($post['date_from']));      
-            if(isset($post['multi-checkbox']))
+            if(isset($post['multi-select']))
             {
-                $attrs = $post['multi-checkbox']; 
+                $attrs = $post['multi-select']; 
                
             }
             else 
@@ -209,8 +209,7 @@ class EntityController extends AbstractActionController
             {
                 $line[$key] = $value;                                
             }
-//            die($sort);
-//            \Zend\Debug\Debug::dump($sort);
+
             if(isset($sort))
             {
                 $key = $line[$sort];
@@ -231,9 +230,7 @@ class EntityController extends AbstractActionController
         {
             $ilines[] = $lines[$key];
         }           
-//        \Zend\Debug\Debug::dump($ilines);
-        
-        
+                
         $form = $this->getServiceLocator()->get('AvailabilityForm');
         $mcheckbox = $form->get('multi-checkbox');
         $mcheckbox->setValueOptions($attList);
