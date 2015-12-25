@@ -44,7 +44,8 @@
     <div id="upper">
         <div id="left">  
             <?php echo $this->form()->openTag($form);?>
-            <table>
+            <div id="divform">           
+            <table>    
                 <tr>
                     <td><?php echo $this->formLabel($form->get('entity_type_id'));?></td>
                     <td><?php echo $this->formElement($form->get('entity_type_id'))?></td>
@@ -57,8 +58,9 @@
                     <td><?php echo $this->formLabel($form->get('multi-select'));?></td>
                     <td><?php echo $this->formElement($form->get('multi-select'))?></td>
                 </tr>            
-            </table>            
-            <br><br><?php echo $this->formElement($form->get('submit'));?>
+            </table>          
+            </div>
+            <div id="divsubmit"><?php echo $this->formElement($form->get('submit'));?></div>            
             <?php echo $this->form()->closeTag();?>
         </div>
         <div id="right">            
@@ -147,13 +149,148 @@
                    return results[1] || 0;
                 }
             }
-            var postdata = $('form').serialize();            
-            $.getReservations = function() {                
+                            
+            $.setTable = function() {
+                $('td.reserved').tooltip({    
+                    items: '[data-reservation-contents]',
+                    show: {effect: "blind", duration:400},
+                    content: "loading...",
+                    create: function(evt, ui) {
+                        var id = $(this).data().reservationId;            
+                        $.get('/pms/ajax/reservationDetails?id='+id, function(data){
+                            data = JSON.parse(data);
+                            var html = "<table style='font-size:0.75em'>";
+                            $.each(data, function(idx, val) {
+                                html += "<tr><td style='font-weight: bold'>"+idx+":&nbsp;</td><td>"+val+"</td></tr>"
+                            })
+                            html += "</table>";
+                            $(evt.target).tooltip('option', 'content', html);
+                        });                                    
+                   }
+                });
+            
+                $('td.reserved').on('mouseleave', function(evt) {
+                    setTimeout(function() {
+                        $(evt.target).tooltip('close');
+                    });                
+                });            
+
+                $('td.reserved').on('dblclick', function(evt) {
+                    var id = $(evt.target).data().reservationId;     
+                    $.ajax({
+                        url: '/pms/ajax/remember?mark=control',
+                        async: false
+                    }).done(function(data) {
+    //                    alert(data);
+                    }).fail(function(xhr) {
+                        //alert('failed');
+                    });
+                   window.location.href = "/pms/reservation/edit/"+id;
+                });
+            
+                $('td.free').on('dblclick', function(evt) {
+                    var startDate = $(evt.target).data().reservationDate;
+                    var time = $(evt.target).data().timeResolution;
+                    var guid = $(evt.target).parent('tr').data().objectId;
+                    $.get('pms/ajax/remember?mark=control', function(data) {
+                        alert(data);
+                    });
+                    //alert("Start date is " + startDate + ", room number is " + guid);
+                    window.location.href = "/pms/reservation/newEntity?guid="+guid+"&startDate="+startDate+"&time="+time;
+                });
+                
+                $('td.free').on('mouseenter', function(evt) {         
+                    evt.preventDefault();
+                    if(evt.type === 'mouseenter' && evt.which == 1 && evt.button == 0) {
+                        var date = $(evt.target).data().reservationDate;
+                        lista[lista.length] = date;
+                        $(evt.target).css("color", "white");
+                        $(evt.target).css("background", "#3056A0");
+                    }	
+
+                });
+
+                $('td.free').on("mousedown mouseup", function(e) {
+                    e.preventDefault();
+                    if(e.type == 'mousedown')
+                    {                 
+                        var date = $(e.target).data().reservationDate;
+                        rowId = $(e.target).parent('tr').data().objectId;
+                        lista[lista.length] = date;
+                        $(e.target).css("color", "white");
+                        $(e.target).css("background", "#3056A0");
+                    }
+
+                    if(e.type == 'mouseup')
+                    {
+                        $.each(lista, function(idx, value) {
+                            $('td.free').parent('tr').filter('[data-object-id = "'+rowId+'"]').removeAttr('style');
+                        });
+
+                        var first = lista[0];
+                        var last = lista[lista.length - 1];
+
+                        var startDate = first;
+                        var endDate = last;                    
+                        var guid = rowId;
+                        var time = $(e.target).data().timeResolution;
+                        if(time == 1)
+                        {
+                            endDate += ' 12:00';
+                        }
+
+                        rowId = -1;
+                        lista = [];
+
+                        $.get('pms/ajax/remember?mark=control', function(data) {
+                        });
+                        //alert("Start date is " + startDate + ", room number is " + guid);
+                        window.location.href = "/pms/reservation/newEntity?guid="+guid+"&startDate="+startDate+"&endDate="+endDate+"&time="+time;                    
+                    }
+                });
+
+            }
+            
+            $.getList = function(formData) {
+                $.ajax({
+                    method: "POST",
+                    url: '/pms/ajax/getReservationList',
+                    async: true, 
+                    data: formData
+                }).done(function(data) {
+                    console.log('entered');
+                    var table = $(data).find('table');        
+                    $('div#lower').html(table);
+                    $('.tablesorter').tablesorter({
+                        theme: 'metro-dark',
+                        showProcessing: true,
+                        headerTemplate : '{content} {icon}',
+                        widgets: [ 'zebra', 'columns', 'stickyHeaders', 'scroller' ],
+                        widgetOptions : {
+                                scroller_height : 200,
+                                // scroll tbody to top after sorting
+                                scroller_upAfterSort: true,
+                                // pop table header into view while scrolling up the page
+                                scroller_jumpToHeader: true,
+                                // In tablesorter v2.19.0 the scroll bar width is auto-detected
+                                // add a value here to override the auto-detected setting
+                                scroller_barWidth : null
+                                // scroll_idPrefix was removed in v2.18.0
+                                // scroller_idPrefix : 's_'
+                        }
+                    });
+                    $.setTable();                    
+                }).fail(function(xhr) {
+                    //alert('failed');
+                });
+            }
+            
+            $.getReservations = function(formData) {                
                 $.ajax({
                     method: "POST",
                     url: '/pms/ajax/getAvailability',
                     async: true, 
-                    data: postdata
+                    data: formData
                 }).done(function(data) {
                     var table = $(data).find('table');        
 //                    alert($(table).attr('class'));
@@ -183,7 +320,10 @@
                 });
             }
             
-            $('#multi-select').multiselect();
+            $('#multi-select').multiselect({
+                classes: 'form-entry'
+            });
+            
             
             $("#date_from").datetimepicker({
                 format: 'Y-m-d H:i:s'
@@ -257,31 +397,17 @@
             });
             
             $('#entity_type_id').on('change', function(evt) {
-//                var start_date = $.urlParam('startDate');                
-//                var start_time = $.urlParam('startTime');                
-//                var entity_type_id = $(evt.target).val();
-//                var params = "id="+entity_type_id;
-//                params += "&startDate="+start_date;
-//                if(start_time != null)
-//                {
-//                    params += "&startTime="+start_time;
-//                }
-//                window.location.href = '/pms/entity/fullList?' + params;                
+                evt.preventDefault();       
+                var formData = $('form').serialize();
+                $.getList(formData);
+                $.getReservations(formData);
             });
             
-            $('#date_from').on('change', function(evt) {
-//                var date = $(evt.target).val();
-//                var timeline = date.split(' ');
-//                var entity_type_id = $('#entity_type_id').val();
-//                var params = "id="+entity_type_id;
-//                params += "&startDate="+timeline[0];
-//                if(timeline.length == 2)
-//                {
-//                    params += "&startTime="+timeline[1];
-//                }
-//                //alert(params);
-//                window.location.href = '/pms/entity/fullList?' + params;            
-                $(document).find('form#AvailabilityForm').submit();
+            $('#date_from').on('change', function(evt) {      
+                evt.preventDefault();       
+                var formData = $('form').serialize();
+                $.getList(formData);
+                $.getReservations(formData);
             });            
 
             $('td.free').on('mouseenter', function(evt) {         
@@ -333,8 +459,9 @@
                     window.location.href = "/pms/reservation/newEntity?guid="+guid+"&startDate="+startDate+"&endDate="+endDate+"&time="+time;                    
                 }
             });
-            
-            $.getReservations();
+            var formData = $('form').serialize();
+//            $.getList(formData);
+            $.getReservations(formData);
                         
         });
     </script>
@@ -363,16 +490,19 @@
             margin-right: 10px;
             font-size: 0.9em;
         }
+                        
         div #upper {
             height: 200px;
             /*border: 2px solid #0000FF;*/
             display: block;
         }
+        
         div #lower {
             height: 350px;
             display: block;
             overflow: hidden;
         }
+        
         #left {
             height: 100%;
             width: 35%;
@@ -381,6 +511,7 @@
             display: inline-block;
             vertical-align: top;
         }
+        
         #right {
             height: 100%;
             width: 64.5%;
@@ -412,6 +543,17 @@
         
         #multi-select {
             font-size: 0.75em;
+        }
+        
+        #divform {
+            float: top;
+            /*border: 1px solid green;*/
+        }
+        
+        #divsubmit {
+            float: bottom;
+            margin-top: 70px;
+            /*border: 1px solid red;*/
         }
         
     </style>

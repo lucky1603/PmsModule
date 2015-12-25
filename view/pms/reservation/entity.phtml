@@ -5,8 +5,6 @@
         $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');        
         $this->headScript()->appendFile('/js/datetimepicker/build/jquery.datetimepicker.full.js');
                        
-        $form = $this->form;
-        $id = $this->id;
         if(isset($id))
         {
             $form->setAttribute('action', $this->url('pms/reservation', [
@@ -55,14 +53,7 @@
             <?php echo $this->formElement($form->get('submit'))?>
         </dd>
     </dl>
-    <?php echo $this->form()->closeTag()?>
-    <div id="dialog">
-        <form name="moja" method="post" action="/pms/client/processFromEntity" enctype="multipart/form-data">
-            <label for="test">Test</label>
-            <input name="test" id="test" type="text" value="type something">
-            <input type="submit" value="Ok">
-        </form>
-    </div>
+    <?php echo $this->form()->closeTag()?>    
     <script>
     $(function() {
         var dialog, form;
@@ -78,7 +69,7 @@
                 //alert('no value');
             }
             else {
-                var id = <?php echo $id;?>;
+                var id = <?php echo isset($id) ? $id : -1;?>;
                 console.log(id);
                 oldValue = $('#entity_id').val();            
                 oldText = $('#entity_id option[value='+oldValue+']').text();

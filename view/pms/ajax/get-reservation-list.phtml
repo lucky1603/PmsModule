@@ -1,0 +1,68 @@
+<?php 
+    $lines = $this->data;
+    $keys = array_keys(array_values($lines)[0]);
+?>
+
+<table class="tablesorter" id="myTable">
+    <thead>
+        <tr>
+            <?php foreach($keys as $key):?>
+            <th><?php echo $key?></th>
+            <?php endforeach;?>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach($lines as $line):?>
+        <tr data-object-id="<?php echo $line['guid']?>">
+            <?php 
+                foreach($keys as $key)
+                {
+                    $content = $line[$key];
+                    if(is_array($content))
+                    {
+                        $value = $content['status'];
+                        $reservation_id = $content['id'];
+                        if(isset($content['time_resolution']))
+                        {
+                            $time_resolution = $content['time_resolution'];
+                        }                        
+                    }
+                    else 
+                    {
+                        $value = $content;
+                    }
+
+                    if($value == 'reserved')
+                    {                        
+                        if(isset($reservation_id))
+                        {
+                            echo '<td class="reserved" data-reservation-id="'.$reservation_id.'" data-reservation-contents="">'.$value.'</td>';
+                        }
+                        else 
+                        {
+                            echo '<td class="reserved" data-reservation-id="none">'.$value.'</td>';
+                        }
+
+                    }
+                    else if ($value == 'free')
+                    {
+                        if(isset($time_resolution))
+                        {
+                            echo '<td class="free" data-reservation-date="'.$key.'" data-time-resolution="'.$time_resolution.'" title="this is free">'.$value.'</td>';
+                        }
+                        else 
+                        {
+                            echo '<td class="free" data-reservation-date="'.$key.'" title="this is free">'.$value.'</td>';
+                        }
+
+                    }
+                    else 
+                    {
+                        echo '<td>'.$value.'</td>';
+                    }
+                }
+            ?>
+        </tr>
+        <?php endforeach;?>
+    </tbody>
+</table>  
