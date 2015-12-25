@@ -28,7 +28,7 @@ class AvailabilityForm extends Form
         }
         $select->setValueOptions($options);
         $select->setAttribute('id', 'entity_type_id');
-        $select->setAttribute('class' , 'ui-select ui-widget ui-state-default ui-corner-all ui-state-active');
+        $select->setAttribute('class' , 'ui-select ui-widget ui-state-default ui-corner-all ui-state-active form-entry');
         $select->setLabelAttributes(['class' => 'form-entry']);
         $this->add($select);
         
@@ -39,7 +39,7 @@ class AvailabilityForm extends Form
                 'type' => 'text',
                 'required' => 'required',
                 'id' => 'date_from',
-                'class' => 'reservation-date'
+                'class' => 'reservation-date form-entry'
             ],
             'options' => [
                 'label' => "From",
@@ -89,8 +89,7 @@ class AvailabilityForm extends Form
                'type' => 'submit',
                'value' => 'Refresh',
                'id' => 'submit', 
-               'class' => 'ui-button',
-               //'class' => 'form-entry'
+               'class' => 'form-entry',
            ],
        ]);   
     }

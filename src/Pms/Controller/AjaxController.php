@@ -39,6 +39,122 @@ class AjaxController extends AbstractActionController
         return $this->viewModel;
     }
     
+    public function getReservationListAction()
+    {
+        $post = $this->request->getPost();
+        $typeId = $post['entity_type_id'];
+        $startDate = date('Y-m-d', strtotime($post['date_from']));
+        $startTime = date('H:i:s', strtotime($post['date_from']));      
+        if(isset($post['multi-select']))
+        {
+            $attrs = $post['multi-select']; 
+
+        }
+        else 
+        {
+            $attrs = array();
+        }
+                        
+        $table = $this->getServiceLocator()->get('EntityTable');    
+        if(isset($sort))
+        {
+            $results = $table->fetchView($typeId, $sort);
+        }
+        else 
+        {
+            $results = $table->fetchView($typeId);
+        }
+        
+        $adapter = $this->getServiceLocator()->get('Adapter');
+        
+        $lines = array();
+        $index = array();
+        $attList = array();
+        foreach($results as $row)
+        {                        
+            $line = array();
+            $id = $row['id'];
+            $model = new \Pms\Model\EntityReservationModel($adapter);
+            $model->setId($id);
+            $time_resolution = $model->getTimeResolution();
+            switch ($time_resolution) {
+                case 1:
+                    $startPeriod = $startDate;
+                    $endPeriod = date('Y-m-d', strtotime('+6 days', strtotime($startDate)));      
+                    break;
+                default:
+                    if(isset($startTime))
+                    {
+                        $startPeriod = $startDate.' '.$startTime;
+                    }
+                    else 
+                    {
+                        $startPeriod = date('Y-m-d H:i:s', strtotime($startDate));
+                    }                    
+                    $endPeriod = date('Y-m-d H:i:s', strtotime('+23 hours', strtotime($startDate)));      
+                    break;
+            }
+            if(isset($startPeriod) && isset($endPeriod))
+            {
+                $model->setPeriod($startPeriod, $endPeriod);
+            }
+            $line['guid'] = $model->guid;
+            $line['code'] = $row['code'];
+            $line['status'] = $model->status;
+            $attributes = $model->getAllAttributes();
+            $mAttList = $model->getAttributesList();
+            foreach($attributes as $attribute)
+            {
+                if(!isset($attList[$attribute->code]))
+                {
+                    $attList[$attribute->code] = $attribute->label;
+                }
+                
+                if(!in_array($attribute->code, $attrs))
+                {
+                    continue;
+                }
+                
+                if($attribute->type == "boolean")
+                {
+                    $line[$attribute->code] = $attribute->value == 1 ? "Yes" : "No";
+                }
+                else if($attribute->type == "select")
+                {
+                    $line[$attribute->code] = $attribute->optionValues[$attribute->value];
+                }
+                else 
+                {
+                    $line[$attribute->code] = $attribute->value;
+                }                
+            }
+            
+            $reservations = $model->getReservations();                     
+            $current = strtotime($startDate);
+            foreach($reservations as $key=>$value)
+            {
+                $line[$key] = $value;                                
+            }
+
+            if(isset($sort))
+            {
+                $key = $line[$sort];
+                $index[$line['guid']] = $key;
+            }
+            else 
+            {
+                $key = $line['guid'];
+                $index[$line['guid']] = $key;
+            }
+                        
+            $lines[$line['guid']] = $line;
+        }                       
+        $viewModel = new ViewModel([
+            'data' => $lines,
+        ]);                
+        return $viewModel;
+    }
+    
     /**
      * Do jaja!!
      * @return type
@@ -210,7 +326,7 @@ class AjaxController extends AbstractActionController
     
     /**
      * Gets the list of upcomming guests
-     * @return ViewModel
+     * @return ViewModelgit push
      */
     public function getAvailabilityAction()
     {
