@@ -216,9 +216,10 @@ class ReservationController extends AbstractActionController
         {
             $data['date_from'] = date('Y-m-d H:i:s', strtotime("+ 12 hours", strtotime($this->params()->fromQuery('startDate'))));      
             $endDate = $this->params()->fromQuery('endDate');
+            Debug::dump($endDate);
             if(isset($endDate))
             {
-                $data['date_to'] = date('Y-m-d H:i:s', strtotime('+ 1 day + 12 Hours', strtotime($endDate))); 
+                $data['date_to'] = date('Y-m-d H:i:s', strtotime('+ 1 day', strtotime($endDate))); 
             }
             else 
             {
@@ -250,7 +251,7 @@ class ReservationController extends AbstractActionController
         $row = $results->current();        
         $data['entity_definition_id'] = $row['code'];
         $data['entity_id'] = $row['id'];
-        
+
         $form = $this->getServiceLocator()->get('ReservationEntityForm');
         $form->setData($data);
         
