@@ -307,6 +307,10 @@ class AjaxController extends AbstractActionController
         return $this->viewModel->setVariable($response, json_encode($response));
     }
     
+    /**
+     * Gets reservation details for the content of tooltip.
+     * @return type
+     */
     public function reservationDetailsAction()
     {
         $id = $this->params()->fromQuery('id');
