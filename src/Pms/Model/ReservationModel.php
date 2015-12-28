@@ -226,6 +226,9 @@ class ReservationModel
             unset($dataToUpdate['reservedEntities']);
             unset($dataToUpdate['clientName']);
             
+//            \Zend\Debug\Debug::dump($dataToUpdate);
+//            die();
+            
             // Set mandatory entry values.
             $dataToUpdate['created_at'] = date('m/d/Y', time());
             $dataToUpdate['modified_at'] = date('m/d/Y', time());
@@ -250,9 +253,12 @@ class ReservationModel
             $results = $statement->execute();
             $row = $results->current();
             $this->id = $row['id'];
-//            \Zend\Debug\Debug::dump("Row is...");
-//            \Zend\Debug\Debug::dump($row);
-//            \Zend\Debug\Debug::dump($this->id);
+            $this->reservation_id = $row['reservation_id'];
+            if($this->reservation_id == 0)
+            {                
+                $reservation_id = sprintf('%010d', $this->id);
+                $table->update(['reservation_id' => $reservation_id], ['id' => $this->id]);
+            }                                    
         }
         else 
         {

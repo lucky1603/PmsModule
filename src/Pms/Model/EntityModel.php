@@ -65,7 +65,7 @@ class EntityModel
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $results = $statement->execute();
         $data = $results->current();        
-
+        
         // Set local data.
         $this->setData($data);
         $this->time_resolution = $data['time_resolution'];

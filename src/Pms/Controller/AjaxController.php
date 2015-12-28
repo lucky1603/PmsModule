@@ -269,14 +269,25 @@ class AjaxController extends AbstractActionController
         $post = $this->request->getPost();
         $form = $this->getServiceLocator()->get("ClientForm");
         $table = $this->getServiceLocator()->get("ClientTable");
-        
+                       
+//        if(count($post) == 0)
+//        {
+//            $post['first_name'] = 'kikiriki';
+//        }
+                
         $form->setData($post);
+//        \Zend\Debug\Debug::dump($form);
         if($form->isValid())
         {
+//            \Zend\Debug\Debug::dump('formvalid');
             $client = new \Pms\Model\Client();    
             $client->exchangeArray($post);
             $table->saveClient($client);
         }
+        else {
+//            \Zend\Debug\Debug::dump('form not valid');
+        }
+//        die();
         
         $data = array();
         $id = $table->getLastId();

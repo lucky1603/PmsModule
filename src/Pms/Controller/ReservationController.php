@@ -216,7 +216,6 @@ class ReservationController extends AbstractActionController
         {
             $data['date_from'] = date('Y-m-d H:i:s', strtotime("+ 12 hours", strtotime($this->params()->fromQuery('startDate'))));      
             $endDate = $this->params()->fromQuery('endDate');
-            Debug::dump($endDate);
             if(isset($endDate))
             {
                 $data['date_to'] = date('Y-m-d H:i:s', strtotime('+ 1 day', strtotime($endDate))); 

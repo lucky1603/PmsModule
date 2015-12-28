@@ -163,7 +163,7 @@ class ClientForm extends Form
            'name' => 'submit',
            'attributes' => [
                'type' => 'submit',
-               'required' => 'required',
+//               'required' => 'required',
                'value' => 'Save',
            ],
            'options' => [
