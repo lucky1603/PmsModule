@@ -87,7 +87,8 @@
                     $content = $line[$key];
                     if(is_array($content))
                     {
-                        $value = $content['status'];
+                        $value = $content['statusvalue'];
+                        $text = $content['statustext'];
                         $reservation_id = $content['id'];
                         if(isset($content['time_resolution']))
                         {
@@ -97,17 +98,18 @@
                     else 
                     {
                         $value = $content;
+                        $text = $content;
                     }
 
-                    if($value == 'reserved')
+                    if($value != 'free')
                     {                        
                         if(isset($reservation_id))
                         {
-                            echo '<td class="reserved" data-reservation-id="'.$reservation_id.'" data-reservation-contents="">'.$value.'</td>';
+                            echo '<td class="reserved '.$value.'" data-reservation-id="'.$reservation_id.'" data-reservation-contents="">'.$text.'</td>';
                         }
                         else 
                         {
-                            echo '<td class="reserved" data-reservation-id="none">'.$value.'</td>';
+                            echo '<td class="regular" data-reservation-id="none">'.$text.'</td>';
                         }
 
                     }
@@ -115,17 +117,17 @@
                     {
                         if(isset($time_resolution))
                         {
-                            echo '<td class="free" data-reservation-date="'.$key.'" data-time-resolution="'.$time_resolution.'" title="this is free">'.$value.'</td>';
+                            echo '<td class="free" data-reservation-date="'.$key.'" data-time-resolution="'.$time_resolution.'" title="this is free">'.$text.'</td>';
                         }
                         else 
                         {
-                            echo '<td class="free" data-reservation-date="'.$key.'" title="this is free">'.$value.'</td>';
+                            echo '<td class="free" data-reservation-date="'.$key.'" title="this is free">'.$text.'</td>';
                         }
 
                     }
                     else 
                     {
-                        echo '<td>'.$value.'</td>';
+                        echo '<td>'.$text.'</td>';
                     }
                 }
             ?>
@@ -484,6 +486,32 @@
             box-shadow: inset 1px 1px 3px #999;
         }
         
+        table.tablesorter tbody td.inquiery {
+            /*background: #8eddca;*/
+            background: #f6d8d8;
+            box-shadow: inset 1px 1px 3px #999;
+        }
+        
+        table.tablesorter tbody td.cancelled {
+            background: #bca37d;
+            box-shadow: inset 1px 1px 3px #999;
+        }
+        
+        table.tablesorter tbody td.inhouse {
+            background: #aecd6f;
+            box-shadow: inset 1px 1px 3px #999;
+        }
+
+        table.tablesorter tbody td.checkout {
+            background: #d59add;
+            box-shadow: inset 1px 1px 3px #999;
+        }
+        
+        table.tablesorter tbody td.archive {
+            background: #77e2c5;
+            box-shadow: inset 1px 1px 3px #999;
+        }
+
         table.tablesorter td.selected {
             background: #ffff33;
             box-shadow: inset 1px 1px 3px #999;

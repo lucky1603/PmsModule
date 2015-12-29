@@ -133,7 +133,8 @@ class EntityReservationModel extends EntityModel
                 }
                 
                 $reservations[$key] = [
-                    'status' => 'free',
+                    'statustext' => 'Free',
+                    'statusvalue' => 'free',
                     'id' => null,
                     'time_resolution' => $this->time_resolution,
                 ];
@@ -148,7 +149,9 @@ class EntityReservationModel extends EntityModel
             }       
             $sql = new Sql($this->dbAdapter);
             $select = $sql->select();     
-            $select->from('reservation_entity')
+            $select->from(['re' =>'reservation_entity'])
+                   ->join(['r' => 'reservations'], 're.reservation_id = r.id', ['status_id'])
+                   ->join(['rs' => 'reservation_status'], 'r.status_id=rs.id', ['statustext', 'statusvalue'])
                    ->where->NEST
                         ->NEST
                             ->lessThanOrEqualTo('date_to', $endDate)
@@ -196,7 +199,9 @@ class EntityReservationModel extends EntityModel
                 {                    
                     if($current >= strtotime($start) && $current < strtotime($end))
                     {
-                        $reservations[date($date_format, $current)]['status'] = 'reserved';
+//                        $reservations[date($date_format, $current)]['status'] = 'reserved';
+                        $reservations[date($date_format, $current)]['statustext'] = $row['statustext'];
+                        $reservations[date($date_format, $current)]['statusvalue'] = $row['statusvalue'];
                         $reservations[date($date_format, $current)]['id'] = $reservation_id;
                         $reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;          
                     }

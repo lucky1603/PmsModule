@@ -20,7 +20,8 @@
                     $content = $line[$key];
                     if(is_array($content))
                     {
-                        $value = $content['status'];
+                        $value = $content['statusvalue'];
+                        $text = $content['statustext'];
                         $reservation_id = $content['id'];
                         if(isset($content['time_resolution']))
                         {
@@ -30,17 +31,18 @@
                     else 
                     {
                         $value = $content;
+                        $text = $content;
                     }
 
-                    if($value == 'reserved')
+                    if($value != 'free')
                     {                        
                         if(isset($reservation_id))
                         {
-                            echo '<td class="reserved" data-reservation-id="'.$reservation_id.'" data-reservation-contents="">'.$value.'</td>';
+                            echo '<td class="reserved '.$value.'" data-reservation-id="'.$reservation_id.'" data-reservation-contents="">'.$text.'</td>';
                         }
                         else 
                         {
-                            echo '<td class="reserved" data-reservation-id="none">'.$value.'</td>';
+                            echo '<td class="regular" data-reservation-id="none">'.$text.'</td>';
                         }
 
                     }
@@ -48,17 +50,17 @@
                     {
                         if(isset($time_resolution))
                         {
-                            echo '<td class="free" data-reservation-date="'.$key.'" data-time-resolution="'.$time_resolution.'" title="this is free">'.$value.'</td>';
+                            echo '<td class="free" data-reservation-date="'.$key.'" data-time-resolution="'.$time_resolution.'" title="this is free">'.$text.'</td>';
                         }
                         else 
                         {
-                            echo '<td class="free" data-reservation-date="'.$key.'" title="this is free">'.$value.'</td>';
+                            echo '<td class="free" data-reservation-date="'.$key.'" title="this is free">'.$text.'</td>';
                         }
 
                     }
                     else 
                     {
-                        echo '<td>'.$value.'</td>';
+                        echo '<td>'.$text.'</td>';
                     }
                 }
             ?>
