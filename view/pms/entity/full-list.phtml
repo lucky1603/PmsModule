@@ -324,6 +324,14 @@
                 classes: 'form-entry'
             });
             
+            $('#multi-select').on('multiselectclose', function(e) {
+                var formData = $('form').serialize();
+                console.log(formData);
+                console.log($(e.target).val());
+                $.getList(formData);
+                $.getReservations(formData);
+            });
+            
             
             $("#date_from").datetimepicker({
                 format: 'Y-m-d H:i:s'
