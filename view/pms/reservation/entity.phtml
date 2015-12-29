@@ -121,10 +121,7 @@
                     evt.preventDefault();
                     fields = $(formData).serialize();                    
                     dialog.dialog('close');    
-                    alert(fields);
                     $.post('/pms/ajax/writeNewClient', fields, function(mydata) {     
-                        alert('ajax');
-                        console.log(mydata);
                         var client = mydata.client;
                         var id = client.id;
                         var name = client.first_name + ' ' + client.last_name;

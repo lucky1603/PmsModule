@@ -150,15 +150,14 @@
             });
             
             $('form').on('submit', function(e) {
-//                e.preventDefault();
-//                var action = $('form').attr('action');
-//                var postdata = $('form').serialize();
-//                $.post(action, postdata, function(data) {
-//                    alert(data);
-//                    $.get('/pms/ajax/whereTo', function(data) {
-//                        window.location.href = data;
-//                    });    
-//                });                
+                e.preventDefault();
+                var action = $('form').attr('action');
+                var postdata = $('form').serialize();
+                $.post(action, postdata, function(data) {
+                    $.get('/pms/ajax/whereTo', function(data) {
+                        window.location.href = data;
+                    });    
+                });                
             });
             
             $('#back_button').click(function(evt) {
