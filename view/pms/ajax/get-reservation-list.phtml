@@ -34,7 +34,9 @@
                         $text = $content;
                     }
 
-                    if($value != 'free')
+                    $functional_keys = array('inquiery', 'confirmed', 'cancelled', 'inhouse', 'checkout', 'archive');
+                    
+                    if(in_array($value, $functional_keys))
                     {                        
                         if(isset($reservation_id))
                         {

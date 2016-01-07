@@ -100,8 +100,10 @@
                         $value = $content;
                         $text = $content;
                     }
+                    
+                    $functional_keys = array('inquiery', 'confirmed', 'cancelled', 'inhouse', 'checkout', 'archive');
 
-                    if($value != 'free')
+                    if(in_array($value, $functional_keys))
                     {                        
                         if(isset($reservation_id))
                         {

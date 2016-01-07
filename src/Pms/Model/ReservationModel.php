@@ -97,8 +97,8 @@ class ReservationModel
             $result = $tableGateway->select(['id' => $this->status_id]);
             $row = $result->current();
             $this->status = $row['statustext'];    
-        }
-        
+                }
+                
         // set entities
         if(isset($data['reservedEntities']))
         {            
