@@ -425,12 +425,22 @@ class AjaxController extends AbstractActionController
         {
             unset($session->direction);
             unset($session->reservationModel);
-            return $this->viewModel->setVariable('response', '/pms/reservation');
+            $instructions = array();
+            $instructions['path'] = '/pms/reservation';
+            $instructions['bookmark'] = '';
+            $instructions['method'] = 'GET';
+            return $this->viewModel->setVariable('response', json_encode($instructions));
         }
         else {
+            $bookmark = $session->bookmark;
             unset($session->direction);
+            unset($session->bookmark);
             unset($session->reservationModel);
-            return $this->viewModel->setVariable('response', '/pms/entity/fullList');
+            $instructions = array();
+            $instructions['path'] = '/pms/entity/fullList';
+            $instructions['bookmark'] = $bookmark;
+            $instructions['method'] = 'POST';
+            return $this->viewModel->setVariable('response', json_encode($instructions));
         }
     }
     
@@ -453,6 +463,11 @@ class AjaxController extends AbstractActionController
         $mark = $this->params()->fromQuery('mark');
         $session = new Container('models');
         $session->direction = $mark;
+        if($this->request->isPost())
+        {
+            $post = $this->request->getPost();
+            $session->bookmark = $post;
+        }
         die($mark);
     }
 }

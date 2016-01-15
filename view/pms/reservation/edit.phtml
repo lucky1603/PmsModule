@@ -162,8 +162,20 @@
             
             $('#back_button').click(function(evt) {
                 evt.preventDefault();
-                $.get('/pms/ajax/whereTo', function(data) {
-                    window.location.href = data;
+                $.get('/pms/ajax/whereTo', function(data) {                                                                               
+                    var instructions = JSON.parse(data);
+                    if(instructions.method == 'GET')
+                    {
+                        $.get(instructions.path, function(data) {
+                            $('body').html(data);
+                        });                           
+                    }
+                    else
+                    {
+                        $.post(instructions.path, instructions.bookmark, function(data) {
+                            $('body').html(data);
+                        });
+                    }
                 });                
             });
         });

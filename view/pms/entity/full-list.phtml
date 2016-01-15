@@ -181,8 +181,11 @@
 
                 $('td.reserved').on('dblclick', function(evt) {
                     var id = $(evt.target).data().reservationId;     
+                    var formdata = $('form').serialize();
                     $.ajax({
+                        method: 'POST',
                         url: '/pms/ajax/remember?mark=control',
+                        data: formdata,
                         async: false
                     }).done(function(data) {
     //                    alert(data);
@@ -386,9 +389,12 @@
              
             $('td.reserved').on('dblclick', function(evt) {
                 var id = $(evt.target).data().reservationId;     
-                $.ajax({
-                    url: '/pms/ajax/remember?mark=control',
-                    async: false
+                var formdata = $('form').serialize();
+                    $.ajax({
+                        method: 'POST',
+                        url: '/pms/ajax/remember?mark=control',
+                        data: formdata,
+                        async: false
                 }).done(function(data) {
 //                    alert(data);
                 }).fail(function(xhr) {
