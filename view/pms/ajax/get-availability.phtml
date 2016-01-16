@@ -14,17 +14,36 @@
     </thead>
     <tbody>
         <?php foreach($guests as $guest):?>
-        <?php
+        <?php          
             $date = date('Y-m-d', strtotime($guest['Arrival']));
             $today = date('Y-m-d', time());
+            $status_id = $guest['Status Id'];
+            
             if($date == $today)
             {
-                echo '<tr class="today">';
+                if($status_id == 4)
+                {
+                    echo '<tr class="in">';
+                }
+                else 
+                {
+                    echo '<tr class="today">';
+                }                
+//                echo '<tr class="today">';
             }
             else 
-            {
-                echo '<tr>';
+            {                
+                if($status_id == 4)
+                {
+                    echo '<tr class="in">';
+                }
+                else 
+                {
+                    echo '<tr>';
+                }                
             }
+            
+            
         ?>
         
             <td><?php echo $guest['Reservation']?></td>

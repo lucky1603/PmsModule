@@ -471,7 +471,19 @@
                     rowId = -1;
                     lista = [];
                     
-                    $.get('pms/ajax/remember?mark=control', function(data) {
+//                    $.get('pms/ajax/remember?mark=control', function(data) {
+//                    });
+                    
+                    var formdata = $('form').serialize();
+                    $.ajax({
+                        method: 'POST',
+                        url: '/pms/ajax/remember?mark=control',
+                        data: formdata,
+                        async: false
+                    }).done(function(data) {
+    //                    alert(data);
+                    }).fail(function(xhr) {
+                        //alert('failed');
                     });
                     //alert("Start date is " + startDate + ", room number is " + guid);
                     window.location.href = "/pms/reservation/newEntity?guid="+guid+"&startDate="+startDate+"&endDate="+endDate+"&time="+time;                    
@@ -579,6 +591,10 @@
         
         .today {
             color:red;
+        }
+        
+        .in {
+            color:green;
         }
         
         table.tablesorter td, table.tablesorter th {

@@ -154,8 +154,22 @@
                 var action = $('form').attr('action');
                 var postdata = $('form').serialize();
                 $.post(action, postdata, function(data) {
+                    var formdata = $('form').serialize();                   
                     $.get('/pms/ajax/whereTo', function(data) {
-                        window.location.href = data;
+//                        window.location.href = data;
+                        var instructions = JSON.parse(data);
+                        if(instructions.method == 'GET')
+                        {
+                            $.get(instructions.path, function(data) {
+                                $('body').html(data);
+                            });                           
+                        }
+                        else
+                        {
+                            $.post(instructions.path, instructions.bookmark, function(data) {
+                                $('body').html(data);
+                            });
+                        }
                     });    
                 });                
             });

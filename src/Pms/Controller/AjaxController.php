@@ -370,7 +370,7 @@ class AjaxController extends AbstractActionController
                ->join(['e' => "entity"], 're.entity_id=e.id', ['Number' => 'guid', 'Room Status' => 'status'])
                ->join(['ed' => 'entity_definition'], 'e.definition_id=ed.id', ['Object Class' => 'code', 'Object Name' => 'name'])
                ->join(['et' => 'entity_type'], 'ed.entity_type_id=et.id', ['Object Type' => 'name'])
-               ->join(['r' => 'reservations'], 're.reservation_id=r.id', ['Reservation' => 'reservation_id'])
+               ->join(['r' => 'reservations'], 're.reservation_id=r.id', ['Reservation' => 'reservation_id', 'Status Id' => 'status_id'])
                ->join(['c' => 'clients'], 're.guest_id=c.id', ['Guest_FirstName' => 'first_name', 'Guest_LastName' => 'last_name'])
                ->join(['d' => 'clients'], 'r.client_id=d.id', ['Client_FirstName' => 'first_name', 'Client_LastName' => 'last_name']);
         
