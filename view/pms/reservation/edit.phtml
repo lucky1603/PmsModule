@@ -158,6 +158,7 @@
                     $.get('/pms/ajax/whereTo', function(data) {
 //                        window.location.href = data;
                         var instructions = JSON.parse(data);
+                        console.log(instructions);
                         if(instructions.method == 'GET')
                         {
                             $.get(instructions.path, function(data) {

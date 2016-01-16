@@ -11,7 +11,7 @@
 //        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.dropbox.css');
 //        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.grey.css');
         $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.metro-dark.css');
-        $this->headLink()->appendStylesheet('/tablesorter-master/css/high-specificity/theme.blue.specific.css');
+//        $this->headLink()->appendStylesheet('/tablesorter-master/css/high-specificity/theme.blue.specific.css');
         $this->headLink()->appendStylesheet('/css/multiselect/jquery.multiselect.css');
         $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');          
         $this->headScript()->appendFile('/js/datetimepicker/build/jquery.datetimepicker.full.js');
@@ -60,7 +60,7 @@
                 </tr>            
             </table>          
             </div>
-            <div id="divsubmit"><?php echo $this->formElement($form->get('submit'));?></div>            
+<!--            <div id="divsubmit"><?php echo $this->formElement($form->get('submit'));?></div>            -->
             <?php echo $this->form()->closeTag();?>
         </div>
         <div id="right">            
@@ -249,7 +249,19 @@
                         rowId = -1;
                         lista = [];
 
-                        $.get('pms/ajax/remember?mark=control', function(data) {
+//                        $.get('pms/ajax/remember?mark=control', function(data) {
+//                        });
+                        
+                        var formdata = $('form').serialize();
+                        $.ajax({
+                            method: 'POST',
+                            url: '/pms/ajax/remember?mark=control',
+                            data: formdata,
+                            async: false
+                        }).done(function(data) {
+        //                    alert(data);
+                        }).fail(function(xhr) {
+                            //alert('failed');
                         });
                         //alert("Start date is " + startDate + ", room number is " + guid);
                         window.location.href = "/pms/reservation/newEntity?guid="+guid+"&startDate="+startDate+"&endDate="+endDate+"&time="+time;                    
