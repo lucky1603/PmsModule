@@ -282,13 +282,7 @@ class ReservationModel
         }
                 
         // Get belonging entities.
-        $currentEntities = $this->getReservedEntities();
-        \Zend\Debug\Debug::dump('currentEntities');
-        foreach($currentEntities as $entity)
-        {
-            \Zend\Debug\Debug::dump($entity->internal_id);
-        }
-        
+        $currentEntities = $this->getReservedEntities();        
         if(isset($this->id))
         {
             // Get existing reservation entities from the database.
@@ -312,9 +306,6 @@ class ReservationModel
                 }
             }
 
-            \Zend\Debug\Debug::dump("Keys to be deleted ... ");
-            \Zend\Debug\Debug::dump($keysToDelete);
-
             // If there were any, delete them.
             if(count($keysToDelete) > 0)
             {
@@ -325,18 +316,27 @@ class ReservationModel
                 $statement->execute();
             }
         }
-        
-//        \Zend\Debug\Debug::dump('id is ..');
-//        \Zend\Debug\Debug::dump($some_id);
-                        
-
-        \Zend\Debug\Debug::dump($this->id);
+                                
         // Now save the entities from the model. 
         if(null != $this->getReservedEntities())
         {
             foreach($this->reservedEntities as $rEntity)
             {
                 $rEntity->setReservationId($this->id);
+                if($this->status_id == 4)
+                {
+                    $entityModel = new \Pms\Model\EntityModel($this->dbAdapter);
+                    $entityModel->setId($rEntity->entity_id);
+                    $entityModel->status_id = 2;
+                    $entityModel->save();
+                }
+                else if($this->status_id == 1) 
+                {
+                    $entityModel = new \Pms\Model\EntityModel($this->dbAdapter);
+                    $entityModel->setId($rEntity->entity_id);
+                    $entityModel->status_id = 1;
+                    $entityModel->save();
+                }
                 $rEntity->save();
             }
         }
