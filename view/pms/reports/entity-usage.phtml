@@ -1,0 +1,38 @@
+<section class="reoports-entity-usage">
+    <?php
+        $usageData = $this->usageData;
+        $header = $usageData['header'];
+        unset($usageData['header']);
+    ?>
+    <h2>Usage details for <?php echo $header['Type Name']?> Nr. <?php echo $header['Number']?></h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Reservation</th>
+                <th>Reserved By</th>
+                <th>Used By</th>
+                <th>From</th>
+                <th>To</th>
+                <th>Duration</th>
+                <th>Time Unit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($usageData as $usage):?>
+            <tr>
+                <td><?php echo $usage['reservation_id']?></td>
+                <td><?php echo $usage['reserved_by']?></td>
+                <td><?php echo $usage['used_by']?></td>
+                <td><?php echo $usage['from']?></td>
+                <td><?php echo $usage['to']?></td>
+                <td><?php echo $usage['duration']?></td>
+                <td><?php echo $usage['time_unit']?></td>
+            </tr>
+            <?php endforeach;?>
+        </tbody>
+    </table>    
+</section>
+
+
+
+

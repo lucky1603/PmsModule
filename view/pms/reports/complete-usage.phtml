@@ -1,0 +1,38 @@
+<section class="reports-complete">
+<?php
+    $usageData = $this->usageData;
+    $header = $usageData['header'];
+    unset($usageData['header']);
+?>
+    <h2><?php echo $header['type']?> Object usage 
+        <?php if(isset($header['from'])) echo 'for the period from '.$header['from'];?>
+        <?php if(isset($header['to'])) echo ' to '.$header['from'];?>
+    </h2>    
+    <p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Number</th>
+                <th>Code</th>
+                <th>Object</th>
+                <th>Duration</th>
+                <th>Unit</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach($usageData as $usage):?>
+            <tr>
+                <td><?php echo $usage['guid']?></td>
+                <td><?php echo $usage['code']?></td>
+                <td><?php echo $usage['name']?></td>
+                <td><?php echo $usage['duration']?></td>
+                <td><?php echo $usage['unit']?></td>
+                <td><a href="/pms/reports/entityUsage?id=<?php echo $usage['entity_id']?>">See Details</a></td>
+            </tr>
+            <?php endforeach;?>
+        </tbody>
+    </table>
+    
+</section>
+

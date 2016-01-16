@@ -28,6 +28,7 @@ use Pms\Model\AttributeValueModel;
 use Pms\Model\AttributeModel;
 use Pms\Model\EntityDefinitionModel;
 use Pms\Model\EntityModel;
+use Pms\Model\EntityReportModel;
 use Pms\Model\ReservationModel;
 use Pms\Form\LoginForm;
 use Pms\Form\RegisterForm;
@@ -253,6 +254,11 @@ class Module implements AutoloaderProviderInterface
                 'BusinessModel' => function($sm) {
                     $dbAdapter = $sm->get('Adapter');
                     $model = new BusinessModel($dbAdapter);
+                    return $model;
+                },
+                'EntityReportModel' => function($sm) {
+                    $dbAdapter = $sm->get('Adapter');
+                    $model = new EntityReportModel($adapter);
                     return $model;
                 },
                 // Authentication Services

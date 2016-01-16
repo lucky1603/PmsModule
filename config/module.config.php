@@ -16,6 +16,7 @@ return array(
             'Pms\Controller\Ajax' => 'Pms\Controller\AjaxController',  
             'Pms\Controller\Business' => 'Pms\Controller\BusinessController',  
             'Pms\Controller\Demo' => 'Pms\Controller\DemoController',
+            'Pms\Controller\Reports' => 'Pms\Controller\ReportsController',
         ),
     ),
     'router' => array(
