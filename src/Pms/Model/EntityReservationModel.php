@@ -203,13 +203,14 @@ class EntityReservationModel extends EntityModel
                         $reservations[date($date_format, $current)]['statustext'] = $row['statustext'];
                         $reservations[date($date_format, $current)]['statusvalue'] = $row['statusvalue'];
                         $reservations[date($date_format, $current)]['id'] = $reservation_id;
-                        $reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;          
+                        $reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;                                                                                 
                     }
                     else 
                     {
 //                        $reservations[date($date_format, $current)]['status'] = 'free';  // commented, because the will overwrite the previous reservations.
-                        $reservations[date($date_format, $current)]['id'] = null;
-                        $reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;
+                        //$reservations[date($date_format, $current)]['id'] = null;
+                        //$reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;
+//                        \Zend\Debug\Debug::dump($reservations[date($date_format, $current)]);
                     }
                     
                     $current = strtotime($increment, $current);

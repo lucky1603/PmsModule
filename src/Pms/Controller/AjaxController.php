@@ -129,7 +129,7 @@ class AjaxController extends AbstractActionController
                 }                
             }
             
-            $reservations = $model->getReservations();                     
+            $reservations = $model->getReservations();       
             $current = strtotime($startDate);
             foreach($reservations as $key=>$value)
             {

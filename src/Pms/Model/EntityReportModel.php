@@ -68,9 +68,10 @@ class EntityReportModel
             
             $starttime = $row['date_from'];
             $endtime = $row['date_to'];
+            
             $diffTime = strtotime($endtime) - strtotime($starttime);
             $diffTime /= 3600;
-            $diffTime /= 24;
+            $diffTime /= 24;                        
             
             $entry = array();
             $entry['entity_id'] = $row['entity_id'];
@@ -79,12 +80,12 @@ class EntityReportModel
             $entry['name'] = $row['name'];
             $entry['duration'] = $diffTime;            
             $time_units = ['none', 'day', 'hour', 'minute'];
-            $entry['unit'] = $time_units[$row['time_resolution']];
+            $entry['unit'] = $time_units[$row['time_resolution']];            
             
             if(array_key_exists($guid, $usageData))
             {
-                $oldVal = (int)$usageData[$guid];
-                $val = (int)$entry['duration'];
+                $oldVal = (int)$usageData[$guid]['duration'];
+                $val = $diffTime;
                 $val += $oldVal;
                 $usageData[$guid]['duration'] = $val;                                
             }

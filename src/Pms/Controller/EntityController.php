@@ -203,7 +203,8 @@ class EntityController extends AbstractActionController
                 }                
             }
             
-            $reservations = $model->getReservations();                     
+            $reservations = $model->getReservations();         
+            
             $current = strtotime($startDate);
             foreach($reservations as $key=>$value)
             {
@@ -219,7 +220,7 @@ class EntityController extends AbstractActionController
             {
                 $key = $line['guid'];
                 $index[$line['guid']] = $key;
-            }
+            }                        
                         
             $lines[$line['guid']] = $line;
         }     
