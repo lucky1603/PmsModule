@@ -21,7 +21,6 @@
         $this->headScript()->appendFile('/js/multiselect/jquery.multiselect.js');
         
         $lines = $this->data;        
-//        \Zend\Debug\Debug::dump($lines);
         if(isset($lines) && count($lines) > 0)
         {
             $keys = array_keys(array_values($lines)[0]);
@@ -277,7 +276,6 @@
                     async: true, 
                     data: formData
                 }).done(function(data) {
-                    console.log('entered');
                     var table = $(data).find('table');        
                     $('div#lower').html(table);
                     $('.tablesorter').tablesorter({
