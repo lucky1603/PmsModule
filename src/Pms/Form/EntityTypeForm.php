@@ -27,7 +27,7 @@ class EntityTypeForm extends Form
             'name' => 'description',
             'attributes' => [
                 'type' => 'textarea',
-                'COLS' => 40,
+                'COLS' => 80,
                 'ROWS' => 4,
             ],
             'options' => [
