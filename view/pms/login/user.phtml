@@ -3,12 +3,18 @@
         $user = $this->username;
     ?>
     <h1>
-        Welcome <?php echo $user?> :)!
+        Welcome <span class="user-name"><?php echo $user?></span> :)!
     </h1>
     <p>As the user of the system, you can do following...
     <h3>Make Reservations</h3>
-    Here, you can make reservations. <a href='/pms/reservation'>Go to reservation page >>>> </a>    
+    Here, you can<a href='/pms/reservation'>check the reservation list</a> or<a href="/pms/entity/fullList">check the avaiability of resources</a>.
     <h3>Manage the client list</h3>
     <p>The clients list. As administrator, you shouldn't be dealing with it, but currently, until we define other users, it's here. 
     <p><p><a href='/pms/client'>To client preview and management >>>> </a>    
 </section>
+<style>
+    .user-name {
+        color: #37ba96;
+        text-shadow: 2px 2px #444444;
+    }
+</style>

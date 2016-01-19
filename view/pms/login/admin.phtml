@@ -3,7 +3,7 @@
         $user = $this->username;
     ?>
     <h1>
-        Welcome <?php echo $user?> :)!
+        Welcome <span class="user-name"><?php echo $user?></span> :)!
     </h1>
     <p>As the member of ADMIN group, you can choose to do following things...
     <h3>Define Business</h3>
@@ -37,3 +37,9 @@
     <p>The clients list. As administrator, you shouldn't be dealing with it, but currently, until we define other users, it's here. 
     <p><p><a href='/pms/client'>To client preview and management >>>> </a>    
 </section>
+<style>
+    .user-name {
+        color: #37ba96;
+        text-shadow: 2px 2px #444444;
+    }
+</style>
