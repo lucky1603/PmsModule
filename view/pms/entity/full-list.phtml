@@ -34,12 +34,12 @@
             'action' => 'fullList',
         ]));
     ?>
-    <h3><?php echo isset($this->typeName) ? $this->typeName : "Room";?> Availability Status <?php 
+    <h3><?php echo isset($this->typeName) ? $this->typeName : "Room";?> Availability Status on <span id="danas"><?php 
         if(isset($startDate) && isset($endDate))
         {
-            echo 'for period from '.date('d.m.Y.', strtotime($startDate)).' to '.date('d.m.Y.', strtotime($endDate));
+            echo date('d.m.Y.', strtotime($startDate));                    
         }
-        ?></h3>
+        ?></span></h3>
     <div id="upper">
         <div id="left">  
             <?php echo $this->form()->openTag($form);?>
@@ -171,11 +171,7 @@
                             $(evt.target).tooltip('option', 'content', html);
                         });                                    
                    }
-                });
-                
-                $('tr').on('mouseenter mouseover mouseleave', function(evt) {
-                    evt.preventDefault();
-                });
+                });                
             
                 $('td.reserved').on('mouseleave', function(evt) {
                     setTimeout(function() {
@@ -212,7 +208,6 @@
                 
                 $('td.free').on('mouseenter', function(evt) {         
                     evt.preventDefault();
-                    console.log(evt);
                     if(evt.type === 'mouseenter' && /* evt.which == 1 && evt.button == 0 */ leftButtonDown == true) {
                         var date = $(evt.target).data().reservationDate;
                         lista[lista.length] = date;
@@ -290,7 +285,7 @@
                         theme: 'metro-dark',
                         showProcessing: true,
                         headerTemplate : '{content} {icon}',
-                        widgets: [ 'zebra', 'columns', 'stickyHeaders', 'scroller' ],
+                        widgets: [ 'columns', 'stickyHeaders', 'scroller' ],
                         widgetOptions : {
                                 scroller_height : 320,
                                 // scroll tbody to top after sorting
@@ -319,14 +314,13 @@
                 }).done(function(data) {
                     var table = $(data).find('table');        
 //                    alert($(table).attr('class'));
-                    $(table).attr('class', 'tablesorter');
+                    $(table).attr('class', 'tablesortera');
                     $('div#right').html(table);
-                    $('div#right').find('table').attr('class', 'tablesorter');
-                    $('.tablesorter').tablesorter({
+                    $('.tablesortera').tablesorter({
                             theme: 'metro-dark',
                             showProcessing: true,
                             headerTemplate : '{content} {icon}',
-                            widgets: [ 'zebra', 'columns', 'stickyHeaders', 'scroller' ],
+                            widgets: [ 'zebra','columns', 'stickyHeaders', 'scroller' ],
                             widgetOptions : {
                                     scroller_height : 200,
                                     // scroll tbody to top after sorting
@@ -362,11 +356,11 @@
                 format: 'Y-m-d H:i:s'
             });
             
-            $('#myTable').tablesorter({               
+            $('.tablesorter').tablesorter({               
                 theme: 'metro-dark',
                 showProcessing: true,
                 headerTemplate : '{content} {icon}',
-                widgets: [ 'zebra', 'columns', 'stickyHeaders', 'scroller' ],
+                widgets: [ 'columns', 'stickyHeaders', 'scroller' ],
                 widgetOptions : {
                         scroller_height : 320,
                         // scroll tbody to top after sorting
@@ -442,17 +436,22 @@
             $('#date_from').on('change', function(evt) {      
                 evt.preventDefault();       
                 var formData = $('form').serialize();
+                console.log(formData);
                 $.getList(formData);
                 $.getReservations(formData);
+                
+                var date = $('form').find('input[name="date_from"]').val();
+                date = new Date(date);
+                var day = date.getDate();
+                var monthIndex = date.getMonth();
+                monthIndex ++;
+                var year = date.getFullYear();                
+                
+                $('span#danas').text(day + '.' + monthIndex + '.' + year);
             });       
-            
-            $('tr').on('mouseenter mouseover mouseleave', function(evt) {
-                evt.preventDefault();
-            });
 
             $('td.free').on('mouseenter', function(evt) {         
                 evt.preventDefault();
-                console.log(evt);
                 if(evt.type === 'mouseenter' && /* evt.which == 1 && evt.button == 0*/ leftButtonDown == true) {
                     var date = $(evt.target).data().reservationDate;
                     lista[lista.length] = date;

@@ -158,5 +158,6 @@ class EntityReportModel
         
         return $entityUsingData;
     }
+    
 }
 
