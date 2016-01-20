@@ -1,6 +1,8 @@
 <section class="entity-definition-edit">
     <?php 
-
+        $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');      
+        
         $id = $this->id;
         $form = $this->form;
         $attributes = $this->attributes;
@@ -56,10 +58,14 @@
             <?php endforeach;?>
         <?php endif;?>        
         <dd>
-            <?php echo $this->formElement($form->get('submit')) ?>
+            <?php echo $this->formElement($form->get('submit')) ?><a href="/pms/entity-type" class="ui-button">Back</a>
         </dd>
     </dl>
     <?php echo $this->form()->closeTag() ?>
-    <a href="/pms/attribute-manager/edef/<?php echo $this->id ?>">Edit attributes</a>
 </section>
+<script>
+$(function() {
+   $('a.ui-button').button();
+});
+</script>
 

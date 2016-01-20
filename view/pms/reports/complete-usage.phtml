@@ -3,6 +3,7 @@
     $usageData = $this->usageData;
     $header = $usageData['header'];
     unset($usageData['header']);
+    ksort($usageData);
 ?>
     <h2><?php echo $header['type']?> Object usage 
         <?php if(isset($header['from'])) echo 'for the period from '.$header['from'];?>

@@ -42,7 +42,9 @@ class ClientForm extends Form
            'name' => 'address1',
            'attributes' => [
                'type' => 'textarea',
-//               'required' => 'required',
+               'required' => 'required',
+               'ROWS' => 4,
+               'COLS' => 40,
            ],
            'options' => [
                'label' => 'Addres1'
@@ -54,6 +56,8 @@ class ClientForm extends Form
            'name' => 'address2',
            'attributes' => [
                'type' => 'textarea',               
+               'ROWS' => 4,
+               'COLS' => 40,
            ],
            'options' => [
                'label' => 'Addres2'
@@ -135,6 +139,7 @@ class ClientForm extends Form
            'name' => 'email',
            'attributes' => [
                'type' => 'text',
+               'size' => 40,
 //               'required' => 'required',
            ],
            'options' => [
@@ -165,6 +170,7 @@ class ClientForm extends Form
                'type' => 'submit',
 //               'required' => 'required',
                'value' => 'Save',
+               'class' => 'ui-button',
            ],
            'options' => [
                'label' => 'Save'

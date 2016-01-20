@@ -1,5 +1,8 @@
 <section class="client-edit">
     <?php
+        $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');          
+        
         $form = $this->form;
         $id = $this->id;
         if(isset($id))
@@ -104,9 +107,14 @@
         </tr>
                   
         <tr>
-            <td colspan="2" style="alignment-adjust: central"><?php echo $this->formElement($form->get('submit'))?></td>
+            <td colspan="2" style="alignment-adjust: central"><?php echo $this->formElement($form->get('submit'))?><a class="ui-button" href="/pms/client">Back</a></td>
         </tr>
     </table>
     <?php echo $this->form()->closeTag()?>
 </section>
+<script>
+ $(function() {
+     $('.ui-button').button();
+ });    
+</script>
 

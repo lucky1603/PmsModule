@@ -1,6 +1,8 @@
 <section class="entity-edit">
     <?php 
-        $this->headScript()->appendFile('/js/jquery-2.1.4.js');
+        $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
+        $this->headScript()->appendFile('/js/jquery-2.1.4.js');        
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');          
         $this->headScript()->appendFile('/js/helper.js');        
         
         $form = $this->form;
@@ -57,7 +59,7 @@
             <?php endforeach;?>
         <?php endif;?>
         <dd>
-            <?php echo $this->formElement($form->get('submit'));?>
+            <?php echo $this->formElement($form->get('submit'));?><a href="/pms/entity" class="ui-button">Back</a>
         </dd>
     </dl>
     <?php echo $this->form()->closeTag();?>

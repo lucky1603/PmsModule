@@ -34,7 +34,7 @@
             'action' => 'fullList',
         ]));
     ?>
-    <h3><?php echo isset($this->typeName) ? $this->typeName : "Room";?> Availability Status on <span id="danas"><?php 
+    <h3><span id="sta"><?php echo isset($this->typeName) ? $this->typeName : "Room";?></span> Availability Status on <span id="danas"><?php 
         if(isset($startDate) && isset($endDate))
         {
             echo date('d.m.Y.', strtotime($startDate));                    
@@ -431,16 +431,20 @@
                 var formData = $('form').serialize();
                 $.getList(formData);
                 $.getReservations(formData);
+//                var acunit = $(evt.target).val();
+                var acunit = $('select#entity_type_id option:selected').text();
+                
+                $('span#sta').text(acunit);
             });
             
             $('#date_from').on('change', function(evt) {      
                 evt.preventDefault();       
                 var formData = $('form').serialize();
-                console.log(formData);
                 $.getList(formData);
                 $.getReservations(formData);
                 
                 var date = $('form').find('input[name="date_from"]').val();
+                var date = $(evt.target).val();
                 date = new Date(date);
                 var day = date.getDate();
                 var monthIndex = date.getMonth();

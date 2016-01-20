@@ -75,7 +75,8 @@ class EntityForm extends Form
             'attributes' => [
                 'type' => 'submit',
                 'value' => 'Save',
-                'id' => 'submitbutton'
+                'id' => 'submitbutton',
+                'class' => 'ui-button',
             ],
         ]);
     }

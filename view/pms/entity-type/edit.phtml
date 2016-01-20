@@ -1,6 +1,9 @@
 <section class="entity-type-edit">
     <?php 
         $this->headStyle()->appendStyle('footer', 'clear: both');
+        $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js'); 
+        
         $id = $this->id;
         $form = $this->form;
         $model = $this->model;
@@ -43,7 +46,7 @@
             <?php echo $this->formElementErrors($form->get('time_resolution'))?>
         </dd>
         <dd>
-            <?php echo $this->formElement($form->get('submit')) ?>
+            <?php echo $this->formElement($form->get('submit')) ?><a href="/pms/entity_type" class="ui-button">Back</a>
         </dd>
     </dl>
     </div>
@@ -80,4 +83,9 @@
     <?php echo $this->form()->closeTag() ?>
     <a href='/pms/entity-type/editAttribute'>Add new</a>
 </section>
+<script>
+$(function() {
+    $('.ui-button').button();
+});
+</script>
 
