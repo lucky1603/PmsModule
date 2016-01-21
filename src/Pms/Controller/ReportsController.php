@@ -29,7 +29,7 @@ class ReportsController extends AbstractActionController
     {
         $adapter = $this->getServiceLocator()->get('Adapter');
         $model = new \Pms\Model\EntityReportModel($adapter);
-        $usageData = $model->getCompleteEntityUsageData(22);
+        $usageData = $model->getCompleteEntityUsageData(/*22*/);
         
         return new ViewModel([
             'usageData' => $usageData,

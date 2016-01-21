@@ -367,7 +367,8 @@ class AjaxController extends AbstractActionController
         $select = $sql->select();
         $select->from(['re' => 'reservation_entity'])
                ->columns(['Arrival' => 'date_from', 'Leaving' => 'date_to'])
-               ->join(['e' => "entity"], 're.entity_id=e.id', ['Number' => 'guid', 'Room Status' => 'status'])
+               ->join(['e' => "entity"], 're.entity_id=e.id', ['Number' => 'guid'])
+               ->join(['rst' => 'status'], 'e.status_id=rst.id', ['Room Status' => 'value'])
                ->join(['ed' => 'entity_definition'], 'e.definition_id=ed.id', ['Object Class' => 'code', 'Object Name' => 'name'])
                ->join(['et' => 'entity_type'], 'ed.entity_type_id=et.id', ['Object Type' => 'name'])
                ->join(['r' => 'reservations'], 're.reservation_id=r.id', ['Reservation' => 'reservation_id', 'Status Id' => 'status_id'])
