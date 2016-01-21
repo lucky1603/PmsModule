@@ -39,6 +39,12 @@ class EntityReservationModel extends EntityModel
      * @var type 
      */
     protected $attributesList;
+    
+    /**
+     * Determines the display resolution of the cells (day = 1, week = 2, month = 3);
+     * @var displayResolution 
+     */
+    protected $displayResolution;
         
     /**
      * Constructor
@@ -57,10 +63,20 @@ class EntityReservationModel extends EntityModel
      * @param type $startDate
      * @param type $endDate
      */
-    public function setPeriod($startDate, $endDate)
+    public function setPeriod($startDate, $endDate, $displayResolution = null)
     {
         $this->startDate = $startDate;
         $this->endDate = $endDate;
+        
+        if($displayResolution == null)
+        {
+            $this->displayResolution = $this->time_resolution;                        
+        }
+        else 
+        {
+            $this->displayResolution = $displayResolution;
+        }
+        
         $this->reservations = $this->initReservations();                        
     }
     
@@ -110,26 +126,34 @@ class EntityReservationModel extends EntityModel
         if(isset($this->id) && isset($this->startDate) && isset($this->endDate))
         {                    
             $startDate = $this->startDate;
-            if($this->time_resolution == 2)
+            if($this->displayResolution == 1)
             {
                 $startDate = date('Y-m-d H:i:s', strtotime($startDate));
             }
             $endDate = $this->endDate;
-            if($this->time_resolution == 2)
+            if($this->displayResolution == 1)
             {
                 $endDate = date('Y-m-d H:i:s', strtotime($endDate));
             }
-                   
+            
+//            \Zend\Debug\Debug::dump($startDate.','.$endDate);
+//  die();
+                               
+            // Generate time classes.
             $date = $startDate;
             while(strtotime($date) <= strtotime($endDate))
             {
-                if($this->time_resolution != 1)
+                if($this->displayResolution == 1)
                 {
-                    $key = date('Y-m-d H:i', strtotime($date));
+                    $key = date('H:i', strtotime($date));
                 }
-                else 
+                else if($this->displayResolution == 2)
                 {
                     $key = date('Y-m-d', strtotime($date));
+                }
+                else
+                {
+                    $key = date('d', strtotime($date));
                 }
                 
                 $reservations[$key] = [
@@ -138,15 +162,27 @@ class EntityReservationModel extends EntityModel
                     'id' => null,
                     'time_resolution' => $this->time_resolution,
                 ];
-                if($this->time_resolution == 1)
+                
+                if($this->displayResolution == 1)
+                {
+                    $date = date('Y-m-d H:i', strtotime('+ 1 hour', strtotime($date)));
+                }
+                else if ($this->displayResolution == 2)
                 {
                     $date = date('Y-m-d', strtotime('+ 1 day', strtotime($date)));
-                }
+                }      
                 else 
                 {
-                    $date = date('Y-m-d H:i:s', strtotime('+ 1 hour', strtotime($date)));
-                }               
+                    $date = date('Y-m-d', strtotime('+ 1 day', strtotime($date)));                    
+                }              
+                
+//                \Zend\Debug\Debug::dump($date);
             }       
+            
+//            \Zend\Debug\Debug::dump($startDate.','.$endDate);
+//            die();
+            
+            // Now make the reservation query.
             $sql = new Sql($this->dbAdapter);
             $select = $sql->select();     
             $select->from(['re' =>'reservation_entity'])
@@ -170,45 +206,77 @@ class EntityReservationModel extends EntityModel
                             ->AND
                             ->greaterThan('date_to', $endDate)
                         ->UNNEST
+                        ->OR
+                        ->NEST
+                            ->lessThan('date_from', $startDate)
+                            ->AND
+                            ->greaterThan('date_to', $endDate)
+                        ->UNNEST
                     ->UNNEST
                     ->AND
                     ->equalTo('entity_id', $this->id);
             
             $statement = $this->sql->prepareStatementForSqlObject($select);
             $results = $statement->execute();
+//            \Zend\Debug\Debug::dump($select->getSqlString());
+//            \Zend\Debug\Debug::dump('results count is '.$results->count());
+//            die();
             
+            // Now parse the reservation results to time classes.
             foreach($results as $row)
-            {                
-                if($this->time_resolution == 1)
+            {        
+//                \Zend\Debug\Debug::dump($row);
+                if ($this->displayResolution == 1)
+                {
+                    $increment_format = "+ 1 hour";
+                    $date_format = "Y-m-d H:i"; 
+                    $key_format = 'H:i';
+                }                
+                else if($this->displayResolution == 2)
                 {
                     $increment_format = "+ 1 day";
-                    $date_format = "Y-m-d";                    
+                    $date_format = "Y-m-d";        
+                    $key_format = 'Y-m-d';
                 }
                 else 
                 {
-                    $increment_format = "+ 1 hour";
-                    $date_format = "Y-m-d H:i";                    
+                    $increment_format = "+ 1 day";
+                    $date_format = "Y-m-d";            
+                    $key_format = 'd';
                 }
+                
+//                \Zend\Debug\Debug::dump($row['date_from'].','. $row['date_to']);
+//                die();
+                
                 $start = date($date_format, strtotime($row['date_from']));
                 $end = date($date_format, strtotime($row['date_to']));
                 $increment = $increment_format;                    
                 $reservation_id = $row['reservation_id'];                       
-                $current = strtotime($startDate);                                                
+                $current = strtotime($startDate);                 
+                
+                
 //                $counter = 0;
                 while($current <= strtotime($endDate))
-                {                    
+                {       
+//                        \Zend\Debug\Debug::dump($start.','.$end.','.date($date_format, $current));
                     if($current >= strtotime($start) && $current < strtotime($end))
                     {
-                        $reservations[date($date_format, $current)]['statustext'] = $row['statustext'];
-                        $reservations[date($date_format, $current)]['statusvalue'] = $row['statusvalue'];
-                        $reservations[date($date_format, $current)]['id'] = $reservation_id;
-                        $reservations[date($date_format, $current)]['time_resolution'] = $this->time_resolution;                                                                                 
+
+//                        die();
+                    
+                        $reservations[date($key_format, $current)]['statustext'] = $row['statustext'];
+                        $reservations[date($key_format, $current)]['statusvalue'] = $row['statusvalue'];
+                        $reservations[date($key_format, $current)]['id'] = $reservation_id;
+                        $reservations[date($key_format, $current)]['time_resolution'] = $this->time_resolution;                                                                                 
                     }
                     
                     $current = strtotime($increment, $current);
 //                    $counter++;
-                }                                
-            }           
+                }       
+                
+                
+            }       
+//            die();
         }
          
         return $reservations;

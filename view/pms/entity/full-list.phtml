@@ -25,7 +25,7 @@
         {
             $keys = array_keys(array_values($lines)[0]);
         }
-        
+                
         $startDate = $this->startDate;
         $endDate = $this->endDate;
         $typeName = $this->typeName;
@@ -498,10 +498,7 @@
                     
                     rowId = -1;
                     lista = [];
-                    
-//                    $.get('pms/ajax/remember?mark=control', function(data) {
-//                    });
-                    
+                                        
                     var formdata = $('form').serialize();
                     $.ajax({
                         method: 'POST',

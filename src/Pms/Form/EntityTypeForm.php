@@ -38,9 +38,8 @@ class EntityTypeForm extends Form
         $select = new \Zend\Form\Element\Select('time_resolution');
         $select->setLabel("Time resolution");
         $select->setValueOptions([
-            1 => "Days",
-            2 => "Hours",
-            3 => "Minutes",
+            1 => "Hours",
+            2 => "Days",
         ]);
         $this->add($select);
         

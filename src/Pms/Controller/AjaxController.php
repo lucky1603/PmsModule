@@ -41,19 +41,31 @@ class AjaxController extends AbstractActionController
     
     public function getReservationListAction()
     {
-        $post = $this->request->getPost();
-        $typeId = $post['entity_type_id'];
-        $startDate = date('Y-m-d', strtotime($post['date_from']));
-        $startTime = date('H:i:s', strtotime($post['date_from']));      
-        if(isset($post['multi-select']))
+        if($this->request->isPost())
         {
-            $attrs = $post['multi-select']; 
-
+            $post = $this->request->getPost();
+            $typeId = $post['entity_type_id'];
+            $startDate = date('Y-m-d', strtotime($post['date_from']));
+            $startTime = date('H:i:s', strtotime($post['date_from']));      
+            if(isset($post['multi-select']))
+            {
+                $attrs = $post['multi-select']; 
+            }
+            else 
+            {
+                $attrs = array();
+            }
         }
         else 
         {
+            $typeId = $this->params()->fromQuery('type');
+            $startDate = date('Y-m-d', strtotime($this->params()->fromQuery('date')));
+            $startTime = date('H:i:s', strtotime($this->params()->fromQuery('date')));
+            $displayRes = $this->params()->fromQuery('displayRes');
+            //\Zend\Debug\Debug::dump($typeId.' '.$startDate)
             $attrs = array();
         }
+        
                         
         $table = $this->getServiceLocator()->get('EntityTable');    
         if(isset($sort))
@@ -76,28 +88,53 @@ class AjaxController extends AbstractActionController
             $id = $row['id'];
             $model = new \Pms\Model\EntityReservationModel($adapter);
             $model->setId($id);
+            
             $time_resolution = $model->getTimeResolution();
-            switch ($time_resolution) {
-                case 1:
-                    $startPeriod = $startDate;
-                    $endPeriod = date('Y-m-d', strtotime('+6 days', strtotime($startDate)));      
+            if(empty($displayRes))
+            {
+                $displayRes = $time_resolution;
+            }
+                        
+            switch ($displayRes) {
+                case 1: /* hours */
+                    $startPeriod = date('Y-m-d H:i:s', strtotime($startDate));
+                    $endPeriod = date('Y-m-d H:i:s', strtotime('+23 hours', strtotime($startPeriod)));
                     break;
-                default:
-                    if(isset($startTime))
-                    {
-                        $startPeriod = $startDate.' '.$startTime;
-                    }
-                    else 
-                    {
-                        $startPeriod = date('Y-m-d H:i:s', strtotime($startDate));
-                    }                    
-                    $endPeriod = date('Y-m-d H:i:s', strtotime('+23 hours', strtotime($startDate)));      
+                case 2: /* days of week */
+                    $startPeriod = date('Y-m-d', strtotime($startDate));
+                    $endPeriod = date('Y-m-d', strtotime('+6 days', strtotime($startPeriod)));
                     break;
+                default: /* days of month */
+                    // get current month
+                    $daycount = array(
+                        '01' => 31,
+                        '02' => 28,
+                        '03' => 31,
+                        '04' => 30, 
+                        '05' => 31, 
+                        '06' => 30, 
+                        '07' => 31, 
+                        '08' => 31, 
+                        '09' => 30,
+                        '10' => 31,
+                        '11' => 30,
+                        '12' => 31,
+                    );
+                    
+                    // Set correction for the overstep year.
+                    $currentYear = (int) date('Y', strtotime($startDate));
+                    if($currentYear % 4 == 0)
+                        $daycount['02'] = 29;
+                    $currentMonth = date('m', strtotime($startDate));                    
+                    $startPeriod = date('Y-m-d', strtotime($currentYear.'-'.$currentMonth.'-'.'01'));
+                    $endPeriod = date('Y-m-d', strtotime($currentYear.'-'.$currentMonth.'-'.$daycount[$currentMonth]));
+                    break;                
             }
             if(isset($startPeriod) && isset($endPeriod))
             {
-                $model->setPeriod($startPeriod, $endPeriod);
+                $model->setPeriod($startPeriod, $endPeriod, $displayRes);
             }
+            
             $line['guid'] = $model->guid;
             $line['code'] = $row['code'];
             $line['status'] = $model->status;
@@ -129,7 +166,8 @@ class AjaxController extends AbstractActionController
                 }                
             }
             
-            $reservations = $model->getReservations();       
+            $reservations = $model->getReservations();                  
+            
             $current = strtotime($startDate);
             foreach($reservations as $key=>$value)
             {
