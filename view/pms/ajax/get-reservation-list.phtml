@@ -23,6 +23,7 @@
                         $value = $content['statusvalue'];
                         $text = $content['statustext'];
                         $reservation_id = $content['id'];
+                        $time = $content['time'];
                         if(isset($content['time_resolution']))
                         {
                             $time_resolution = $content['time_resolution'];
@@ -51,11 +52,11 @@
                     {
                         if(isset($time_resolution))
                         {
-                            echo '<td class="free" data-reservation-date="'.$key.'" data-time-resolution="'.$time_resolution.'" title="this is free"></td>';
+                            echo '<td class="free" data-reservation-date="'.$time.'" data-time-resolution="'.$time_resolution.'" title="this is free"></td>';
                         }
                         else 
                         {
-                            echo '<td class="free" data-reservation-date="'.$key.'" title="this is free"></td>';
+                            echo '<td class="free" data-reservation-date="'.$time.'" title="this is free"></td>';
                         }
 
                     }

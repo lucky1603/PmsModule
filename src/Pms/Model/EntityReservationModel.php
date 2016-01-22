@@ -135,10 +135,7 @@ class EntityReservationModel extends EntityModel
             {
                 $endDate = date('Y-m-d H:i:s', strtotime($endDate));
             }
-            
-//            \Zend\Debug\Debug::dump($startDate.','.$endDate);
-//  die();
-                               
+                                           
             // Generate time classes.
             $date = $startDate;
             while(strtotime($date) <= strtotime($endDate))
@@ -150,15 +147,19 @@ class EntityReservationModel extends EntityModel
                 else if($this->displayResolution == 2)
                 {
                     $key = date('Y-m-d', strtotime($date));
+                    $date = date('Y-m-d H:i', strtotime('+ 12 hours', strtotime($key)));
                 }
                 else
                 {
                     $key = date('d', strtotime($date));
+                    $date = date('Y-m-d', strtotime($date));
+                    $date = date('Y-m-d H:i', strtotime('+ 12 hours', strtotime($date)));
                 }
                 
                 $reservations[$key] = [
                     'statustext' => 'Free',
                     'statusvalue' => 'free',
+                    'time' => date('Y-m-d H:i', strtotime($date)),
                     'id' => null,
                     'time_resolution' => $this->time_resolution,
                 ];
@@ -174,14 +175,9 @@ class EntityReservationModel extends EntityModel
                 else 
                 {
                     $date = date('Y-m-d', strtotime('+ 1 day', strtotime($date)));                    
-                }              
-                
-//                \Zend\Debug\Debug::dump($date);
+                }                              
             }       
-            
-//            \Zend\Debug\Debug::dump($startDate.','.$endDate);
-//            die();
-            
+                       
             // Now make the reservation query.
             $sql = new Sql($this->dbAdapter);
             $select = $sql->select();     
@@ -218,14 +214,10 @@ class EntityReservationModel extends EntityModel
             
             $statement = $this->sql->prepareStatementForSqlObject($select);
             $results = $statement->execute();
-//            \Zend\Debug\Debug::dump($select->getSqlString());
-//            \Zend\Debug\Debug::dump('results count is '.$results->count());
-//            die();
             
             // Now parse the reservation results to time classes.
             foreach($results as $row)
             {        
-//                \Zend\Debug\Debug::dump($row);
                 if ($this->displayResolution == 1)
                 {
                     $increment_format = "+ 1 hour";
@@ -244,26 +236,17 @@ class EntityReservationModel extends EntityModel
                     $date_format = "Y-m-d";            
                     $key_format = 'd';
                 }
-                
-//                \Zend\Debug\Debug::dump($row['date_from'].','. $row['date_to']);
-//                die();
-                
+                                
                 $start = date($date_format, strtotime($row['date_from']));
                 $end = date($date_format, strtotime($row['date_to']));
                 $increment = $increment_format;                    
                 $reservation_id = $row['reservation_id'];                       
                 $current = strtotime($startDate);                 
                 
-                
-//                $counter = 0;
                 while($current <= strtotime($endDate))
                 {       
-//                        \Zend\Debug\Debug::dump($start.','.$end.','.date($date_format, $current));
                     if($current >= strtotime($start) && $current < strtotime($end))
-                    {
-
-//                        die();
-                    
+                    {                    
                         $reservations[date($key_format, $current)]['statustext'] = $row['statustext'];
                         $reservations[date($key_format, $current)]['statusvalue'] = $row['statusvalue'];
                         $reservations[date($key_format, $current)]['id'] = $reservation_id;
@@ -271,12 +254,8 @@ class EntityReservationModel extends EntityModel
                     }
                     
                     $current = strtotime($increment, $current);
-//                    $counter++;
-                }       
-                
-                
+                }                                       
             }       
-//            die();
         }
          
         return $reservations;

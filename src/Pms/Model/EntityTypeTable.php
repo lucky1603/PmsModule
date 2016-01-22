@@ -109,6 +109,6 @@ class EntityTypeTable
     public function deleteEntityType($id)
     {
         $this->tableGateway->delete(['id' => $id]);
-    }
+    }        
 }
 
