@@ -47,9 +47,77 @@ class EntityController extends AbstractActionController
     
     /**
      * Returns the room list with attribute values.
-     * @return ViewModel
+     * @return ViewModel Corresponding view model.
      */
     public function fullListAction()
+    {
+        // Prepare the form entries.
+        // Get entity type. Find ACUNIT if exists. If not, take the first from the list of entities.
+        $table = $this->getServiceLocator()->get('EntityTypeTable');
+        $entityType = $table->getEntityTypeByName('ACUNIT');
+        if(empty($entityType))
+        {
+            $rows = $table->fetchAll();
+            if(count($rows) > 0)
+            {
+                $id = $rows->current()[0]['id'];
+                $entityType = $table->getEntityType($id);
+            }
+        }
+        
+        if(empty($entityType))
+        {
+            // TODO later.
+        }
+        
+        // Date and time now
+        $date = date('Y-m-d', time());
+        $date = date('Y-m-d H:i', strtotime('+ 8 hours', strtotime($date)));
+        
+        // Default time resolution.
+        $resolution = $entityType->time_resolution;
+        
+        // Attributes
+        $dbAdapter = $this->getServiceLocator()->get('Adapter');
+        $sql = new Sql($dbAdapter);
+        $select = $sql->select();
+        $select->from(['eta' => 'entity_type_attribute'])
+               ->join(['a' => 'attribute'], 'eta.attribute_id=a.id', ['code', 'label'])
+               ->where(['entity_type_id' => $entityType->id]);
+        $statement = $sql->prepareStatementForSqlObject($select);
+        $rows = $statement->execute();
+        $attributes = array();
+        foreach($rows as $row)
+        {
+            $attributes[$row['code']] = $row['label'];
+        }      
+                
+        $form = $this->getServiceLocator()->get('AvailabilityForm');
+        $mselect = $form->get('multi-select');
+        $mselect->setValueOptions($attributes);
+                
+        $formData = array();
+        $formData['date_from'] = $date;
+        $formData['entity_type_id'] = $entityType->id;
+        $formData['multi-select'] = array();
+        $formData['resolution'] = $resolution;
+                                
+        $form->setData($formData);
+        $viewModel = new ViewModel([
+            'form' => $form,
+            'typeName' => $entityType->name,
+        ]);
+        
+        return $viewModel;
+    }
+    
+    /**
+     * REMARK: Old version of the function. I wanted to save the code though. 
+     * That is why it is archived here.
+     * Returns the room list with attribute values.
+     * @return ViewModel
+     */
+    public function fullListActionArchive()
     {                 
         if($this->request->isPost())
         {
@@ -60,6 +128,7 @@ class EntityController extends AbstractActionController
             $typeName = $entity->name;           
             $startDate = date('Y-m-d', strtotime($post['date_from']));
             $startTime = date('H:i:s', strtotime($post['date_from']));      
+            $resolution = $post['resolution'];
             if(isset($post['multi-select']))
             {
                 $attrs = $post['multi-select']; 
@@ -96,10 +165,14 @@ class EntityController extends AbstractActionController
                     else 
                     {
                         $typeId = $table->fetchAll()->current()->id;
-                    }                    
+                        $entityType = $table->getEntityType($typeId);
+                    }             
+                    
+                    $resolution = $entityType->time_resolution; 
                 }
                 
                 $entity = $table->getEntityType($typeId);
+                $resolution = $entity->time_resolution;
                 $typeName = $entity->name;         
                 $sort = $this->params()->fromQuery('sort'); 
                 if(!isset($sort))
@@ -176,7 +249,10 @@ class EntityController extends AbstractActionController
             $line['code'] = $row['code'];
             $line['status'] = $model->status;
             $attributes = $model->getAllAttributes();
+//            \Zend\Debug\Debug::dump($attributes);            
             $mAttList = $model->getAttributesList();
+            \Zend\Debug\Debug::dump($mAttList);
+            die();
             foreach($attributes as $attribute)
             {
                 if(!isset($attList[$attribute->code]))
@@ -244,6 +320,8 @@ class EntityController extends AbstractActionController
             $sortAttrs[$attr] = $attr;
         }
         $sorter->setValueOptions($sortAttrs);
+        
+        \Zend\Debug\Debug::dump($attrs);
         
         $formData = array();
         $formData['date_from'] = $startDate;

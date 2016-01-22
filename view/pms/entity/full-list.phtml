@@ -20,26 +20,15 @@
         $this->headScript()->appendFile('/tablesorter-master/js/widgets/widget-scroller.js');
         $this->headScript()->appendFile('/js/multiselect/jquery.multiselect.js');
         
-        $lines = $this->data;        
-        if(isset($lines) && count($lines) > 0)
-        {
-            $keys = array_keys(array_values($lines)[0]);
-        }
-                
-        $startDate = $this->startDate;
-        $endDate = $this->endDate;
         $typeName = $this->typeName;
-        $form = $this->form;                
+        $form = $this->form;         
+        $date = $form->get('date_from')->getValue();
+        $date = date('Y-m-d', strtotime($date));
         $form->setAttribute('action', $this->url('pms/entity', [
             'action' => 'fullList',
         ]));
     ?>
-    <h3><span id="sta"><?php echo isset($this->typeName) ? $this->typeName : "Room";?></span> Availability Status on <span id="danas"><?php 
-        if(isset($startDate) && isset($endDate))
-        {
-            echo date('d.m.Y.', strtotime($startDate));                    
-        }
-        ?></span></h3>
+    <h3><span id="sta"><?php echo isset($this->typeName) ? $this->typeName : "Room";?></span> Availability Status on <span id="danas"><?php echo date('d.m.Y', strtotime($date))?></span></h3>
     <div id="upper">
         <div id="left">  
             <?php echo $this->form()->openTag($form);?>
@@ -56,94 +45,25 @@
                 <tr>
                     <td><?php echo $this->formLabel($form->get('multi-select'));?></td>
                     <td><?php echo $this->formElement($form->get('multi-select'))?></td>
-                </tr>            
+                </tr>    
+                <tr>
+                    <td><?php echo $this->formLabel($form->get('resolution'))?></td>
+                    <td><?php echo $this->formElement($form->get('resolution'))?></td>
+                </tr>
             </table>          
             </div>
-<!--            <div id="divsubmit"><?php echo $this->formElement($form->get('submit'));?></div>            -->
+            <!--<div id="divsubmit"><?php echo $this->formElement($form->get('submit'));?></div>-->            
             <?php echo $this->form()->closeTag();?>
         </div>
         <div id="right">            
         </div>
     </div>
-    <div id="lower">
-        <?php if(empty($keys)):?>
-        <h3 class="error">No defined object types.</h3>
-        <?php else: ?>
-        <table class="tablesorter" id="myTable">
-        <thead>
-        <tr>
-            <?php foreach($keys as $key):?>
-            <th><?php echo $key?></th>
-            <?php endforeach;?>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach($lines as $line):?>
-        <tr data-object-id="<?php echo $line['guid']?>">
-            <?php 
-                foreach($keys as $key)
-                {
-                    $content = $line[$key];
-                    if(is_array($content))
-                    {
-                        $value = $content['statusvalue'];
-                        $text = $content['statustext'];
-                        $reservation_id = $content['id'];
-                        if(isset($content['time_resolution']))
-                        {
-                            $time_resolution = $content['time_resolution'];
-                        }                        
-                    }
-                    else 
-                    {
-                        $value = $content;
-                        $text = $content;
-                    }
-                    
-                    $functional_keys = array('inquiery', 'confirmed', 'cancelled', 'inhouse', 'checkout', 'archive');
-
-                    if(in_array($value, $functional_keys))
-                    {                        
-                        if(isset($reservation_id))
-                        {
-                            echo '<td class="reserved '.$value.'" data-reservation-id="'.$reservation_id.'" data-reservation-contents="">'.$text.'</td>';
-                        }
-                        else 
-                        {
-                            echo '<td class="regular" data-reservation-id="none">'.$text.'</td>';
-                        }
-
-                    }
-                    else if ($value == 'free')
-                    {
-                        if(isset($time_resolution))
-                        {
-                            echo '<td class="free" data-reservation-date="'.$key.'" data-time-resolution="'.$time_resolution.'" title="this is free">'.$text.'</td>';
-                        }
-                        else 
-                        {
-                            echo '<td class="free" data-reservation-date="'.$key.'" title="this is free">'.$text.'</td>';
-                        }
-
-                    }
-                    else 
-                    {
-                        echo '<td>'.$text.'</td>';
-                    }
-                }
-            ?>
-        </tr>
-        <?php endforeach;?>
-        </tbody>
-        </table>  
-        <?php endif;?>
-    </div>
-          
-    <script>
-        var lista = [];
-        var rowId = -1;
-        var leftButtonDown = false;
-        $(function() {                
+    <div id="lower"></div>          
+    <script>        
+        $(document).ready(function() {         
+            var lista = [];
+            var rowId = -1;
+            var leftButtonDown = false;
             $.urlParam = function(name){
                 var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
                 if (results==null){
@@ -300,7 +220,7 @@
                         }
                     });
                     $.setTable();                    
-                }).fail(function(xhr) {
+                }).fail(function(xbr) {
                     //alert('failed');
                 });
             }
@@ -312,6 +232,7 @@
                     async: true, 
                     data: formData
                 }).done(function(data) {
+//                    console.log(data);
                     var table = $(data).find('table');        
 //                    alert($(table).attr('class'));
                     $(table).attr('class', 'tablesortera');
@@ -345,8 +266,14 @@
             
             $('#multi-select').on('multiselectclose', function(e) {
                 var formData = $('form').serialize();
-                console.log(formData);
-                console.log($(e.target).val());
+//                console.log(formData);
+//                console.log($(e.target).val());
+                $.getList(formData);
+                $.getReservations(formData);
+            });
+            
+            $('#resolution').on('change', function(e) {
+                var formData = $('form').serialize();
                 $.getList(formData);
                 $.getReservations(formData);
             });
@@ -515,8 +442,8 @@
                 }
             });
             var formData = $('form').serialize();
-//            $.getList(formData);
             $.getReservations(formData);
+            $.getList(formData);
                         
         });
     </script>
@@ -639,6 +566,10 @@
             float: bottom;
             margin-top: 70px;
             /*border: 1px solid red;*/
+        }
+        
+        div.container {
+            width: 100%;
         }
         
     </style>

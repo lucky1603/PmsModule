@@ -40,22 +40,22 @@
                     {                        
                         if(isset($reservation_id))
                         {
-                            echo '<td class="reserved '.$value.'" data-reservation-id="'.$reservation_id.'" data-reservation-contents="">'.$text.'</td>';
+                            echo '<td class="reserved '.$value.'" data-reservation-id="'.$reservation_id.'" data-reservation-contents=""></td>';
                         }
                         else 
                         {
-                            echo '<td class="regular" data-reservation-id="none">'.$text.'</td>';
+                            echo '<td class="regular" data-reservation-id="none"></td>';
                         }
                     }
                     else if ($value == 'free')
                     {
                         if(isset($time_resolution))
                         {
-                            echo '<td class="free" data-reservation-date="'.$key.'" data-time-resolution="'.$time_resolution.'" title="this is free">'.$text.'</td>';
+                            echo '<td class="free" data-reservation-date="'.$key.'" data-time-resolution="'.$time_resolution.'" title="this is free"></td>';
                         }
                         else 
                         {
-                            echo '<td class="free" data-reservation-date="'.$key.'" title="this is free">'.$text.'</td>';
+                            echo '<td class="free" data-reservation-date="'.$key.'" title="this is free"></td>';
                         }
 
                     }

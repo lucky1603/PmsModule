@@ -82,6 +82,20 @@ class AvailabilityForm extends Form
         $sort->setAttribute('class', 'form-entry');
         $this->add($sort);        
         
+        // Time resolution options
+        $resolution = new \Zend\Form\Element\Select('resolution');
+        $resolution->setLabel('Time Resolution:');
+        $resolution->setLabelAttributes(['class' => 'form-entry']);
+        $resolution->setAttribute('class', 'form-entry');
+        $resolution->setAttribute('id', 'resolution');
+        $resolution->setValueOptions([
+            '1' => "Day",
+            '2' => 'Week',
+            '3' => 'Month',
+        ]);
+        $resolution->setAttribute('default', '2');
+        $this->add($resolution);
+                
         // Submit.
         $this->add([
            'name' => 'submit',

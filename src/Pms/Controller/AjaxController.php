@@ -46,7 +46,8 @@ class AjaxController extends AbstractActionController
             $post = $this->request->getPost();
             $typeId = $post['entity_type_id'];
             $startDate = date('Y-m-d', strtotime($post['date_from']));
-            $startTime = date('H:i:s', strtotime($post['date_from']));      
+            $startTime = date('H:i:s', strtotime($post['date_from']));  
+            $displayRes = $post['resolution'];
             if(isset($post['multi-select']))
             {
                 $attrs = $post['multi-select']; 
@@ -62,7 +63,6 @@ class AjaxController extends AbstractActionController
             $startDate = date('Y-m-d', strtotime($this->params()->fromQuery('date')));
             $startTime = date('H:i:s', strtotime($this->params()->fromQuery('date')));
             $displayRes = $this->params()->fromQuery('displayRes');
-            //\Zend\Debug\Debug::dump($typeId.' '.$startDate)
             $attrs = array();
         }
         
