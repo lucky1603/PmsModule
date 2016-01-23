@@ -186,6 +186,7 @@
                             //alert('failed');
                         });
                         //alert("Start date is " + startDate + ", room number is " + guid);
+                        console.log("/pms/reservation/newEntity?guid="+guid+"&startDate="+startDate+"&endDate="+endDate+"&time="+time);
                         window.location.href = "/pms/reservation/newEntity?guid="+guid+"&startDate="+startDate+"&endDate="+endDate+"&time="+time;                    
                     }
                 });

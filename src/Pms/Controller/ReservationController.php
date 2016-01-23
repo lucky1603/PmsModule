@@ -212,22 +212,13 @@ class ReservationController extends AbstractActionController
         
         $time = $this->params()->fromQuery('time');
         $guid = $this->params()->fromQuery('guid');
+        
+        Debug::dump('Time is '.$time);
+        Debug::dump('GUID is '.$guid);
+        
         if($time == 1)
         {
-            $data['date_from'] = date('Y-m-d H:i:s', strtotime("+ 12 hours", strtotime($this->params()->fromQuery('startDate'))));      
-            $endDate = $this->params()->fromQuery('endDate');
-            if(isset($endDate))
-            {
-                $data['date_to'] = date('Y-m-d H:i:s', strtotime('+ 1 day', strtotime($endDate))); 
-            }
-            else 
-            {
-               $data['date_to'] = date('Y-m-d H:i:s', strtotime('+ 1 day + 12 hours', strtotime($data['date_from']))); 
-            }
             
-        }
-        else 
-        {
             $data['date_from'] = $this->params()->fromQuery('startDate'); 
             $endDate = $this->params()->fromQuery('endDate');
             if(isset($endDate))
@@ -238,8 +229,33 @@ class ReservationController extends AbstractActionController
             {
                $data['date_to'] = date('Y-m-d H:i:s', strtotime('+ 1 hour', strtotime($data['date_from']))); 
             }
+        }
+        else /* time=2 and time=3 */
+        {
+            $time = date('H:i', strtotime($this->params()->fromQuery('startDate')));
+            if($time == '00:00')
+            {
+                $data['date_from'] = date('Y-m-d H:i:s', strtotime("+ 12 hours", strtotime($this->params()->fromQuery('startDate'))));   
+            }
+            else 
+            {
+                $data['date_from'] = date('Y-m-d H:i:s', strtotime($this->params()->fromQuery('startDate')));   
+            }
+            
+            $endDate = $this->params()->fromQuery('endDate');            
+            if(isset($endDate))
+            {                
+                $data['date_to'] = date('Y-m-d H:i:s', strtotime('+ 1 day', strtotime($endDate))); 
+            }
+            else 
+            {
+               $data['date_to'] = date('Y-m-d H:i:s', strtotime('+ 1 day', strtotime($data['date_from']))); 
+            }
             
         }        
+        
+        Debug::dump($data);
+        
         $sql = new Sql($dbAdapter);
         $select = $sql->select();
         $select->from(['e' =>'entity'])

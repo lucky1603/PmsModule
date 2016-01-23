@@ -43,10 +43,10 @@ class AjaxController extends AbstractActionController
     {
         if($this->request->isPost())
         {
-            $post = $this->request->getPost();
+            $post = $this->request->getPost();           
             $typeId = $post['entity_type_id'];
-            $startDate = date('Y-m-d', strtotime($post['date_from']));
-            $startTime = date('H:i:s', strtotime($post['date_from']));  
+            $startDate = date('Y-m-d H:i:s', strtotime($post['date_from']));
+            $startTime = date('H:i:s', strtotime($post['date_from']));                          
             $displayRes = $post['resolution'];
             if(isset($post['multi-select']))
             {
@@ -60,8 +60,10 @@ class AjaxController extends AbstractActionController
         else 
         {
             $typeId = $this->params()->fromQuery('type');
-            $startDate = date('Y-m-d', strtotime($this->params()->fromQuery('date')));
+            \Zend\Debug\Debug::dump('From query - '. $this->params()->fromQuery('date'));
+            $startDate = date('Y-m-d H:i:s', strtotime($this->params()->fromQuery('date')));
             $startTime = date('H:i:s', strtotime($this->params()->fromQuery('date')));
+            \Zend\Debug\Debug::dump('Start time is '.$startTime);
             $displayRes = $this->params()->fromQuery('displayRes');
             $attrs = array();
         }

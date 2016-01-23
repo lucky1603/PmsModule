@@ -69,21 +69,13 @@ class ReservationEntityModel
         $retval = array();
         switch($this->time_resolution)
         {
-            case 1:
-                $retval['value'] = ($time_to - $time_from) / (60 * 60 * 24);
-                $retval['type'] = 'day(s)';
-                break;
-            case 2:
+            case 1: /* hours */
                 $retval['value'] = ($time_to - $time_from) / (60 * 60);
                 $retval['type'] = 'hour(s)';
                 break;
-            case 3: 
-                $retval['value'] = ($time_to - $time_from) / (60);
-                $retval['type'] = 'minute(s)';
-                break;
             default:
-                $retval['value'] = $this->time_resolution;
-                $retval['type'] = 'Type';
+                $retval['value'] = ($time_to - $time_from) / (60 * 60 * 24);
+                $retval['type'] = 'days(s)';
                 break;
         }
         

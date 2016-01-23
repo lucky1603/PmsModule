@@ -135,7 +135,7 @@ class EntityReservationModel extends EntityModel
             {
                 $endDate = date('Y-m-d H:i:s', strtotime($endDate));
             }
-                                           
+                        
             // Generate time classes.
             $date = $startDate;
             while(strtotime($date) <= strtotime($endDate))
@@ -176,7 +176,7 @@ class EntityReservationModel extends EntityModel
                 {
                     $date = date('Y-m-d', strtotime('+ 1 day', strtotime($date)));                    
                 }                              
-            }       
+            }                   
                        
             // Now make the reservation query.
             $sql = new Sql($this->dbAdapter);
