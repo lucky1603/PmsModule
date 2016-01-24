@@ -70,7 +70,7 @@ class EntityController extends AbstractActionController
             // TODO later.
         }
         
-        // Date and time now
+        // Date and time today
         $date = date('Y-m-d', time());
         $date = date('Y-m-d H:i', strtotime('+ 8 hours', strtotime($date)));
         

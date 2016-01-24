@@ -417,7 +417,7 @@ class AjaxController extends AbstractActionController
         
         if(empty($startDate))
         {
-            if($time_resolution == 1 /* days */)
+            if($time_resolution > 1 /* days */)
             {
                 $format = 'Y-m-d';
             }
@@ -431,7 +431,7 @@ class AjaxController extends AbstractActionController
         
         if(empty($endDate))
         {
-           if($time_resolution == 1 /* Days */)
+           if($time_resolution > 1 /* Days */)
            {
                $increment = '+ 6 days';
                $format = 'Y-m-d';

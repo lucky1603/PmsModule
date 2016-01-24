@@ -9,8 +9,6 @@
 namespace Pms\Form;
 
 use Zend\Form\Form;
-use Zend\Db\TableGateway\TableGateway;
-use Zend\Db\Sql\Select;
 use Zend\Db\Sql\Sql;
 
 class ReservationForm extends Form

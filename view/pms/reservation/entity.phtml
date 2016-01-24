@@ -106,8 +106,8 @@
         dialog = $('#dialog').dialog({
                 autoOpen: false,
                 modal: true,
-                width: 400, 
-                height: 600,
+                width: 550, 
+                height: 630,
                 title: "New Guest"
         });
             
@@ -115,7 +115,7 @@
             var formData, fields;
             e.preventDefault();
             $.get('/pms/client/edit', function(data) {
-                formData = $(data).find('form');    
+                formData = $(data).find('form table');    
                 //$(formData).attr('action', '/pms/client/processFromEntity');
                 $(formData).on('submit', function(evt) {
                     evt.preventDefault();
@@ -129,6 +129,7 @@
                         $(document).find('#guest_id').val(id);
                     }, "json");                            
                 });
+                $(formData).find('.ui-button').button();
                 $(dialog).html(formData);                
             });   
                                               

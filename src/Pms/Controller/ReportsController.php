@@ -26,13 +26,57 @@ class ReportsController extends AbstractActionController
      * Complete usage of all entities.
      */
     public function completeUsageAction()
-    {
+    {                
         $adapter = $this->getServiceLocator()->get('Adapter');
         $model = new \Pms\Model\EntityReportModel($adapter);
-        $usageData = $model->getCompleteEntityUsageData(/*22*/);
+        // Prepare form.
+        $form = $this->getServiceLocator()->get('ReportFilterForm');
+        $entityTypeTable = $this->getServiceLocator()->get('EntityTypeTable');
+        $types = $entityTypeTable->fetchAll()->toArray();
+        $valueOptions = array();
+        foreach($types as $type)
+        {
+            $valueOptions[$type['id']] = $type['name'];
+        }        
+        $type = $form->get('type');
+        $type->setValueOptions($valueOptions);
         
+        if($this->request->isPost())
+        {
+            $post = $this->request->getPost();
+            $entityType = $post['type'];
+            if(isset($post['start']))
+            {
+                $start = $post['start'];
+            }
+            if(isset($post['end']))
+            {
+                $end = $post['end'];
+            }
+            
+            $form->setData($post);
+            if($form->isValid())
+            {
+                $usageData = $model->getCompleteEntityUsageData($entityType, $start, $end);
+            }
+            else if(isset($entityType) && isset($start))
+            {
+                $usageData = $model->getCompleteEntityUsageData($entityType, $start); 
+            }                        
+            else if (isset($entityType))
+            {
+                $usageData = $model->getCompleteEntityUsageData($entityType); 
+            }
+        }
+        else 
+        {
+            $usageData = $model->getCompleteEntityUsageData(/*22*/); 
+        }
+                        
+        // Call view model.
         return new ViewModel([
             'usageData' => $usageData,
+            'form' => $form,
         ]);        
     }
     

@@ -33,11 +33,11 @@ class EntityReportModel
         {
             $select->where->equalTo('et.id', $type);
         }
-        if(isset($start))
+        if(!empty($start))
         {
             $select->where->greaterThanOrEqualTo('date_from', $start);
         }
-        if(isset($end))
+        if(!empty($end))
         {
             $select->where->lessThanOrEqualTo('date_to', $end);
         }
@@ -70,8 +70,11 @@ class EntityReportModel
             $endtime = $row['date_to'];
             
             $diffTime = strtotime($endtime) - strtotime($starttime);
-            $diffTime /= 3600;
-            $diffTime /= 24;                        
+            $diffTime /= 3600;                          
+            if($row['time_resolution'] > 1/* currently days, in the future maybe something more */)
+            {
+                $diffTime /= 24;
+            }
             
             $entry = array();
             $entry['entity_id'] = $row['entity_id'];
@@ -79,7 +82,7 @@ class EntityReportModel
             $entry['code'] = $row['code'];
             $entry['name'] = $row['name'];
             $entry['duration'] = $diffTime;            
-            $time_units = ['none', 'day', 'hour', 'minute'];
+            $time_units = ['none', 'hour', 'day'];
             $entry['unit'] = $time_units[$row['time_resolution']];            
             
             if(array_key_exists($guid, $usageData))
@@ -141,7 +144,7 @@ class EntityReportModel
         $entityTypeTable = new \Zend\Db\TableGateway\TableGateway('entity_type', $this->dbAdapter);
         $results = $entityTypeTable->select(['id' => $entity_type_id]);
         $time_resolution = $results->current()['time_resolution'];
-        $intervals = array('none', 'days', 'hours', 'minutes');
+        $intervals = array('none', 'hours', 'days', 'days');
                 
         foreach($rows as $row)
         {
@@ -151,7 +154,7 @@ class EntityReportModel
             $entityUsing['used_by'] = $row['Guest Firstname'].' '.$row['Guest Lastname'];
             $entityUsing['from'] = $row['date_from'];
             $entityUsing['to'] = $row['date_to'];
-            $entityUsing['duration'] = ((int)strtotime($row['date_to']) - (int)strtotime($row['date_from']))/($time_resolution == 1 ? 3600 * 24 : 24);
+            $entityUsing['duration'] = ((int)strtotime($row['date_to']) - (int)strtotime($row['date_from']))/($time_resolution == 1 ? 3600 : (3600 * 24));
             $entityUsing['time_unit'] = $intervals[$time_resolution];
             $entityUsingData[$row['reservation_id']] = $entityUsing;
         }

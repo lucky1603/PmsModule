@@ -213,9 +213,6 @@ class ReservationController extends AbstractActionController
         $time = $this->params()->fromQuery('time');
         $guid = $this->params()->fromQuery('guid');
         
-        Debug::dump('Time is '.$time);
-        Debug::dump('GUID is '.$guid);
-        
         if($time == 1)
         {
             
@@ -253,9 +250,7 @@ class ReservationController extends AbstractActionController
             }
             
         }        
-        
-        Debug::dump($data);
-        
+                
         $sql = new Sql($dbAdapter);
         $select = $sql->select();
         $select->from(['e' =>'entity'])

@@ -88,7 +88,7 @@
     <p><a id='addbutton' href="/pms/reservation/entity">Add new entity</a><br>
     <span><?php echo $this->formElement($form->get('submit'))?><a href="/pms/reservation/reset" class='ui-button' id="back_button">Back</a></span>
     <?php echo $this->form()->closeTag()?>     
-    <div id="dialog"></div>
+    <div id="dialog" class="ui-widget"></div>
     <script type="text/javascript">
         $(function() {  
             var dialog, form;
@@ -108,8 +108,9 @@
             dialog = $("#dialog").dialog({
                     autoOpen: false,
                     modal: true, 
-                    width: 400,
-                    height: 600,
+                    width: 550,
+                    height: 630,
+                    title: "New Client"
             });
             
             $('.ui-button').button();
@@ -117,7 +118,7 @@
                 var formData, fields;
                 e.preventDefault();        
                 $.get('/pms/client/edit', function(data) {
-                   formData = $(data).find('form');                   
+                   formData = $(data).find('form table');                   
                    $(formData).on('submit', function(evt) {
                         evt.preventDefault();
                         fields = $(formData).serialize();                    
@@ -131,8 +132,10 @@
                             fill();
                         }, "json");                            
                     });
+                    $(formData).find('.ui-button').button();
                     $(dialog).html(formData);
-                });                
+                });     
+                $(formData).find('.ui-button').button();
                 dialog.dialog("open");
             });
             

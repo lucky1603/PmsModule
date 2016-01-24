@@ -226,7 +226,8 @@
                 });
             }
             
-            $.getReservations = function(formData) {                
+            $.getReservations = function(formData) {            
+                console.log(formData);
                 $.ajax({
                     method: "POST",
                     url: '/pms/ajax/getAvailability',

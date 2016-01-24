@@ -211,6 +211,10 @@ class Module implements AutoloaderProviderInterface
                     $form = new AvailabilityForm('Availability', ['adapter' => $dbAdapter]);
                     return $form;
                 },
+                'ReportFilterForm' => function($sm) {
+                    $form = new \Pms\Form\ReportFilterForm();
+                    return $form;
+                },
                 // Filters
                 'LoginFilter' => function($sm) {
                     $loginFilter = new LoginFilter();
