@@ -182,6 +182,7 @@
                 evt.preventDefault();
                 $.get('/pms/ajax/whereTo', function(data) {                                                                               
                     var instructions = JSON.parse(data);
+                    console.log(instructions);
                     if(instructions.method == 'GET')
                     {
                         $.get(instructions.path, function(data) {

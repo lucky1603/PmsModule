@@ -51,17 +51,39 @@ class EntityController extends AbstractActionController
      */
     public function fullListAction()
     {
+        if($this->request->isPost())
+        {
+            $post = $this->request->getPost();
+            $date = $post['date_from'];
+            $entityTypeId = $post['entity_type_id'];
+            $resolution = $post['resolution'];
+            if(isset($post['multi-select']))
+            {
+                $multiSelect = $post['multi-select'];
+            }
+        }
+        
         // Prepare the form entries.
         // Get entity type. Find ACUNIT if exists. If not, take the first from the list of entities.
         $table = $this->getServiceLocator()->get('EntityTypeTable');
-        $entityType = $table->getEntityTypeByName('ACUNIT');
+        
+        if($entityTypeId)
+        {
+            $entityType = $table->getEntityType($entityTypeId);
+        }
+        else 
+        {
+            $entityType = $table->getEntityTypeByName('ACUNIT');
+            $entityTypeId = $entityType->id;
+        }
+        
         if(empty($entityType))
         {
             $rows = $table->fetchAll();
             if(count($rows) > 0)
             {
-                $id = $rows->current()[0]['id'];
-                $entityType = $table->getEntityType($id);
+                $entityTypeId = $rows->current()[0]['id'];
+                $entityType = $table->getEntityType($entityTypeId);
             }
         }
         
@@ -70,13 +92,19 @@ class EntityController extends AbstractActionController
             // TODO later.
         }
         
-        // Date and time today
-        $date = date('Y-m-d', time());
-        $date = date('Y-m-d H:i', strtotime('+ 8 hours', strtotime($date)));
+        if(empty($date))
+        {
+            // Date and time today
+            $date = date('Y-m-d', time());
+            $date = date('Y-m-d H:i', strtotime('+ 8 hours', strtotime($date)));
+        }
         
-        // Default time resolution.
-        $resolution = $entityType->time_resolution;
-        
+        if(empty($resolution))
+        {
+            // Default time resolution.
+            $resolution = $entityType->time_resolution;
+        }
+                
         // Attributes
         $dbAdapter = $this->getServiceLocator()->get('Adapter');
         $sql = new Sql($dbAdapter);
@@ -98,10 +126,19 @@ class EntityController extends AbstractActionController
                 
         $formData = array();
         $formData['date_from'] = $date;
-        $formData['entity_type_id'] = $entityType->id;
-        $formData['multi-select'] = array();
+        $formData['entity_type_id'] = $entityTypeId;
+        
+        if(isset($multiSelect))
+        {
+            $formData['multi-select'] = $multiSelect;
+        }
+        else 
+        {
+            $formData['multi-select'] = array();
+        }
+        
         $formData['resolution'] = $resolution;
-                                
+                                               
         $form->setData($formData);
         $viewModel = new ViewModel([
             'form' => $form,

@@ -9,6 +9,14 @@
         'controller' => 'reports',
         'action' => 'completeUsage', 
     ]));
+    if(!empty($this->start))
+    {
+        $start = $this->start;
+    }
+    if(!empty($this->end))
+    {
+        $end = $this->end;
+    }        
 ?>
     <div id="form-container">
         <h2>Search</h2>
@@ -47,7 +55,17 @@
                     <td><?php echo $usage['name']?></td>
                     <td><?php echo $usage['duration']?></td>
                     <td><?php echo $usage['unit']?></td>
-                    <td><a href="/pms/reports/entityUsage?id=<?php echo $usage['entity_id']?>">See Details</a></td>
+                    <?php $argString = 'id='.$usage['entity_id'];
+                        if(isset($start))
+                        {
+                            $argString .= '&start='.$start;
+                        }
+                        if(isset($end))
+                        {
+                            $argString .= '&end='.$end;
+                        }
+                    ?>                    
+                    <td><a href="/pms/reports/entityUsage?<?php echo $argString?>">See Details</a></td>
                 </tr>
                 <?php endforeach;?>
             </tbody>

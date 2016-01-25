@@ -74,19 +74,33 @@ class ReportsController extends AbstractActionController
         }
                         
         // Call view model.
-        return new ViewModel([
+        $viewModel = new ViewModel([
             'usageData' => $usageData,
             'form' => $form,
         ]);        
+        
+        if(isset($start))
+        {
+            $viewModel->setVariable('start', $start);
+        }
+        
+        if(isset($end))
+        {
+            $viewModel->setVariable('end', $end);
+        }
+        
+        return $viewModel;
     }
     
     public function entityUsageAction()
     {
         $id = $this->params()->fromQuery('id');
+        $start = $this->params()->fromQuery('start');
+        $end = $this->params()->fromQuery('end');
         
         $adapter = $this->getServiceLocator()->get('Adapter');
         $model = new \Pms\Model\EntityReportModel($adapter);
-        $usageData = $model->getSingleEntityUsageData($id);
+        $usageData = $model->getSingleEntityUsageData($id, $start, $end);
         
         return new ViewModel([
             'usageData' => $usageData,
