@@ -115,12 +115,13 @@
             var formData, fields;
             e.preventDefault();
             $.get('/pms/client/edit', function(data) {
-                formData = $(data).find('form table');    
+                formData = $(data).find('form');    
                 //$(formData).attr('action', '/pms/client/processFromEntity');
                 $(formData).on('submit', function(evt) {
                     evt.preventDefault();
                     fields = $(formData).serialize();                    
-                    dialog.dialog('close');    
+                    dialog.dialog('close');   
+                    console.log(fields);
                     $.post('/pms/ajax/writeNewClient', fields, function(mydata) {     
                         var client = mydata.client;
                         var id = client.id;

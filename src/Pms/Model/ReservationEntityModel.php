@@ -198,10 +198,6 @@ class ReservationEntityModel
             unset($data['ed_name']);
             unset($data['first_name']);
             unset($data['last_name']);            
-            
-            // Set the mandatory entry values.
-            $data['date_start'] = 0;
-            $data['date_end'] = 0;
                        
             $insert->into('reservation_entity')
                     ->values($data);
@@ -219,14 +215,7 @@ class ReservationEntityModel
             unset($data['ed_name']);
             unset($data['first_name']);
             unset($data['last_name']);            
-            
-            // Set mandatory entry values.
-            $data['date_start'] = 0;
-            $data['date_end'] = 0;      
-            
-//            Debug::dump("Updating...");
-//            Debug::dump($data);
-            
+                       
             $update = $this->sql->update();
             $update->table('reservation_entity')
                     ->set($data)
