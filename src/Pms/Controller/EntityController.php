@@ -67,7 +67,7 @@ class EntityController extends AbstractActionController
         // Get entity type. Find ACUNIT if exists. If not, take the first from the list of entities.
         $table = $this->getServiceLocator()->get('EntityTypeTable');
         
-        if($entityTypeId)
+        if(isset($entityTypeId))
         {
             $entityType = $table->getEntityType($entityTypeId);
         }
