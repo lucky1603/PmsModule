@@ -60,10 +60,8 @@ class AjaxController extends AbstractActionController
         else 
         {
             $typeId = $this->params()->fromQuery('type');
-            \Zend\Debug\Debug::dump('From query - '. $this->params()->fromQuery('date'));
             $startDate = date('Y-m-d H:i:s', strtotime($this->params()->fromQuery('date')));
             $startTime = date('H:i:s', strtotime($this->params()->fromQuery('date')));
-            \Zend\Debug\Debug::dump('Start time is '.$startTime);
             $displayRes = $this->params()->fromQuery('displayRes');
             $attrs = array();
         }

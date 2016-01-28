@@ -1,13 +1,46 @@
 <?php 
     $lines = $this->data;
+//    \Zend\Debug\Debug::dump($lines);
+//    die();
     $keys = array_keys(array_values($lines)[0]);
 ?>
 
 <table class="tablesorter" id="myTable">
     <thead>
         <tr>
-            <?php foreach($keys as $key):?>
-            <th><?php echo $key?></th>
+            <?php 
+                foreach($keys as $key):
+                $content = array_values($lines)[0][$key];
+                if(is_array($content))
+                {
+                    $today = false;
+                    if($content['time_resolution'])
+                    {
+                        $time_resolution = $content['time_resolution'];
+                        if($time_resolution == 1 /* hours */)
+                        {
+                            $time = date('Y-m-d H', strtotime($content['time']));                       
+                            $todayTime = date("Y-m-d H");
+                        }
+                        else /* days */
+                        {
+                            $time = date('Y-m-d', strtotime($content['time']));                       
+                            $todayTime = date("Y-m-d");
+                        }
+
+                        if($time == $todayTime)
+                        {
+                            $today = true;
+                        }
+                    }
+                }
+                
+            ?>
+            <?php if(isset($today) && $today == true):?>
+                <th class="today"><?php echo $key?></th>
+            <?php else:?>
+                <th><?php echo $key?></th>
+            <?php endif;?>
             <?php endforeach;?>
         </tr>
     </thead>
@@ -18,16 +51,33 @@
                 foreach($keys as $key)
                 {
                     $content = $line[$key];
+                    $today = false;
                     if(is_array($content))
                     {
                         $value = $content['statusvalue'];
                         $text = $content['statustext'];
                         $reservation_id = $content['id'];
-                        $time = $content['time'];
+                        
                         if(isset($content['time_resolution']))
                         {
                             $time_resolution = $content['time_resolution'];
-                        }                        
+//                            if($time_resolution == 1 /* hours */)
+//                            {
+//                                $time = date('Y-m-d H', strtotime($content['time']));                       
+//                                $todayTime = date("Y-m-d H");
+//                            }
+//                            else /* days */
+//                            {
+//                                $time = date('Y-m-d', strtotime($content['time']));                       
+//                                $todayTime = date("Y-m-d");
+//                            }
+//                            
+////                            \Zend\Debug\Debug::dump($time.' '.$todayTime);
+//                            if($time == $todayTime)
+//                            {
+//                                $today = true;
+//                            }
+                        }                                                
                     }
                     else 
                     {
@@ -41,22 +91,38 @@
                     {                        
                         if(isset($reservation_id))
                         {
-                            echo '<td class="reserved '.$value.'" data-reservation-id="'.$reservation_id.'" data-reservation-contents=""></td>';
+                            $class = 'reserved';
+                            if($today == true)
+                            {
+                                $class .= ' today';
+                            }
+                            echo '<td class="'.$class.' '.$value.'" data-reservation-id="'.$reservation_id.'" data-reservation-contents=""></td>';
                         }
                         else 
                         {
-                            echo '<td class="regular" data-reservation-id="none"></td>';
+                            $class = 'regular';
+                            if($today == true)
+                            {
+                                $class .= ' today';
+                            }
+                            
+                            echo '<td class="'.$class.'" data-reservation-id="none"></td>';
                         }
                     }
                     else if ($value == 'free')
                     {
+                        $class = 'free';
+                        if($today == true)
+                        {
+                            $class .= ' today';
+                        }
                         if(isset($time_resolution))
                         {
-                            echo '<td class="free" data-reservation-date="'.$time.'" data-time-resolution="'.$time_resolution.'" title="this is free"></td>';
+                            echo '<td class="'.$class.'" data-reservation-date="'.$time.'" data-time-resolution="'.$time_resolution.'" title="this is free"></td>';
                         }
                         else 
                         {
-                            echo '<td class="free" data-reservation-date="'.$time.'" title="this is free"></td>';
+                            echo '<td class="'.$class.'" data-reservation-date="'.$time.'" title="this is free"></td>';
                         }
 
                     }
