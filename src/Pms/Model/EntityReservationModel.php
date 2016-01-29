@@ -176,8 +176,10 @@ class EntityReservationModel extends EntityModel
                 {
                     $date = date('Y-m-d', strtotime('+ 1 day', strtotime($date)));                    
                 }                              
-            }                   
-                       
+            }      
+            
+//            \Zend\Debug\Debug::dump($reservations);
+                                   
             // Now make the reservation query.
             $sql = new Sql($this->dbAdapter);
             $select = $sql->select();     
@@ -257,7 +259,10 @@ class EntityReservationModel extends EntityModel
                 }                                       
             }       
         }
-         
+        
+//        \Zend\Debug\Debug::dump($reservations);
+//        die();
+//        \Zend\Debug\Debug::dump($reservations); 
         return $reservations;
     }
         

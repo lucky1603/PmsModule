@@ -94,7 +94,7 @@ class AjaxController extends AbstractActionController
             {
                 $displayRes = $time_resolution;
             }
-                        
+                                                            
             switch ($displayRes) {
                 case 1: /* hours */
                     $startPeriod = date('Y-m-d H:i:s', strtotime($startDate));
@@ -166,7 +166,7 @@ class AjaxController extends AbstractActionController
                 }                
             }
             
-            $reservations = $model->getReservations();                  
+            $reservations = $model->getReservations();      
             
             $current = strtotime($startDate);
             foreach($reservations as $key=>$value)
