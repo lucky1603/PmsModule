@@ -425,6 +425,27 @@ class EntityController extends AbstractActionController
                     $attElement = new \Zend\Form\Element\Select($attribute->code);
                     $attElement->setValueOptions($attribute->optionValues);                    
                 }
+                elseif ($attribute->type == 'double' || $attribute->type == 'integer')
+                {
+                    $attElement = new \Zend\Form\Element\Number($attribute->code);
+                    if($attribute->type == 'integer')
+                    {
+                        $attElement->setAttributes([
+                            'min' => 0,
+                            'max' => 1000,
+                            'step' => 1,
+                        ]);
+                    }
+                    else 
+                    {
+                        $attElement->setAttributes([
+                            'min' => -1000.0,
+                            'max' => 1000.0,
+                            'step' => 0.1,
+                        ]);
+                    }
+                    
+                }
                 else {
                     $attElement = new \Zend\Form\Element\Text($attribute->code);
                 }
@@ -489,6 +510,27 @@ class EntityController extends AbstractActionController
                         $attElement = new \Zend\Form\Element\Select($attribute->code);
                         $attElement->setValueOptions($attribute->optionValues);                         
                     }
+                    elseif ($attribute->type == 'double' || $attribute->type == 'integer')
+                    {
+                        $attElement = new \Zend\Form\Element\Number($attribute->code);
+                        if($attribute->type == 'integer')
+                        {
+                            $attElement->setAttributes([
+                                'min' => 0,
+                                'max' => 1000,
+                                'step' => 1,
+                            ]);
+                        }
+                        else 
+                        {
+                            $attElement->setAttributes([
+                                'min' => -1000.0,
+                                'max' => 1000.0,
+                                'step' => 0.1,
+                            ]);
+                        }
+
+                    }
                     else {
                         $attElement = new \Zend\Form\Element\Text($attribute->code);
                     }
@@ -538,6 +580,27 @@ class EntityController extends AbstractActionController
                     {
                         $attElement = new \Zend\Form\Element\Select($attribute->code);
                         $attElement->setValueOptions($attribute->optionValues);                                                
+                    }
+                    elseif ($attribute->type == 'double' || $attribute->type == 'integer')
+                    {
+                        $attElement = new \Zend\Form\Element\Number($attribute->code);
+                        if($attribute->type == 'integer')
+                        {
+                            $attElement->setAttributes([
+                                'min' => 0,
+                                'max' => 1000,
+                                'step' => 1,
+                            ]);
+                        }
+                        else 
+                        {
+                            $attElement->setAttributes([
+                                'min' => -1000.0,
+                                'max' => 1000.0,
+                                'step' => 0.1,
+                            ]);
+                        }
+
                     }
                     else {
                         $attElement = new \Zend\Form\Element\Text($attribute->code);
@@ -666,6 +729,27 @@ class EntityController extends AbstractActionController
                 }
                 elseif ($attribute->type == 'timestamp') {
                     $attElement = new \Zend\Form\Element\DateTime($attribute->code);
+                }
+                elseif ($attribute->type == 'double' || $attribute->type == 'integer')
+                {
+                    $attElement = new \Zend\Form\Element\Number($attribute->code);
+                    if($attribute->type == 'integer')
+                    {
+                        $attElement->setAttributes([
+                            'min' => 0,
+                            'max' => 1000,
+                            'step' => 1,
+                        ]);
+                    }
+                    else 
+                    {
+                        $attElement->setAttributes([
+                            'min' => -1000.0,
+                            'max' => 1000.0,
+                            'step' => 0.1,
+                        ]);
+                    }
+                    
                 }
                 elseif ($attribute->type == 'select')
                 {
