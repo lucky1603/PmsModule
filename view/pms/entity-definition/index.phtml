@@ -1,5 +1,12 @@
 <section class="entity-definition">
     <?php
+        $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.metro-dark.css');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');          
+        $this->headScript()->appendFile('/tablesorter-master/js/jquery.tablesorter.js');
+        $this->headScript()->appendFile('/tablesorter-master/js/jquery.tablesorter.widgets.js');
+        $this->headScript()->appendFile('/tablesorter-master/js/widgets/widget-scroller.js');
+        
         $entityDefinitions = $this->entityDefinitions;
     ?>
     <?php if($entityDefinitions == null || count($entityDefinitions) == 0):?>
@@ -9,7 +16,8 @@
         <h2>Object Definitions</h2>
         <p>
         <p>
-        <table class="table">
+        <table class="table tablesorter">
+            <thead>
             <tr>
                 <th>Type</th>
                 <th>Code</th>
@@ -17,26 +25,51 @@
                 <th>Description</th>
                 <th>Action</th>
             </tr>
-        <?php foreach($entityDefinitions as $entityDefinition):?>
-            <tr>
-                <td>
-                    <?php echo $entityDefinition['typename'] ?>
-                </td>
-                <td>
-                    <?php echo $entityDefinition['code'] ?>
-                </td>
-                <td>
-                    <?php echo $entityDefinition['name'] ?>
-                </td>
-                <td>
-                    <?php echo $entityDefinition['description'] ?>
-                </td>
-                <td>
-                    <a href="/pms/entity-definition/edit/<?php echo $entityDefinition['id']?>">Edit</a> | <a href="/pms/entity-definition/delete/<?php echo $entityDefinition['id']?>">Delete</a>
-                </td>
-            </tr>
-        <?php endforeach;?>
+            </thead>
+            <tbody>
+            <?php foreach($entityDefinitions as $entityDefinition):?>
+                <tr>
+                    <td>
+                        <?php echo $entityDefinition['typename'] ?>
+                    </td>
+                    <td>
+                        <?php echo $entityDefinition['code'] ?>
+                    </td>
+                    <td>
+                        <?php echo $entityDefinition['name'] ?>
+                    </td>
+                    <td>
+                        <?php echo $entityDefinition['description'] ?>
+                    </td>
+                    <td>
+                        <a href="/pms/entity-definition/edit/<?php echo $entityDefinition['id']?>">Edit</a> | <a href="/pms/entity-definition/delete/<?php echo $entityDefinition['id']?>">Delete</a>
+                    </td>
+                </tr>
+            <?php endforeach;?>
+            </tbody>
         </table>
     <?php endif; ?>
     <a href="/pms/entity-definition/new">Add new object definition</a> | <a href='/'>Home</a>
 </section>
+<script>
+    $(document).ready(function(){
+       $('.tablesorter').tablesorter({
+            theme: 'metro-dark',
+            showProcessing: true,
+            headerTemplate : '{content} {icon}',
+            widgets: [ 'columns', 'stickyHeaders', 'scroller' ],
+            widgetOptions : {
+                    scroller_height : 400,
+                    // scroll tbody to top after sorting
+                    scroller_upAfterSort: true,
+                    // pop table header into view while scrolling up the page
+                    scroller_jumpToHeader: true,
+                    // In tablesorter v2.19.0 the scroll bar width is auto-detected
+                    // add a value here to override the auto-detected setting
+                    scroller_barWidth : null
+                    // scroll_idPrefix was removed in v2.18.0
+                    // scroller_idPrefix : 's_'
+            }
+        });
+    });
+</script>

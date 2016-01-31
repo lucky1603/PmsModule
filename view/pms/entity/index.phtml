@@ -1,28 +1,36 @@
 <section class="entity">
     <?php 
         $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
-        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');    
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.metro-dark.css');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');          
+        $this->headScript()->appendFile('/tablesorter-master/js/jquery.tablesorter.js');
+        $this->headScript()->appendFile('/tablesorter-master/js/jquery.tablesorter.widgets.js');
+        $this->headScript()->appendFile('/tablesorter-master/js/widgets/widget-scroller.js');
         $entities = $this->entities;
     ?>
     <h2>Available Objects</h2>
     <?php if(count($entities) == 0):?>
         <p class="error">There are no rooms in the facility.
     <?php else: ?>
-        <table class="table">
-            <tr>
-                <th>Room Nr.</th>
-                <th>Room Type</th>
-                <th>Status</th>
-                <th>Action</th>
-            </tr>
-            <?php foreach($entities as $entity):?>
+        <table class="table tablesorter">
+            <thead>
                 <tr>
-                    <td><?php echo $entity['guid']?></td>
-                    <td><?php echo $entity['code']?></td>
-                    <td><?php echo $entity['SValue']?></td>
-                    <td><a href="/pms/entity/edit/<?php echo $entity['id']?>">Edit</a> | <a href="/pms/entity/delete/<?php echo $entity['id'] ?>">Delete</a>                        
+                    <th>Object Nr.</th>
+                    <th>Object Type</th>
+                    <th>Status</th>
+                    <th>Action</th>
                 </tr>
-            <?php endforeach;?>
+            </thead>
+            <tbody>
+                <?php foreach($entities as $entity):?>
+                    <tr>
+                        <td><?php echo $entity['guid']?></td>
+                        <td><?php echo $entity['code']?></td>
+                        <td><?php echo $entity['SValue']?></td>
+                        <td><a href="/pms/entity/edit/<?php echo $entity['id']?>">Edit</a> | <a href="/pms/entity/delete/<?php echo $entity['id'] ?>">Delete</a>                        
+                    </tr>
+                <?php endforeach;?>
+            </tbody>
         </table>
     <?php endif;?>
     <a href="/pms/entity/new">Add new</a> | <a href='/'>Home</a>
@@ -31,29 +39,48 @@
     </div>
 </section>
 <script>
-$(function() {
-   $('.delete').on('click', function(evt) {
-        evt.preventDefault();
-        console.log(evt.target);
-        val address =  $(evt.target).attr('href').val();
-        alert(address);
-        
-//        $('#dialog-confirm').dialog({
-//            resizable: false,
-//            height: 250,
-//            width: 350,
-//            modal: true,
-//            buttons: {
-//                "Delete" : function() {
-//                    $(this).dialog("close");
-//                },
-//                Cancel: function() {
-//                    $(this).dialog('close');
-//                }
-//            }
-//       });
-        
-   });
+$(document).ready(function() {
+    $('.tablesorter').tablesorter({
+            theme: 'metro-dark',
+            showProcessing: true,
+            headerTemplate : '{content} {icon}',
+            widgets: [ 'columns', 'stickyHeaders', 'scroller' ],
+            widgetOptions : {
+                    scroller_height : 400,
+                    // scroll tbody to top after sorting
+                    scroller_upAfterSort: true,
+                    // pop table header into view while scrolling up the page
+                    scroller_jumpToHeader: true,
+                    // In tablesorter v2.19.0 the scroll bar width is auto-detected
+                    // add a value here to override the auto-detected setting
+                    scroller_barWidth : null
+                    // scroll_idPrefix was removed in v2.18.0
+                    // scroller_idPrefix : 's_'
+            }
+        });
+    
+//    $('.delete').on('click', function(evt) {
+//        evt.preventDefault();
+//        console.log(evt.target);
+//        val address =  $(evt.target).attr('href').val();
+//        alert(address);
+//        
+////        $('#dialog-confirm').dialog({
+////            resizable: false,
+////            height: 250,
+////            width: 350,
+////            modal: true,
+////            buttons: {
+////                "Delete" : function() {
+////                    $(this).dialog("close");
+////                },
+////                Cancel: function() {
+////                    $(this).dialog('close');
+////                }
+////            }
+////       });
+//        
+//   });
 });
 </script>
 
