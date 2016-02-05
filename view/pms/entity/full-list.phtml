@@ -37,51 +37,31 @@
         </div>
         <div id="left">  
             <?php echo $this->form()->openTag($form);?>
-            <div id="divform">           
-<!--            <table>    
-                <tr>
-                    <td><?php echo $this->formLabel($form->get('entity_type_id'));?></td>
-                    <td><?php echo $this->formElement($form->get('entity_type_id'))?></td>
-                </tr>
-                <tr>
-                    <td><?php echo $this->formLabel($form->get('date_from'));?></td>
-                    <td><?php echo $this->formElement($form->get('date_from'))?></td>
-                </tr>
-                <tr>
-                    <td><?php echo $this->formLabel($form->get('multi-select'));?></td>
-                    <td><?php echo $this->formElement($form->get('multi-select'))?></td>
-                </tr>    
-                <tr>
-                    <td><?php echo $this->formLabel($form->get('resolution'))?></td>
-                    <td><?php echo $this->formElement($form->get('resolution'))?></td>
-                </tr>
-            </table>          -->
-                
-                
-                    <div class='input-field-container'>
-                        <?php 
-                            echo $this->formLabel($form->get('entity_type_id'));
-                            echo $this->formElement($form->get('entity_type_id'));
-                        ?>
-                    </div>
-                    <div class="input-field-container">
-                        <?php 
-                            echo $this->formLabel($form->get('date_from'));
-                            echo $this->formElement($form->get('date_from'));
-                        ?>
-                    </div>      
-                    <div class="input-field-container">
-                        <?php 
-                            echo $this->formLabel($form->get('resolution'));
-                            echo $this->formElement($form->get('resolution'));
-                        ?>
-                    </div>
-                    <div class="input-field-container" id='multiselect-container'>
-                        <?php 
-                            echo $this->formLabel($form->get('multi-select'));
-                            echo $this->formElement($form->get('multi-select'));
-                        ?>
-                    </div>                                                        
+            <div id="divform">                                          
+                <div class='input-field-container'>
+                    <?php 
+                        echo $this->formLabel($form->get('entity_type_id'));
+                        echo $this->formElement($form->get('entity_type_id'));
+                    ?>
+                </div>
+                <div class="input-field-container">
+                    <?php 
+                        echo $this->formLabel($form->get('date_from'));
+                        echo $this->formElement($form->get('date_from'));
+                    ?>
+                </div>      
+                <div class="input-field-container">
+                    <?php 
+                        echo $this->formLabel($form->get('resolution'));
+                        echo $this->formElement($form->get('resolution'));
+                    ?>
+                </div>
+                <div class="input-field-container" id='multiselect-container'>
+                    <?php 
+                        echo $this->formLabel($form->get('multi-select'));
+                        echo $this->formElement($form->get('multi-select'));
+                    ?>
+                </div>                                                        
             </div>
             <!--<div id="divsubmit"><?php echo $this->formElement($form->get('submit'));?></div>-->            
             <?php echo $this->form()->closeTag();?>
@@ -295,24 +275,25 @@
             }
             
                         
-//            $('#multi-select').multiselect({
-//                classes: 'form-entry',
-//            });
-            
-            $('#multi-select').scombobox();
-            $('#multi-select').on('change', function(e) {
-                var formData = $('form').serialize();
-                $.getList(formData);
-                $.getReservations(formData);
+            $('#multi-select').multiselect({
+                classes: 'form-entry',
+                minWidth: 100,
             });
             
-//            $('#multi-select').on('multiselectclose', function(e) {
+//            $('#multi-select').scombobox();
+//            $('#multi-select').on('change', function(e) {
 //                var formData = $('form').serialize();
-////                console.log(formData);
-////                console.log($(e.target).val());
 //                $.getList(formData);
 //                $.getReservations(formData);
 //            });
+            
+            $('#multi-select').on('multiselectclose', function(e) {
+                var formData = $('form').serialize();
+//                console.log(formData);
+//                console.log($(e.target).val());
+                $.getList(formData);
+                $.getReservations(formData);
+            });
             
             $('#resolution').on('change', function(e) {
                 var formData = $('form').serialize();
@@ -521,9 +502,9 @@
         
         div #multi-select {
             display: inline-block;
-            width: 50%;
+/*            width: 50%;
             min-width: 120px;
-            max-width: 100%;
+            max-width: 100%;*/
             /*margin-top: 0px;*/
         }
         
@@ -531,6 +512,31 @@
             display: inline-block;            
             /*border: 1px solid #77e2c5;*/
             vertical-align: top;
+            min-height: 15px;
+        }
+        
+        div .input-field-container label {
+            /*color: red;*/
+            vertical-align: central;
+            min-width: 100px;
+        }
+        
+        div .input-field-container input {
+            /*color: blue;*/
+            vertical-align: central;
+
+        }
+        
+        div .input-field-container select {
+            /*color: green;*/
+            float: right;
+            /*vertical-align: central;*/
+        }
+        
+        div .input-field-container button {
+            /*color: purple;*/
+            margin-bottom: 2px;
+            /*vertical-align: central;*/
         }
         
         div #multiselect-container {
