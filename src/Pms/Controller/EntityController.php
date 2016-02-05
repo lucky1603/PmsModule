@@ -25,6 +25,13 @@ class EntityController extends AbstractActionController
      */
     public function indexAction()
     {
+        $service = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $service->getStorage()->read();
+        if(!isset($mail))
+        {
+            return $this->redirect()->toUrl('/');
+        }
+        
         $table = $this->getServiceLocator()->get('EntityTable');
         $results = $table->fetchView();
         
@@ -51,6 +58,13 @@ class EntityController extends AbstractActionController
      */
     public function fullListAction()
     {
+        $service = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $service->getStorage()->read();
+        if(!isset($mail))
+        {
+            return $this->redirect()->toUrl('/');
+        }
+        
         if($this->request->isPost())
         {
             $post = $this->request->getPost();

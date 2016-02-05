@@ -25,6 +25,13 @@ class EntityTypeController extends AbstractActionController
      */
     public function indexAction()
     {
+        $service = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $service->getStorage()->read();
+        if(!isset($mail))
+        {
+            return $this->redirect()->toUrl('/');
+        }
+       
         // Reset session data.
         $session = new Container('models');
         unset($session->entityTypeData);

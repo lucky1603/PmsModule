@@ -58,7 +58,7 @@ class IndexController extends AbstractActionController
                return $viewModel;
            }
        }
-       
+            
        return new ViewModel();
     }
     

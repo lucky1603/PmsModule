@@ -2,6 +2,7 @@
     <?php
         $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
         $this->headLink()->appendStylesheet('/js/datetimepicker/jquery.datetimepicker.css');
+
 //        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.blue.css');
 //        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.bootstrap.css');        
 //        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.jui.css');
@@ -13,12 +14,14 @@
         $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.metro-dark.css');
 //        $this->headLink()->appendStylesheet('/tablesorter-master/css/high-specificity/theme.blue.specific.css');
         $this->headLink()->appendStylesheet('/css/multiselect/jquery.multiselect.css');
+        $this->headLink()->appendStylesheet('/css/jquery.scombobox.css');
         $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');          
         $this->headScript()->appendFile('/js/datetimepicker/build/jquery.datetimepicker.full.js');
         $this->headScript()->appendFile('/tablesorter-master/js/jquery.tablesorter.js');
         $this->headScript()->appendFile('/tablesorter-master/js/jquery.tablesorter.widgets.js');
         $this->headScript()->appendFile('/tablesorter-master/js/widgets/widget-scroller.js');
         $this->headScript()->appendFile('/js/multiselect/jquery.multiselect.js');
+        $this->headScript()->appendFile('/js/jquery.scombobox.js');
         
         $typeName = $this->typeName;
         $form = $this->form;         
@@ -30,10 +33,12 @@
     ?>
     <h3><span id="sta"><?php echo isset($this->typeName) ? $this->typeName : "Room";?></span> Availability Status on <span id="danas"><?php echo date('d.m.Y', strtotime($date))?></span></h3>
     <div id="upper">
+        <div id="right">            
+        </div>
         <div id="left">  
             <?php echo $this->form()->openTag($form);?>
             <div id="divform">           
-            <table>    
+<!--            <table>    
                 <tr>
                     <td><?php echo $this->formLabel($form->get('entity_type_id'));?></td>
                     <td><?php echo $this->formElement($form->get('entity_type_id'))?></td>
@@ -50,13 +55,22 @@
                     <td><?php echo $this->formLabel($form->get('resolution'))?></td>
                     <td><?php echo $this->formElement($form->get('resolution'))?></td>
                 </tr>
-            </table>          
+            </table>          -->
+                <?php
+                    echo $this->formLabel($form->get('entity_type_id'));
+                    echo $this->formElement($form->get('entity_type_id'));
+                    echo $this->formLabel($form->get('date_from'));
+                    echo $this->formElement($form->get('date_from'));
+                    echo $this->formLabel($form->get('resolution'));
+                    echo $this->formElement($form->get('resolution'));
+                    echo $this->formLabel($form->get('multi-select'));
+                    echo $this->formElement($form->get('multi-select'));
+                                        
+                ?>
             </div>
             <!--<div id="divsubmit"><?php echo $this->formElement($form->get('submit'));?></div>-->            
             <?php echo $this->form()->closeTag();?>
-        </div>
-        <div id="right">            
-        </div>
+        </div>        
     </div>
     <div id="lower"></div>          
     <script>        
@@ -265,17 +279,25 @@
                 });
             }
             
-            $('#multi-select').multiselect({
-                classes: 'form-entry'
-            });
+                        
+//            $('#multi-select').multiselect({
+//                classes: 'form-entry',
+//            });
             
-            $('#multi-select').on('multiselectclose', function(e) {
+            $('#multi-select').scombobox();
+            $('#multi-select').on('change', function(e) {
                 var formData = $('form').serialize();
-//                console.log(formData);
-//                console.log($(e.target).val());
                 $.getList(formData);
                 $.getReservations(formData);
             });
+            
+//            $('#multi-select').on('multiselectclose', function(e) {
+//                var formData = $('form').serialize();
+////                console.log(formData);
+////                console.log($(e.target).val());
+//                $.getList(formData);
+//                $.getReservations(formData);
+//            });
             
             $('#resolution').on('change', function(e) {
                 var formData = $('form').serialize();
@@ -370,12 +392,15 @@
         .form-entry {
             margin-left: 10px;
             margin-right: 10px;
-            font-size: 0.9em;
+            font-size: 0.9em;          
+            vertical-align: top;
+            margin-top: 10px;
         }
+        
                         
-        div #upper {
+/*        div #upper {
             height: 200px;
-            /*border: 2px solid #0000FF;*/
+            border: 2px solid #0000FF;
             display: block;
         }
         
@@ -397,16 +422,36 @@
         #right {
             height: 100%;
             width: 64.5%;
-            /*border: 1px dashed #00FF00;*/
+            border: 1px dashed #00FF00;
             display: inline-block;
-            /*background: #ffff33;*/        
+            background: #ffff33;        
             vertical-align: top;
             overflow: hidden;
-            
+            background: #dddddd;            
+        }*/
+
+        div #upper {
+            height: 50%;
+            display: block;
         }
         
+        div #left {
+            height: 10%;
+            width: 100%;
+            border: 1px dashed #AAAAAA;
+            border-radius: 15px;
+        }
+        
+        div #right {
+            height: 90%;
+            width: 100%;
+            display: block;
+            background: #dddddd;
+            overflow: hidden;
+        }
+                
         form {
-            margin-top: 10px;
+            /*margin-top: 10px;*/
         }
         
         #submit {
@@ -450,5 +495,22 @@
             color: orange;
         }
         
+        #date_from {
+            max-width: 120px;
+            padding-left: 3px;
+        }
+        
+        .tablesortera {
+            margin-top: 0px;
+        }
+        
+        div #multi-select {
+            display: inline-block;
+            width: 50%;
+            min-width: 120px;
+            max-width: 100%;
+            /*margin-top: 0px;*/
+        }
+               
     </style>
 </section>

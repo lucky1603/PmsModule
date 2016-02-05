@@ -1,5 +1,12 @@
 <section class="reports-complete" style="height: 100%;">
 <?php
+$this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
+    $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.metro-dark.css');
+    $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');          
+    $this->headScript()->appendFile('/tablesorter-master/js/jquery.tablesorter.js');
+    $this->headScript()->appendFile('/tablesorter-master/js/jquery.tablesorter.widgets.js');
+    $this->headScript()->appendFile('/tablesorter-master/js/widgets/widget-scroller.js');
+    
     $usageData = $this->usageData;
     $header = $usageData['header'];
     unset($usageData['header']);
@@ -72,6 +79,28 @@
         </table>
     </div>
 </section>
+<script>
+    $(document).ready(function() {
+        $('.tablesorter').tablesorter({
+            theme: 'metro-dark',
+            showProcessing: true,
+            headerTemplate : '{content} {icon}',
+            widgets: [ 'columns', 'stickyHeaders', 'scroller' ],
+            widgetOptions : {
+                    scroller_height : 400,
+                    // scroll tbody to top after sorting
+                    scroller_upAfterSort: true,
+                    // pop table header into view while scrolling up the page
+                    scroller_jumpToHeader: true,
+                    // In tablesorter v2.19.0 the scroll bar width is auto-detected
+                    // add a value here to override the auto-detected setting
+                    scroller_barWidth : null
+                    // scroll_idPrefix was removed in v2.18.0
+                    // scroller_idPrefix : 's_'
+            }
+        });
+    });
+</script>
 <style>
     #form-container {
         border: 1px solid #aaaaaa;

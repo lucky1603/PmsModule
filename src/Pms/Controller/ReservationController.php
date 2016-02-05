@@ -22,6 +22,13 @@ class ReservationController extends AbstractActionController
      * Default action.
      */
     public function indexAction() {
+        $service = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $service->getStorage()->read();
+        if(!isset($mail))
+        {
+            return $this->redirect()->toUrl('/');
+        }
+        
         $model = $this->getServiceLocator()->get('ReservationModel');        
         $reservations = $model->fetchAll();      
         $id = $this->params()->fromRoute('id');
