@@ -56,17 +56,32 @@
                     <td><?php echo $this->formElement($form->get('resolution'))?></td>
                 </tr>
             </table>          -->
-                <?php
-                    echo $this->formLabel($form->get('entity_type_id'));
-                    echo $this->formElement($form->get('entity_type_id'));
-                    echo $this->formLabel($form->get('date_from'));
-                    echo $this->formElement($form->get('date_from'));
-                    echo $this->formLabel($form->get('resolution'));
-                    echo $this->formElement($form->get('resolution'));
-                    echo $this->formLabel($form->get('multi-select'));
-                    echo $this->formElement($form->get('multi-select'));
-                                        
-                ?>
+                
+                
+                    <div class='input-field-container'>
+                        <?php 
+                            echo $this->formLabel($form->get('entity_type_id'));
+                            echo $this->formElement($form->get('entity_type_id'));
+                        ?>
+                    </div>
+                    <div class="input-field-container">
+                        <?php 
+                            echo $this->formLabel($form->get('date_from'));
+                            echo $this->formElement($form->get('date_from'));
+                        ?>
+                    </div>      
+                    <div class="input-field-container">
+                        <?php 
+                            echo $this->formLabel($form->get('resolution'));
+                            echo $this->formElement($form->get('resolution'));
+                        ?>
+                    </div>
+                    <div class="input-field-container" id='multiselect-container'>
+                        <?php 
+                            echo $this->formLabel($form->get('multi-select'));
+                            echo $this->formElement($form->get('multi-select'));
+                        ?>
+                    </div>                                                        
             </div>
             <!--<div id="divsubmit"><?php echo $this->formElement($form->get('submit'));?></div>-->            
             <?php echo $this->form()->closeTag();?>
@@ -510,6 +525,17 @@
             min-width: 120px;
             max-width: 100%;
             /*margin-top: 0px;*/
+        }
+        
+        div .input-field-container {
+            display: inline-block;            
+            /*border: 1px solid #77e2c5;*/
+            vertical-align: top;
+        }
+        
+        div #multiselect-container {
+            width:30%;
+            min-width: 300px;
         }
                
     </style>

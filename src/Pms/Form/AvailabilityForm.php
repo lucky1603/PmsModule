@@ -63,7 +63,7 @@ class AvailabilityForm extends Form
         $this->add($multiCheckbox);
         
         $multiselect = new \Zend\Form\Element\Select('multi-select');
-        $multiselect->setLabel('Show/Hide Attributes');
+        $multiselect->setLabel('Attributes');
                 $multiCheckbox->setValueOptions(array(
                 '0' => 'Apple',
                 '1' => 'Orange',
