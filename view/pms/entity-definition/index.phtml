@@ -42,7 +42,7 @@
                         <?php echo $entityDefinition['description'] ?>
                     </td>
                     <td>
-                        <a href="/pms/entity-definition/edit/<?php echo $entityDefinition['id']?>">Edit</a> | <a href="/pms/entity-definition/delete/<?php echo $entityDefinition['id']?>">Delete</a>
+                        <a href="/pms/entity-definition/edit/<?php echo $entityDefinition['id']?>">Edit</a> | <a id="delete" href="/pms/entity-definition/delete/<?php echo $entityDefinition['id']?>">Delete</a>
                     </td>
                 </tr>
             <?php endforeach;?>
@@ -50,6 +50,9 @@
         </table>
     <?php endif; ?>
     <a href="/pms/entity-definition/new">Add new object definition</a> | <a href='/'>Home</a>
+    <div hidden="true" id="ConfirmDialog" title="Delete Entity Definition?">
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0; font-size: 0.75em"></span>Definition will be completely deleted and cannot be recovered. Are you sure?</p>
+    </div>
 </section>
 <script>
     $(document).ready(function(){
@@ -71,5 +74,31 @@
                     // scroller_idPrefix : 's_'
             }
         });
+    });
+    $('#ConfirmDialog').dialog({
+        resizable: false,
+        height:200,
+        width:400,
+        modal:true,
+        autoOpen: false,
+        modal:true,
+        buttons : {
+            "Yes" : function() {                
+                $(this).dialog('close');             
+                window.location.href = path;
+            },
+            "No" : function() {
+                $(this).dialog('close');             
+            }
+        },
+        close : function() {
+            $(this).dialog('close');
+        }
+    });    
+    $('a#delete').on('click', function(e) {
+        e.preventDefault();
+        path = $(e.target).attr('href');
+        console.log(path);
+        $('#ConfirmDialog').dialog('open');
     });
 </script>

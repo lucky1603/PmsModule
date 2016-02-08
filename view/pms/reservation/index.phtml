@@ -32,16 +32,20 @@
                 <td><?php echo $reservation['created_at']?></td>
                 <td><?php echo $reservation['modified_at']?></td>
                 <td><?php echo $reservation['statustext']?></td>
-                <td><a href="/pms/reservation/edit/<?php echo $reservation['id']?>">Edit</a>&nbsp;|&nbsp;<a href="/pms/reservation/delete/<?php echo $reservation['id']?>">Delete</a></td>
+                <td><a href="/pms/reservation/edit/<?php echo $reservation['id']?>">Edit</a>&nbsp;|&nbsp;<a id='delete' href="/pms/reservation/delete/<?php echo $reservation['id']?>">Delete</a></td>
             </tr>
         <?php endforeach;?>
             </tbody>
         </table>
     <?php endif;?>
-        <a href="/pms/reservation/edit">Add new</a>&nbsp;|&nbsp;<a href='/'>Home</a>&nbsp;|&nbsp;<a href="/pms/entity/fullList">Check Availability >>> </a> 
+    <a href="/pms/reservation/edit">Add new</a>&nbsp;|&nbsp;<a href='/'>Home</a>&nbsp;|&nbsp;<a href="/pms/entity/fullList">Check Availability >>> </a> 
+    <div hidden="true" id="ConfirmDialog" title="Delete Reservation?">
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0; font-size: 0.75em"></span>Reservation will be completely deleted and cannot be recovered. Are you sure?</p>
+    </div>
 </section>
 <script>
     $(document).ready(function(){
+       var path;
        $('.tablesorter').tablesorter({
             theme: 'metro-dark',
             showProcessing: true,
@@ -59,6 +63,32 @@
                     // scroll_idPrefix was removed in v2.18.0
                     // scroller_idPrefix : 's_'
             }
+        });                
+        $('#ConfirmDialog').dialog({
+            resizable: false,
+            height:200,
+            width:400,
+            modal:true,
+            autoOpen: false,
+            modal:true,
+            buttons : {
+                "Yes" : function() {                
+                    $(this).dialog('close');             
+                    window.location.href = path;
+                },
+                "No" : function() {
+                    $(this).dialog('close');             
+                }
+            },
+            close : function() {
+                $(this).dialog('close');
+            }
+        });    
+        $('a#delete').on('click', function(e) {
+            e.preventDefault();
+            path = $(e.target).attr('href');
+            console.log(path);
+            $('#ConfirmDialog').dialog('open');
         });
     });
 </script>

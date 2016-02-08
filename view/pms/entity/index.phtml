@@ -27,19 +27,20 @@
                         <td><?php echo $entity['guid']?></td>
                         <td><?php echo $entity['code']?></td>
                         <td><?php echo $entity['SValue']?></td>
-                        <td><a href="/pms/entity/edit/<?php echo $entity['id']?>">Edit</a> | <a href="/pms/entity/delete/<?php echo $entity['id'] ?>">Delete</a>                        
+                        <td><a href="/pms/entity/edit/<?php echo $entity['id']?>">Edit</a> | <a id='delete' href="/pms/entity/delete/<?php echo $entity['id'] ?>">Delete</a>                        
                     </tr>
                 <?php endforeach;?>
             </tbody>
         </table>
     <?php endif;?>
     <a href="/pms/entity/new">Add new</a> | <a href='/'>Home</a>
-    <div hidden="true" id="dialog-confirm" title="Delete entity?">
-        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0"></span>Entity will be completely deleted and cannot be recovered. Are you sure?</p>
+    <div hidden="true" id="ConfirmDialog" title="Delete entity?">
+        <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0; font-size: 0.75em"></span>Entity will be completely deleted and cannot be recovered. Are you sure?</p>
     </div>
 </section>
 <script>
 $(document).ready(function() {
+    var path;
     $('.tablesorter').tablesorter({
             theme: 'metro-dark',
             showProcessing: true,
@@ -57,30 +58,33 @@ $(document).ready(function() {
                     // scroll_idPrefix was removed in v2.18.0
                     // scroller_idPrefix : 's_'
             }
-        });
-    
-//    $('.delete').on('click', function(evt) {
-//        evt.preventDefault();
-//        console.log(evt.target);
-//        val address =  $(evt.target).attr('href').val();
-//        alert(address);
-//        
-////        $('#dialog-confirm').dialog({
-////            resizable: false,
-////            height: 250,
-////            width: 350,
-////            modal: true,
-////            buttons: {
-////                "Delete" : function() {
-////                    $(this).dialog("close");
-////                },
-////                Cancel: function() {
-////                    $(this).dialog('close');
-////                }
-////            }
-////       });
-//        
-//   });
+    });        
+    $('#ConfirmDialog').dialog({
+        resizable: false,
+        height:200,
+        width:400,
+        modal:true,
+        autoOpen: false,
+        modal:true,
+        buttons : {
+            "Yes" : function() {                
+                $(this).dialog('close');             
+                window.location.href = path;
+            },
+            "No" : function() {
+                $(this).dialog('close');             
+            }
+        },
+        close : function() {
+            $(this).dialog('close');
+        }
+    });    
+    $('a#delete').on('click', function(e) {
+        e.preventDefault();
+        path = $(e.target).attr('href');
+        console.log(path);
+        $('#ConfirmDialog').dialog('open');
+    });
 });
 </script>
 

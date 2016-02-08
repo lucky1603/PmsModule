@@ -1,5 +1,8 @@
 <section class="client-index">
     <?php 
+        $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
+//        $this->headLink()->appendStylesheet('//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css');
+        $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');
         $clients = $this->clients;
     ?>
     <h3>Clients List</h3>
@@ -26,11 +29,44 @@
                 <td><?php echo $client['country']?></td>
                 <td><?php echo $client['phone']?></td>
                 <td><?php echo $client['email']?></td>
-                <td><a href="/pms/client/edit/<?php echo $client['id']?>">Edit</a> | <a href="/pms/client/delete/<?php echo $client['id']?>">Delete</a></td>
+                <td><a id='edit' href="/pms/client/edit/<?php echo $client['id']?>">Edit</a> | <a id='delete' href="/pms/client/delete/<?php echo $client['id']?>">Delete</a></td>
             </tr>
             <?php endforeach;?>
         </table>
     <?php endif;?>
     <p> <a href="/pms/client/edit">Add new</a> | <a href="/">Home</a>
+    <div id="ConfirmDialog" style="font-size: 0.75em" hidden="true">
+        <p>Are you sure?</p>
+    </div>    
 </section>
+<script>
+$(document).ready(function() {
+    var path;
+    $('#ConfirmDialog').dialog({
+        resizable: false,
+        height:170,
+        modal:true,
+        autoOpen: false,
+        title: "Delete Client?",
+        buttons : {
+            "Yes" : function() {                
+                $(this).dialog('close');             
+                window.location.href = path;
+            },
+            "No" : function() {
+                $(this).dialog('close');             
+            }
+        },
+        close : function() {
+            $(this).dialog('close');
+        }
+    });
+    
+    $('a#delete').on('click', function(e) {
+        e.preventDefault();
+        path = $(e.target).attr('href');
+        $('#ConfirmDialog').dialog('open');
+    });
+});
+</script>
 
