@@ -27,45 +27,82 @@
     <?php else:?>
     <h2>Change object details</h2>
     <?php endif;?>
-    <dl>
-        <dt><?php echo $this->formLabel($form->get('entity_type_id')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('entity_type_id')) ?>
-            <?php echo $this->formElementErrors($form->get('entity_type_id'))?>
-        </dd>        
-        <dt><?php echo $this->formLabel($form->get('code')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('code')) ?>
-            <?php echo $this->formElementErrors($form->get('code'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('name')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('name')) ?>
-            <?php echo $this->formElementErrors($form->get('name'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('description')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('description')) ?>
-            <?php echo $this->formElementErrors($form->get('description'))?>
-        </dd>
-        <?php if(count($attributes) > 0): ?>
-            <?php foreach ($attributes as $attribute):?>
-                <dt><?php echo $this->formLabel($form->get($attribute->code)) ?></dt>
-                <dd>
-                    <?php echo $this->formElement($form->get($attribute->code)) ?>
-                    <?php echo $this->formElementErrors($form->get($attribute->code))?>
-                </dd>
-            <?php endforeach;?>
-        <?php endif;?>        
-        <dd>
-            <?php echo $this->formElement($form->get('submit')) ?><a href="/pms/entity-definition" class="ui-button">Back</a>
-        </dd>
-    </dl>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('entity_type_id'))?>
+        <div class="col-xs-4">
+            <?php echo $this->formElement($form->get('entity_type_id'))?>
+        </div>        
+    </div>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('code'))?>
+        <div class="col-xs-4">
+            <?php echo $this->formElement($form->get('code'))?>
+        </div>        
+    </div>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('name'))?>
+        <div class="col-xs-10">
+            <?php echo $this->formElement($form->get('name'))?>
+        </div>        
+    </div>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('description'))?>
+        <div class="col-xs-10">
+            <?php echo $this->formElement($form->get('description'))?>
+        </div>        
+    </div>
+    <?php if(count($attributes) > 0): ?>
+        <?php foreach ($attributes as $attribute):?>
+            <?php
+                switch($attribute->type) {
+                    case 'textarea':
+                        $width_class = 'col-xs-10';
+                        break;
+                    case 'text':
+                        $width_class = 'col-xs-10';
+                        break;
+                    case 'boolean':
+                        $width_class = 'col-xs-1';
+                        break;
+                    case 'integer':
+                        $width_class = 'col-xs-2';
+                        break;
+                    case 'double':
+                        $width_class = 'col-xs-2';
+                        break;       
+                    case 'select':
+                        $width_class = 'col-xs-4';
+                        break; 
+                    default:
+                        $width_class = 'col-xs-4';
+                        break;
+                }
+            ?>            
+            <div class="form-group">
+                <?php echo $this->formLabel($form->get($attribute->code))?>
+                <div class="<?php echo $width_class?>">
+                    <?php echo $this->formElement($form->get($attribute->code))?>
+                </div> 
+            </div>            
+        <?php endforeach;?>    
+    <?php endif;?>
+    
+    <div class="form-group">
+        <!--<label class="control-label col-xs-2" for="submit"></label>-->
+        <div class="col-xs-offset-2 col-xs-2">            
+            <?php echo $this->formElement($form->get('submit'))?>            
+        </div>        
+        <div class="col-xs-2">
+            <button id='back' class="form-control">Back</button>
+        </div>
+    </div>
     <?php echo $this->form()->closeTag() ?>
 </section>
 <script>
-$(function() {
-   $('a.ui-button').button();
+$(document).ready(function() {
+    $('#back').on('click', function(e) {
+        window.location.href = '/pms/entity-definition';
+    });
 });
 </script>
 

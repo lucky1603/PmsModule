@@ -12,10 +12,15 @@ class EntityDefinitionForm extends Form
         parent::__construct('EntityDefinitionForm');
         $this->setAttribute('method', 'post');
         $this->setAttribute('enctype', 'multipart/form-data');
+        $this->setAttribute('class', 'form-horizontal');
+        $this->setAttribute('role', 'form');
         
         // Initialize options field.
         $select = new \Zend\Form\Element\Select('entity_type_id');
         $select->setLabel('Entity type');
+        $select->setLabelAttributes([
+            'class' => 'control-label col-sm-2'
+        ]);
         $dbAdapter = $options['adapter'];
         $tableGateway = new TableGateway("entity_type", $dbAdapter, null, null);
         $s = new Select("entity_type");
@@ -26,6 +31,7 @@ class EntityDefinitionForm extends Form
             $options[$result['id']] = $result['name'];
         }
         $select->setValueOptions($options);
+        $select->setAttribute('class', 'form-control');
         $this->add($select);
         
         // Name.
@@ -33,10 +39,14 @@ class EntityDefinitionForm extends Form
             'name' => 'name',
             'attributes' => [
                 'type' => 'text',
-                'required' => 'required'
+                'required' => 'required',
+                'class' => 'form-control',
             ],
             'options' => [
-                'label' => 'Name' 
+                'label' => 'Name',
+                'label_attributes' => [
+                    'class' => 'control-label col-sm-2'
+                ]
             ]
         ]);
         
@@ -44,10 +54,14 @@ class EntityDefinitionForm extends Form
             'name' => 'code',
             'attributes' => [
                 'type' => 'text',
-                'required' => 'required'
+                'required' => 'required',
+                'class' => 'form-control',
             ],
             'options' => [
-                'label' => 'Code' 
+                'label' => 'Code',
+                'label_attributes' => [
+                    'class' => 'control-label col-sm-2'
+                ]
             ]
         ]);
         
@@ -57,9 +71,13 @@ class EntityDefinitionForm extends Form
                 'type' => 'textarea',
                 'COLS' => 40,
                 'ROWS' => 4,
+                'class' => 'form-control',
             ],
             'options' => [
-                'label' => 'Description' 
+                'label' => 'Description',
+                'label_attributes' => [
+                    'class' => 'control-label col-sm-2'
+                ]
             ]
         ]);
         
@@ -69,7 +87,7 @@ class EntityDefinitionForm extends Form
                 'type' => 'Submit', 
                 'value' => 'Save',
                 'id' => 'submitbutton',
-                'class' => 'ui-button',
+                'class' => 'ui-button form-control',
             ],
         ]);
         

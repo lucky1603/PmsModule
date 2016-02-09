@@ -53,6 +53,7 @@ class EntityDefinitionController extends AbstractActionController
                 if($attribute->type == 'boolean')
                 {
                     $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+                    $attElement->setUseHiddenElement(TRUE);
                 }
                 elseif ($attribute->type == 'text') {
                     $attElement = new \Zend\Form\Element\Textarea($attribute->code);
@@ -94,6 +95,12 @@ class EntityDefinitionController extends AbstractActionController
                 
                 $attElement->setLabel($attribute->label);
                 $attElement->setValue($attribute->getValue());
+                $attElement->setLabelAttributes(['class' => 'control-label col-sm-2']);
+                if($attribute->type != 'boolean')
+                {
+                    $attElement->setAttribute('class', 'form-control');
+                }
+                
                 $form->add($attElement);
             }
 
@@ -133,6 +140,7 @@ class EntityDefinitionController extends AbstractActionController
                 if($attribute->type == 'boolean')
                 {
                     $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+                    $attElement->setUseHiddenElement(TRUE);
                 }
                 elseif ($attribute->type == 'text') {
                     $attElement = new \Zend\Form\Element\Textarea($attribute->code);
@@ -172,6 +180,9 @@ class EntityDefinitionController extends AbstractActionController
                 
                 $attElement->setLabel($attribute->label);
                 $attElement->setValue($attribute->getValue());
+                $attElement->setLabelAttributes(['class' => 'control-label col-sm-2']);
+                $attElement->setAttribute('class', 'form-control');
+
                 $form->add($attElement);
             }
             
@@ -194,6 +205,7 @@ class EntityDefinitionController extends AbstractActionController
                 if($attribute->type == 'boolean')
                 {
                     $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+                    $attElement->setUseHiddenElement(TRUE);
                 }
                 elseif ($attribute->type == 'text') {
                     $attElement = new \Zend\Form\Element\Textarea($attribute->code);
@@ -233,6 +245,9 @@ class EntityDefinitionController extends AbstractActionController
                 
                 $attElement->setLabel($attribute->label);
                 $attElement->setValue($attribute->getValue());
+                $attElement->setLabelAttributes(['class' => 'control-label col-sm-2']);
+                $attElement->setAttribute('class', 'form-control');
+
                 $form->add($attElement);
             }
             $form->bind($entityDefinitionModel);
@@ -283,6 +298,7 @@ class EntityDefinitionController extends AbstractActionController
                 if($attribute->type == 'boolean')
                 {
                     $attElement = new \Zend\Form\Element\Checkbox($attribute->code);
+                    $attElement->setUseHiddenElement(TRUE);
                 }
                 elseif ($attribute->type == 'text') {
                     $attElement = new \Zend\Form\Element\Textarea($attribute->code);
@@ -334,6 +350,9 @@ class EntityDefinitionController extends AbstractActionController
 
                 $attElement->setLabel($attribute->label);
                 $attElement->setValue($attribute->getValue());
+                $attElement->setLabelAttributes(['class' => 'control-label col-sm-2']);
+                $attElement->setAttribute('class', 'form-control');
+
                 $form->add($attElement);
             }  
             
