@@ -11,15 +11,21 @@ class EntityTypeForm extends Form
         parent::__construct('EntityTypeForm');
         $this->setAttribute('method', 'post');
         $this->setAttribute('enctype', 'multipart/form-data');
+        $this->setAttribute('class', 'form-horizontal');
+        $this->setAttribute('role', 'form');
         
         $this->add([
             'name' => 'name',
             'attributes' => [
                 'type' => 'text',
-                'required' => 'required'
+                'required' => 'required',
+                'class' => 'form-control',
             ],
             'options' => [
                 'label' => 'Name',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ] 
             ],
         ]);
         
@@ -29,14 +35,22 @@ class EntityTypeForm extends Form
                 'type' => 'textarea',
                 'COLS' => 80,
                 'ROWS' => 4,
+                'class' => 'form-control'
             ],
             'options' => [
                 'label' => 'Decription',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
             ],
         ]);
         
         $select = new \Zend\Form\Element\Select('time_resolution');
         $select->setLabel("Time resolution");
+        $select->setAttribute('class', 'form-control');
+        $select->setLabelAttributes([
+            'class' => 'control-label col-xs-2',
+        ]);
         $select->setValueOptions([
             1 => "Hours",
             2 => "Days",
@@ -49,7 +63,7 @@ class EntityTypeForm extends Form
                 'type' => 'submit',
                 'value' => 'Save',
                 'id' => 'submitbutton',
-                'class' => 'ui-button',
+                'class' => 'ui-button form-control',
             ],
         ]);
     }

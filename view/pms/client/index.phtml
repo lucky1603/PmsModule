@@ -1,43 +1,70 @@
 <section class="client-index">
     <?php 
         $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
-//        $this->headLink()->appendStylesheet('//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css');
         $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');
+        $this->headLink()->appendStylesheet('/tablesorter-master/css/theme.metro-dark.css');
+        $this->headScript()->appendFile('/tablesorter-master/js/jquery.tablesorter.js');
+        $this->headScript()->appendFile('/tablesorter-master/js/jquery.tablesorter.widgets.js');
+        $this->headScript()->appendFile('/tablesorter-master/js/widgets/widget-scroller.js');
+        
         $clients = $this->clients;
     ?>
     <h3>Clients List</h3>
     <?php if(count($clients) == 0):?>
         <p class="error">Client list is empty!
     <?php else:?>
-        <table class="table-responsive">
-            <tr>
-                <th>Name</th>
-                <th>Last Name</th>
-                <th>Address</th>
-                <th>City</th>
-                <th>Country</th>
-                <th>Phone</th>
-                <th>E Mail</th>
-                <th>Action</th>
-            </tr>
-            <?php foreach($clients as $client):?>
-            <tr>
-                <td><?php echo $client['first_name']?></td>
-                <td><?php echo $client['last_name']?></td>
-                <td><?php echo $client['address1']?></td>
-                <td><?php echo $client['city']?></td>
-                <td><?php echo $client['country']?></td>
-                <td><?php echo $client['phone']?></td>
-                <td><?php echo $client['email']?></td>
-                <td><a id='edit' href="/pms/client/edit/<?php echo $client['id']?>">Edit</a> | <a id='delete' href="/pms/client/delete/<?php echo $client['id']?>">Delete</a></td>
-            </tr>
-            <?php endforeach;?>
+        <table class="table tablesorter">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Last Name</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>Country</th>
+                    <th>Phone</th>
+                    <th>E Mail</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach($clients as $client):?>
+                <tr>
+                    <td><?php echo $client['first_name']?></td>
+                    <td><?php echo $client['last_name']?></td>
+                    <td><?php echo $client['address1']?></td>
+                    <td><?php echo $client['city']?></td>
+                    <td><?php echo $client['country']?></td>
+                    <td><?php echo $client['phone']?></td>
+                    <td><?php echo $client['email']?></td>
+                    <td><a id='edit' href="/pms/client/edit/<?php echo $client['id']?>">Edit</a> | <a id='delete' href="/pms/client/delete/<?php echo $client['id']?>">Delete</a></td>
+                </tr>
+                <?php endforeach;?>
+            </tbody>            
         </table>
     <?php endif;?>
     <p> <a href="/pms/client/edit">Add new</a> | <a href="/">Home</a>
     <div id="ConfirmDialog" style="font-size: 0.75em" hidden="true">
         <p>Are you sure?</p>
     </div>    
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title">Delete Client Entry</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Client will be completely deleted and cannot be recovered. Are you sure?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-confirm" data-dismiss="modal">Yes</button>
+                    <button type="button" class="btn btn-cancel" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </section>
 <script>
 $(document).ready(function() {
@@ -65,8 +92,33 @@ $(document).ready(function() {
     $('a#delete').on('click', function(e) {
         e.preventDefault();
         path = $(e.target).attr('href');
-        $('#ConfirmDialog').dialog('open');
+        //$('#ConfirmDialog').dialog('open');
+        $('#myModal').modal('show');
     });
+    
+    $('.btn-confirm').on('click', function(e) {        
+        alert('confirmed');
+        window.location.href = path;
+    });
+    
+    $('.tablesorter').tablesorter({
+        theme: 'metro-dark',
+        showProcessing: true,
+        headerTemplate : '{content} {icon}',
+        widgets: [ 'columns', 'stickyHeaders', 'scroller' ],
+        widgetOptions : {
+                scroller_height : 400,
+                // scroll tbody to top after sorting
+                scroller_upAfterSort: true,
+                // pop table header into view while scrolling up the page
+                scroller_jumpToHeader: true,
+                // In tablesorter v2.19.0 the scroll bar width is auto-detected
+                // add a value here to override the auto-detected setting
+                scroller_barWidth : null
+                // scroll_idPrefix was removed in v2.18.0
+                // scroller_idPrefix : 's_'
+        }
+    });        
 });
 </script>
 

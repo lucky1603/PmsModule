@@ -6,6 +6,8 @@
         $id = $this->id;
         $form = $this->form;
         $model = $this->model;
+        $type = $this->type;
+        $typeId = $type->id;
         if($id)
         {
             $id = (int)$id;
@@ -32,7 +34,7 @@
                 }
                 else 
                 {
-                    echo "No Model!";
+                    echo json_encode("No Model!");
                 }            
             ?>;
             initEntries(model);
@@ -86,10 +88,20 @@
         </dd>                
         <dd>
             <?php echo $this->formElement($form->get('submit')) ?>
+            <button id='back'>Back</button>
         </dd>
     </dl>
     <?php echo $this->form()->closeTag() ?>
 </section>
-
+<script>
+$(document).ready(function() {
+    $('button#back').on('click', function(e) {
+        e.preventDefault();
+        var loc = '/pms/entity-type/edit/' + <?php echo $typeId ?>;
+        console.log(loc);
+        window.location.href = loc;
+    });
+});
+</script>
 
 

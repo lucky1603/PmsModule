@@ -28,6 +28,7 @@
     <?php else:?>
     <h2>Change '<?php echo $model->name?>' details</h2>
     <?php endif;?>
+    <!--
     <div class="general-data">
     <dl>
         <dt><?php echo $this->formLabel($form->get('name')) ?></dt>
@@ -50,6 +51,67 @@
         </dd>
     </dl>
     </div>
+    -->
+    
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('name'))?>
+        <div class="col-xs-5">
+            <?php echo $this->formElement($form->get('name'))?>
+        </div> 
+    </div>
+    
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('description'))?>
+        <div class="col-xs-10">
+            <?php echo $this->formElement($form->get('description'))?>
+        </div> 
+    </div>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('time_resolution'))?>
+        <div class="col-xs-2">
+            <?php echo $this->formElement($form->get('time_resolution'))?>
+        </div> 
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-2" for="myTable">Parameters</label>
+        <div class="col-xs-10">
+            <table id='myTable' class='table'>
+                <tr>
+                    <th>Parameter</th>
+                    <th>Accessibility</th>
+                    <th>Type</th>
+                    <th>Action</th>
+                </tr>
+                <?php foreach($model->attributes as $attribute):?>
+                <tr>
+                    <td><?php echo $attribute->label?></td>
+                    <td><?php 
+                        $values = ['GLOBAL', 'DEFINITION', 'OBJECT'];
+                        echo $values[$attribute->scope];
+                    ?></td>
+                    <td><?php echo $attribute->type?></td>
+                    <td>
+                        <a href='/pms/entity-type/editAttribute/<?php echo $attribute->internal_id?>'>Edit</a> 
+                        | 
+                        <a href='/pms/entity-type/deleteAttribute/<?php echo $attribute->internal_id?>'>Delete</a>
+                    </td>
+                </tr>
+                <?php endforeach;?>
+            </table>  
+            <!-- <a href='/pms/entity-type/editAttribute' style='margin-top: 0px;margin-bottom: 10px;'>Add new</a> -->
+        </div>
+    <div class="form-group">
+        <div class="col-xs-offset-2 col-xs-2">
+            <?php echo $this->formElement($form->get('submit'))?>
+        </div> 
+       <div class="col-xs-2">
+            <button id="back" class="form-control">Back</button>
+       </div> 
+        <div class='col-xs-2'>
+            <button id='new' class='form-control'>New Parameter</button>
+        </div>
+    </div>
+    <!--
     <div class='attribute-data'>
         <h3>Parameters</h3>
         <?php if (isset($model->attributes)):?>        
@@ -82,10 +144,14 @@
     </div>
     <?php echo $this->form()->closeTag() ?>
     <a href='/pms/entity-type/editAttribute'>Add new</a>
+    -->
 </section>
 <script>
-$(function() {
-    $('.ui-button').button();
+$(document).ready(function() {
+    $('button#new').on('click', function(e) {
+        e.preventDefault(); 
+        window.location.href='/pms/entity-type/editAttribute';
+    });
 });
 </script>
 

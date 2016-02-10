@@ -192,6 +192,7 @@ class EntityTypeController extends AbstractActionController
                 'form' => $form,
                 'id' => $id,
                 'model' => $aModel,
+                'type' => $model,
             ]);
         }
         else 
@@ -199,6 +200,7 @@ class EntityTypeController extends AbstractActionController
             // add new
             return new ViewModel([
                 'form' => $form,
+                'type' => $model,
             ]);
         }
     }
