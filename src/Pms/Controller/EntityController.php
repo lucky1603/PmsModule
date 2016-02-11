@@ -465,6 +465,10 @@ class EntityController extends AbstractActionController
                 }
 
                 $attElement->setLabel($attribute->label);
+                $attElement->setLabelAttributes([
+                    'class' => 'control-label col-xs-2',
+                ]);
+                $attElement->setAttribute('class', 'form-control');
                 $attElement->setValue($attribute->getValue());
                 $form->add($attElement);
             }
@@ -785,6 +789,10 @@ class EntityController extends AbstractActionController
                 }
 
                 $attElement->setLabel($attribute->label);
+                $attElement->setLabelAttributes([
+                    'class' => 'control-label col-xs-2',
+                ]);
+                $attElement->setAttribute('class', 'form-control');
                 $attElement->setValue($attribute->getValue());
                 $form->add($attElement);
             }
@@ -794,6 +802,7 @@ class EntityController extends AbstractActionController
                 'model' => $model,
                 'attributes' => $attributes,
             ]);
+                       
             $viewModel->setTemplate('/pms/entity/edit');
             return $viewModel;
         }

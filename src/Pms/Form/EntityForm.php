@@ -12,12 +12,18 @@ class EntityForm extends Form
         parent::__construct('EntityForm');
         $this->setAttribute('method', 'post');
         $this->setAttribute('enctype', 'multipart/form-data');
-        
-        // Initialize options field.
-        $select = new \Zend\Form\Element\Select('definition_id');
-        $select->setLabel('Select type');
+        $this->setAttribute('class', 'form-horizontal');
+        $this->setAttribute('role', 'form');
+
         $dbAdapter = $options['adapter'];
         $sql = new Sql($dbAdapter);
+        
+//         Initialize options field.
+        $select = new \Zend\Form\Element\Select('definition_id');
+        $select->setLabel('Select type');
+        $select->setLabelAttributes([
+            'class' => 'control-label col-xs-2',
+        ]);
         $sqlselect = $sql->select();
         $sqlselect->from('entity_definition')
                 ->columns(['id', 'code']);
@@ -30,21 +36,32 @@ class EntityForm extends Form
         }
         $select->setValueOptions($options);
         $select->setAttribute('id', 'definition_id');
+        $select->setAttribute('class', 'form-control');
+        $select->setAttribute('disabled', 'true');
         $this->add($select);
+                
+
         
         $this->add([
             'name' => 'guid',
             'attributes' => [
                 'type' => 'text',
-                'required' => 'required'
+                'required' => 'required',
+                'class' => 'form-control',
             ],
             'options' => [
                 'label' => 'Number',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
             ],
         ]);
         
         $status = new \Zend\Form\Element\Select('status_id');
         $status->setLabel('Set status');
+        $status->setLabelAttributes([
+            'class' => 'control-label col-xs-2',
+        ]);
         $sqlselect1 = $sql->select();
         $sqlselect1->from('status')
                 ->columns(['id', 'value']);
@@ -57,6 +74,7 @@ class EntityForm extends Form
         }
         $status->setValueOptions($options);
         $status->setAttribute('id', 'status_id');
+        $status->setAttribute('class', 'form-control');
         $this->add($status);
         
         $this->add([
@@ -64,9 +82,13 @@ class EntityForm extends Form
             'attributes' => [
                 'type' => 'text',
                 'required' => 'required',
+                'class' => 'form-control',
             ],
             'options' => [
                 'label' => 'Status',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
             ],
         ]);
         
@@ -76,7 +98,7 @@ class EntityForm extends Form
                 'type' => 'submit',
                 'value' => 'Save',
                 'id' => 'submitbutton',
-                'class' => 'ui-button',
+                'class' => 'form-control',
             ],
         ]);
     }

@@ -5,7 +5,8 @@
         $id = $this->id;        
     ?>
     <h3><?php echo $entityDefinitionModel->code?> parameters</h3>
-    <table class="table" style="margin-left: 0px;padding-left: 0px">        
+    <!-- <table class="table" style="margin-left: 0px;padding-left: 0px"> -->
+    <table class="table" id="att-table">
         <?php foreach($attributes as $attribute):?>
         <tr>
             <td><?php echo $attribute->label?></td>

@@ -12,16 +12,22 @@ class ClientForm extends Form
         $this->setAttribute('method', 'post');
         $this->setAttribute('enctype', 'multipart/form-data');
         $adapter = $options['adapter'];
+        $this->setAttribute('class', 'form-horizontal');
+        $this->setAttribute('role' , 'form');
         
         // First name.
         $this->add([
            'name' => 'first_name',
            'attributes' => [
                'type' => 'text',
+               'class' => 'form-control',
 //               'required' => 'required',
            ],
            'options' => [
-               'label' => 'First Name'
+               'label' => 'First Name',
+               'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
            ]
         ]);
         
@@ -30,10 +36,14 @@ class ClientForm extends Form
            'name' => 'last_name',
            'attributes' => [
                'type' => 'text',
+               'class' => 'form-control',
 //               'required' => 'required',
            ],
            'options' => [
-               'label' => 'Last Name'
+               'label' => 'Last Name',
+               'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+               ]
            ]
         ]);
         
@@ -45,9 +55,13 @@ class ClientForm extends Form
                'required' => 'required',
                'ROWS' => 4,
                'COLS' => 40,
+               'class' => 'form-control',
            ],
            'options' => [
-               'label' => 'Addres1'
+               'label' => 'Addres1',
+               'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+               ]
            ]
         ]);
         
@@ -58,9 +72,13 @@ class ClientForm extends Form
                'type' => 'textarea',               
                'ROWS' => 4,
                'COLS' => 40,
+               'class' => 'form-control',
            ],
            'options' => [
-               'label' => 'Addres2'
+               'label' => 'Addres2',
+               'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+               ]
            ]
         ]);
         
@@ -69,10 +87,14 @@ class ClientForm extends Form
            'name' => 'city',
            'attributes' => [
                'type' => 'text',
+               'class' => 'form-control',
 //               'required' => 'required',
            ],
            'options' => [
-               'label' => 'City'
+               'label' => 'City',
+               'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+               ]
            ]
         ]);
         
@@ -81,10 +103,14 @@ class ClientForm extends Form
            'name' => 'zipcode',
            'attributes' => [
                'type' => 'text',
+               'class' => 'form-control',
 //               'required' => 'required',
            ],
            'options' => [
-               'label' => 'Zip Code'
+               'label' => 'Zip Code',
+               'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+               ]
            ]
         ]);
         
@@ -93,10 +119,14 @@ class ClientForm extends Form
            'name' => 'country',
            'attributes' => [
                'type' => 'text',
+               'class' => 'form-control',
 //               'required' => 'required',
            ],
            'options' => [
-               'label' => 'Country'
+               'label' => 'Country',
+               'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+               ]
            ]
         ]);
         
@@ -105,10 +135,14 @@ class ClientForm extends Form
            'name' => 'phone',
            'attributes' => [
                'type' => 'text',
+               'class' => 'form-control',
 //               'required' => 'required',
            ],
            'options' => [
-               'label' => 'Phone'
+               'label' => 'Phone',
+               'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+               ]
            ]
         ]);
         
@@ -117,9 +151,13 @@ class ClientForm extends Form
            'name' => 'mobile',
            'attributes' => [
                'type' => 'text',
+               'class' => 'form-control',
            ],
            'options' => [
-               'label' => 'Mobile'
+               'label' => 'Mobile',
+               'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+               ]
            ]
         ]);
         
@@ -128,9 +166,13 @@ class ClientForm extends Form
            'name' => 'fax',
            'attributes' => [
                'type' => 'text',
+               'class' => 'form-control',
            ],
            'options' => [
-               'label' => 'Fax'
+               'label' => 'Fax',
+               'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+               ]
            ]
         ]);
         
@@ -140,10 +182,14 @@ class ClientForm extends Form
            'attributes' => [
                'type' => 'text',
                'size' => 40,
+               'class' => 'form-control',
 //               'required' => 'required',
            ],
            'options' => [
-               'label' => 'E-Mail'
+               'label' => 'E-Mail',
+               'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+               ]
            ]
         ]);
         
@@ -160,7 +206,11 @@ class ClientForm extends Form
             $options[$row['id']] = $row['title'];
         }
         $title->setValueOptions($options);
+        $title->setAttribute('class', 'form-control');
         $title->setLabel('Title');
+        $title->setLabelAttributes([
+            'class' => 'control-label col-xs-2',
+        ]);
         $this->add($title);
         
         // Submit
@@ -170,7 +220,7 @@ class ClientForm extends Form
                'type' => 'submit',
 //               'required' => 'required',
                'value' => 'Save',
-               'class' => 'ui-button',
+               'class' => 'ui-button form-control',
            ],
            'options' => [
                'label' => 'Save'

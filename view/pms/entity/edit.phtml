@@ -3,90 +3,106 @@
         $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
         $this->headScript()->appendFile('/js/jquery-2.1.4.js');        
         $this->headScript()->appendFile('/js/jquery-ui/jquery-ui.js');          
-        $this->headScript()->appendFile('/js/helper.js');        
         
         $form = $this->form;
         $id = $this->id;
         $attributes = $this->attributes;
+        $definitionId = $form->get('definition_id')->getValue();        
         
         if(isset($this->id))
         {
-                $form->setAttribute('action', $this->url('pms/entity', [
-                    'action' => 'process',
-                    'id' => $this->id,
-                ]));
+            $form->setAttribute('action', $this->url('pms/entity', [
+                'action' => 'process',
+                'id' => $this->id,
+            ]));
         }
         else 
         {
-                $form->setAttribute('action', $this->url('pms/entity', [
-                    'action' => 'process',
-                ]));
+            $form->setAttribute('action', $this->url('pms/entity', [
+                'action' => 'process',
+            ]));
         }
         
         echo $this->form()->openTag($form);
     ?>    
-    <div id="a">
-    <div id="b">
     <h3>Object Details</h3>
-    <dl>        
-        <dt><?php echo $this->formLabel($form->get('definition_id')) ?></dt>
-        <dd>
+    <div class='form-group'>
+        <?php echo $this->formLabel($form->get('definition_id')) ?>
+        <div class='col-xs-4'>
             <?php echo $this->formElement($form->get('definition_id'));?>
-            <?php echo $this->formElementErrors($form->get('definition_id'));?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('guid')) ?></dt>
-        <dd>
+        </div>
+    </div>
+    <div class='form-group'>
+        <?php echo $this->formLabel($form->get('guid')) ?>
+        <div class='col-xs-4'>
             <?php echo $this->formElement($form->get('guid'));?>
-            <?php echo $this->formElementErrors($form->get('guid'));?>
-        </dd>
-<!--        <dt><?php echo $this->formLabel($form->get('status')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('status'));?>
-            <?php echo $this->formElementErrors($form->get('status'));?>
-        </dd>-->
-        <dt><?php echo $this->formLabel($form->get('status_id')) ?></dt>
-        <dd>
+        </div>
+    </div>
+    <div class='form-group'>
+        <?php echo $this->formLabel($form->get('status_id')) ?>
+        <div class='col-xs-4'>
             <?php echo $this->formElement($form->get('status_id'));?>
-            <?php echo $this->formElementErrors($form->get('status_id'));?>
-        </dd>
-        <?php if(isset($attributes)):?>
-            <?php foreach($attributes as $attribute):?>
-                <dt><?php echo $this->formLabel($form->get($attribute->code)) ?></dt>
-                <dd>
-                    <?php echo $this->formElement($form->get($attribute->code));?>
-                    <?php echo $this->formElementErrors($form->get($attribute->code));?>
-                </dd>
-            <?php endforeach;?>
-        <?php endif;?>
-        <dd>
-            <?php echo $this->formElement($form->get('submit'));?><a href="/pms/entity" class="ui-button">Back</a>
-        </dd>
-    </dl>
+        </div>
+    </div>
+    <?php if(count($attributes) > 0): ?>
+        <?php foreach ($attributes as $attribute):?>
+            <?php
+                switch($attribute->type) {
+                    case 'textarea':
+                        $width_class = 'col-xs-10';
+                        break;
+                    case 'text':
+                        $width_class = 'col-xs-10';
+                        break;
+                    case 'boolean':
+                        $width_class = 'col-xs-1';
+                        break;
+                    case 'integer':
+                        $width_class = 'col-xs-2';
+                        break;
+                    case 'double':
+                        $width_class = 'col-xs-2';
+                        break;       
+                    case 'select':
+                        $width_class = 'col-xs-4';
+                        break; 
+                    default:
+                        $width_class = 'col-xs-4';
+                        break;
+                }
+            ?>            
+            <div class="form-group">
+                <?php echo $this->formLabel($form->get($attribute->code))?>
+                <div class="<?php echo $width_class?>">
+                    <?php echo $this->formElement($form->get($attribute->code))?>
+                </div> 
+            </div>            
+        <?php endforeach;?>    
+    <?php endif;?>    
+    <div class="form-group">
+        <label class="control-label col-xs-2" for="att-table">Parameters</label>
+        <div class="col-xs-10"  id="attribute-content"></div>
+    </div>
+    <div class='form-group'>
+        <div class='col-xs-offset-2 col-xs-2'>
+            <?php echo $this->formElement($form->get('submit'));?>
+        </div>
+        <div class='col-xs-2'>
+            <button id='back' class='form-control'>Back</button>
+        </div>
+    </div>
+    
     <?php echo $this->form()->closeTag();?>
-    </div>
-    <div class="attribute-content" id="c"></div>   
-    </div>
 </section>
-<style>
-    div#a {
-        display: block;
-        height: 600px;
-        /*border: 1px solid red;*/
-    }
-    div#b {
-        display: inline-block;
-        width: 200px;
-        height:600px;
-        /*border: 1px solid green;*/
-        vertical-align: top;
-    }
-    div#c {
-        display: inline-block;
-        height: 500px;  
-        width: 300px;
-        border-left:  1px solid #bbbbbb;
-        vertical-align: top;
-        margin-top: 75px;
-        /*padding-left: 5px;*/
-    }
-</style>
+<script>
+$(document).ready(function(){
+    $('button#back').on('click', function(e) {
+        window.location.href = '/pms/entity';
+    });
+    var id = <?php echo $definitionId;?>;
+    $.get('/pms/entity-definition/preview/' + id, function(data) {
+        var table = $(data).find('table');
+         $('div#attribute-content').html(table); 
+     });
+});
+</script>
