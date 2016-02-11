@@ -21,43 +21,73 @@
                 
         echo $this->form()->openTag($form);
     ?>
-    <h2>Room Reservation Details</h2>
-    <dl>
-        <dt><?php echo $this->formLabel($form->get('date_from'))?><dt>
-        <dd>
+    <h2 class='page-header'>Room Reservation Details</h2>
+    <div class='form-group'>
+        <?php echo $this->formLabel($form->get('date_from'))?>
+        <div class='col-xs-4'>
             <?php echo $this->formElement($form->get('date_from'))?>
-            <?php echo $this->formElementErrors($form->get('date_from'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('date_to'))?><dt>
-        <dd>
+        </div>
+    </div>
+    
+    <div class='form-group'>
+        <?php echo $this->formLabel($form->get('date_to'))?>
+        <div class='col-xs-4'>
             <?php echo $this->formElement($form->get('date_to'))?>
-            <?php echo $this->formElementErrors($form->get('date_to'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('entity_definition_id'))?><dt>
-        <dd>
+        </div>
+    </div>
+    
+    <div class='form-group'>
+        <?php echo $this->formLabel($form->get('entity_definition_id'))?>
+        <div class='col-xs-4'>
             <?php echo $this->formElement($form->get('entity_definition_id'))?>
-            <?php echo $this->formElementErrors($form->get('entity_definition_id'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('entity_id'))?><dt>
-        <dd>
-            <?php echo $this->formElement($form->get('entity_id'))?>            
-            <?php echo $this->formElementErrors($form->get('entity_id'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('guest_id'))?><dt>
-        <dd>
-            <?php echo $this->formElement($form->get('guest_id'))?>
-            <?php echo $this->formElementErrors($form->get('guest_id'))?>
-            <a href="" id="button" class="ui-button">New</a>
-        </dd>
-        <dd>
+        </div>
+    </div>
+    
+    <div class='form-group'>
+        <?php echo $this->formLabel($form->get('entity_id'))?>
+        <div class='col-xs-4'>
+            <?php echo $this->formElement($form->get('entity_id'))?>
+        </div>
+    </div>
+    
+    <div class='form-group'>
+        <?php echo $this->formLabel($form->get('guest_id'))?>
+        <div class='col-xs-4'>
+            <?php echo $this->formElement($form->get('guest_id'))?>            
+        </div>
+        <div class='col-xs-2'>
+            <button class='form-control' id='new'>New</button>
+        </div>
+    </div>
+    
+    <div class='form-group'>
+        <div class='col-xs-offset-2 col-xs-2'>
             <?php echo $this->formElement($form->get('submit'))?>
-        </dd>
-    </dl>
+        </div>
+        <div class='col-xs-2'>
+            <button class='form-control' id='back'>Back</button>
+        </div>
+    </div>
     <?php echo $this->form()->closeTag()?>    
-    <div id="dialog" title="New Client"></div>
+    
+    <div id="myModalDialog" class='modal fade' role='dialog'>
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal'>&times;</button>
+                    <h4 class='modal-title'>New Client</h4>
+                </div>
+                <div class='modal-body'></div>
+                <div class='modal-footer'>
+                    <button type="button" class="btn btn-save" data-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>            
+        </div>
+    </div>
     <script>
-    $(function() {
-        var dialog, form;
+    $(document).ready(function() {
+        var formData;
         
         var fillRooms = function() {
             var code = $('#entity_definition_id option:selected').val();
@@ -102,39 +132,33 @@
         $('#entity_definition_id').on('change', function(evt) {
             fillRooms();
         });
-        
-        dialog = $('#dialog').dialog({
-                autoOpen: false,
-                modal: true,
-                width: 550, 
-                height: 630,
-                title: "New Guest"
-        });
-            
-        $('#button').on('click', function(e) {
-            var formData, fields;
+                                    
+        $('#new').on('click', function(e) {
+            var fields;
             e.preventDefault();
+            console.log("clicked new");
             $.get('/pms/client/edit', function(data) {
                 formData = $(data).find('form');    
-                //$(formData).attr('action', '/pms/client/processFromEntity');
-                $(formData).on('submit', function(evt) {
-                    evt.preventDefault();
-                    fields = $(formData).serialize();                    
-                    dialog.dialog('close');   
-                    console.log(fields);
-                    $.post('/pms/ajax/writeNewClient', fields, function(mydata) {     
-                        var client = mydata.client;
-                        var id = client.id;
-                        var name = client.first_name + ' ' + client.last_name;
-                        $(document).find('#guest_id').append('<option value="' + id + '">' + name + '</option>');
-                        $(document).find('#guest_id').val(id);
-                    }, "json");                            
-                });
-                $(formData).find('.ui-button').button();
-                $(dialog).html(formData);                
-            });   
-                                              
-            dialog.dialog('open');                                                 
+                $(formData).find('div.buttons').attr('hidden', 'true');
+                $('div.modal-body').html(formData);
+                $("#myModalDialog").find('.modal-body').html(formData);
+                $('#myModalDialog').modal('show');
+            });
+        });                                                 
+       
+        
+        $('.btn-save').on('click', function(e) {
+            e.preventDefault();
+            fields = $(formData).serialize();
+            console.log(fields);
+            $.post('/pms/ajax/writeNewClient', fields, function(mydata) {                                                
+                var client = mydata.client;
+                var id = client.id;
+                var name = client.first_name + ' ' + client.last_name;
+                $(document).find('#client_id').append('<option value="' + id + '">' + name + '</option>');
+                $(document).find('#client_id').val(id);
+                fill();
+            }, "json");    
         });
     });
     </script>

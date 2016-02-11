@@ -16,6 +16,8 @@ class ReservationEntityForm extends Form
        parent::__construct(isset($name) ? $name : 'ReservationEntity');
        $this->setAttribute('method', 'post');
        $this->setAttribute('enctype', 'multipart/form-data');
+       $this->setAttribute('class', 'form-horizontal');
+       $this->setAttribute('role', 'form');
        
        $dbAdapter = isset($options['adapter']) ? $options['adapter'] : null;
        
@@ -26,10 +28,13 @@ class ReservationEntityForm extends Form
                'type' => 'text',
                'required' => 'required',
                'id' => 'date_from',
-               'class' => 'reservation-date'
+               'class' => 'reservation-date form-control'
            ],
            'options' => [
                'label' => "From",
+               'label_attributes' => [
+                   'class' => 'control-label col-xs-2',
+               ]
            ],
        ]);
        
@@ -40,17 +45,24 @@ class ReservationEntityForm extends Form
                'type' => 'text',
                'required' => 'required',
                'id' => 'date_to',
-               'class' => 'reservation-date'
+               'class' => 'reservation-date form-control'
            ],
            'options' => [
                'label' => "To",
+               'label_attributes' => [
+                   'class' => 'control-label col-xs-2',
+               ]
            ],
        ]);
                               
        // Guest (predlozi se nosilac rezervacije)
        $guest_id = new \Zend\Form\Element\Select('guest_id');
        $guest_id->setLabel('Guest');
+       $guest_id->setLabelAttributes([
+           'class' => 'control-label col-xs-2',
+       ]);
        $guest_id->setAttribute('id', 'guest_id');
+       $guest_id->setAttribute('class', 'form-control');
        if($dbAdapter)
        {
            $sql = new Sql($dbAdapter);
@@ -70,7 +82,11 @@ class ReservationEntityForm extends Form
        // definicija (izabrati definiciju)
        $tip = new \Zend\Form\Element\Select('entity_definition_id');
        $tip->setLabel('Entity Definition');
+       $tip->setLabelAttributes([
+           'class' => 'control-label col-xs-2',
+       ]);
        $tip->setAttribute('id', 'entity_definition_id');
+       $tip->setAttribute('class', 'form-control');
        if($dbAdapter)
        {
            $sql = new Sql($dbAdapter);
@@ -91,7 +107,11 @@ class ReservationEntityForm extends Form
        // Broj (za postojeci tip i datume rezervacije, proveriti raspolozivost resursa
        $guid = new \Zend\Form\Element\Select('entity_id');
        $guid->setLabel('Entity Number');
+       $guid->setLabelAttributes([
+           'class' => 'control-label col-xs-2',
+       ]);
        $guid->setAttribute('id', 'entity_id');
+       $guid->setAttribute('class', 'form-control');
        if($dbAdapter)
        {
            $sql = new Sql($dbAdapter);
@@ -113,7 +133,8 @@ class ReservationEntityForm extends Form
            'attributes' => [
                'type' => 'submit',
                'value' => 'Save',
-               'id' => 'submit'
+               'id' => 'submit',
+               'class' => 'form-control',
            ],
        ]);     
     }

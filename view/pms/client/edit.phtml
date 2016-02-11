@@ -20,21 +20,22 @@
         echo $this->form()->openTag($form);
         $this->headTitle("Client Details");
     ?>
+    <div class='entry-content'>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('title_id'))?>
-        <div class="col-xs-1">
+        <div class="col-xs-2">
             <?php echo $this->formElement($form->get('title_id'))?>
         </div>
     </div>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('first_name'))?>
-        <div class="col-xs-3">
+        <div class="col-xs-10">
             <?php echo $this->formElement($form->get('first_name'))?>
         </div>
     </div>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('last_name'))?>
-        <div class="col-xs-3">
+        <div class="col-xs-10">
             <?php echo $this->formElement($form->get('last_name'))?>
         </div>
     </div>
@@ -52,48 +53,51 @@
     </div>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('city'))?>
-        <div class="col-xs-3">
+        <div class="col-xs-10">
             <?php echo $this->formElement($form->get('city'))?>
         </div>
     </div>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('zipcode'))?>
-        <div class="col-xs-3">
+        <div class="col-xs-10">
             <?php echo $this->formElement($form->get('zipcode'))?>
         </div>
     </div>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('country'))?>
-        <div class="col-xs-3">
+        <div class="col-xs-10">
             <?php echo  $this->formElement($form->get('country'))?>
         </div>
     </div>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('phone'))?>
-        <div class="col-xs-3">
+        <div class="col-xs-10">
             <?php echo $this->formElement($form->get('phone'))?>
         </div>
     </div>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('mobile'))?>
-        <div class="col-xs-3">
+        <div class="col-xs-10">
             <?php echo $this->formElement($form->get('mobile'))?>
         </div>
     </div>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('email'))?>
-        <div class="col-xs-3">
+        <div class="col-xs-10">
             <?php echo $this->formElement($form->get('email'))?>
         </div>
     </div>
-    <div class="form-group">        
-        <div class="col-xs-offset-2 col-xs-2">
-            <?php echo $this->formElement($form->get('submit'))?>
-        </div>
-        <div class="col-xs-2">
-            <button id='back' class='form-control'>Back</button>
-        </div>
-    </div>        
+    </div>    
+    <div class='buttons'>
+        <div class="form-group">        
+            <div class="col-xs-offset-2 col-xs-2">
+                <?php echo $this->formElement($form->get('submit'))?>
+            </div>
+            <div class="col-xs-2">
+                <button id='back' class='form-control'>Back</button>
+            </div>
+        </div>  
+    </div>
     <?php echo $this->form()->closeTag()?>
 </section>
 <script>

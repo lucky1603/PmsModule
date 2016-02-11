@@ -92,12 +92,10 @@ $(document).ready(function() {
     $('a#delete').on('click', function(e) {
         e.preventDefault();
         path = $(e.target).attr('href');
-        //$('#ConfirmDialog').dialog('open');
         $('#myModal').modal('show');
     });
     
     $('.btn-confirm').on('click', function(e) {        
-        alert('confirmed');
         window.location.href = path;
     });
     
