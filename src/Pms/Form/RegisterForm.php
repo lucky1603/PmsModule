@@ -25,10 +25,15 @@ class RegisterForm extends Form
         parent::__construct('Register');
         $this->setAttribute('method', 'post');
         $this->setAttribute('enctype', 'multipart/form-data');
+        $this->setAttribute('class', 'form-horizontal');
+        $this->setAttribute('role', 'form');
               
         // Initialize options field.
         $select = new \Zend\Form\Element\Select('role_id');
         $select->setLabel('Select Role');
+        $select->setLabelAttributes([
+            'class' => 'control-label col-xs-2',
+        ]);
         $dbAdapter = $options['adapter'];
         $tableGateway = new TableGateway("role", $dbAdapter, null, null);
         $s = new Select("role");
@@ -39,16 +44,21 @@ class RegisterForm extends Form
             $options[$result['id']] = $result['name'];
         }
         $select->setValueOptions($options);
+        $select->setAttribute('class', 'form-control');
         $this->add($select);
         
         $this->add([
             'name' => 'username',
             'attributes' => [
                 'type' => 'text',
-                'required' => 'required'
+                'required' => 'required',
+                'class' => 'form-control'
             ],
             'options' => [
                 'label' => 'Username',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
             ],
         ]);
                 
@@ -56,9 +66,15 @@ class RegisterForm extends Form
             'name' => 'email',
             'attributes' => [
                 'type' => 'email', 
-                'required' => 'required'
+                'required' => 'required',
+                'class' => 'form-control'
             ],
-            'options' => ['label' => 'Email'],
+            'options' => [
+                'label' => 'Email',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
+            ],
             'filters' => [['name', 'stringTrim']],
             'validators' => [[
                 'name' => 'EmailAddress',
@@ -75,18 +91,30 @@ class RegisterForm extends Form
             'name' => 'password',
             'attributes' => [
                 'type' => 'password', 
-                'required' => 'required'
+                'required' => 'required',
+                'class' => 'form-control'
             ],
-            'options' => ['label' => 'Password'],            
+            'options' => [
+                'label' => 'Password',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
+            ],            
         ]);
         
         $this->add([
             'name' => 'confirm_password',
             'attributes' => [
                 'type' => 'password', 
-                'required' => 'required'
+                'required' => 'required',
+                'class' => 'form-control'
             ],
-            'options' => ['label' => 'Confirm Password'],            
+            'options' => [
+                'label' => 'Confirm Password',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
+            ],            
         ]);
         
         $this->add([
@@ -94,7 +122,8 @@ class RegisterForm extends Form
             'attributes' => [
                 'type' => 'Submit', 
                 'value' => 'Register',
-                'id' => 'submitbutton'
+                'id' => 'submitbutton',
+                'class' => 'form-control'
             ],
         ]);
     }

@@ -6,51 +6,77 @@
         ]));
         echo $this->form()->openTag($form);
     ?>
-    <h2>Change business data</h2>
-    <dl>
-        <dt><?php echo $this->formLabel($form->get('name'))?></dt>
-        <dd>
+    <h2 class="page-header">Change business data</h2>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('name'))?>
+        <div class="col-xs-4">
             <?php echo $this->formElement($form->get('name'))?>
-            <?php echo $this->formElementErrors($form->get('name'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('description'))?></dt>
-        <dd>
+        </div>
+    </div>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('description'))?>
+        <div class="col-xs-10">
             <?php echo $this->formElement($form->get('description'))?>
-            <?php echo $this->formElementErrors($form->get('description'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('company_name'))?></dt>
-        <dd>
+        </div>
+    </div>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('company_name'))?>
+        <div class="col-xs-4">
             <?php echo $this->formElement($form->get('company_name'))?>
-            <?php echo $this->formElementErrors($form->get('company_name'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('address'))?></dt>
-        <dd>
+        </div>
+    </div>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('company_name'))?>
+        <div class="col-xs-10">
+            <?php echo $this->formElement($form->get('company_name'))?>
+        </div>
+    </div>
+ 
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('address'))?>
+        <div class="col-xs-10">
             <?php echo $this->formElement($form->get('address'))?>
-            <?php echo $this->formElementErrors($form->get('address'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('phone'))?></dt>
-        <dd>
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('phone'))?>
+        <div class="col-xs-4">
             <?php echo $this->formElement($form->get('phone'))?>
-            <?php echo $this->formElementErrors($form->get('phone'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('email'))?></dt>
-        <dd>
+        </div>
+    </div>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('email'))?>
+        <div class="col-xs-4">
             <?php echo $this->formElement($form->get('email'))?>
-            <?php echo $this->formElementErrors($form->get('email'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('contact_first_name'))?></dt>
-        <dd>
+        </div>
+    </div>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('contact_first_name'))?>
+        <div class="col-xs-4">
             <?php echo $this->formElement($form->get('contact_first_name'))?>
-            <?php echo $this->formElementErrors($form->get('contact_first_name'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('contact_last_name'))?></dt>
-        <dd>
+        </div>
+    </div>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('contact_last_name'))?>
+        <div class="col-xs-4">
             <?php echo $this->formElement($form->get('contact_last_name'))?>
-            <?php echo $this->formElementErrors($form->get('contact_last_name'))?>
-        </dd>
-        <dd>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-offset-2 col-xs-2">
             <?php echo $this->formElement($form->get('submit'))?>
-        </dd>        
-    </dl>
-    <?php echo $this->form()->closeTag();?>
+        </div>
+        <div class="col-xs-2">
+            <button class="form-control" id='back'>Back</button>
+        </div>
+    </div>        
+    <?php echo $this->form()->closeTag();?>    
 </section>
+<script>
+$(document).ready(function(){
+    $('#back').on('click', function(e) {
+        window.location.href = '/pms/business';
+    });
+});
+</script>

@@ -17,10 +17,15 @@ class ReservationForm extends Form
         parent::__construct('ReservationForm');
         $this->setAttribute('method', 'post');
         $this->setAttribute('enctype', 'multipart/form-data');
+        $this->setAttribute('class', 'form-horizontal');
+        $this->setAttribute('role', 'form');
                 
         // Initialize client field.
         $client = new \Zend\Form\Element\Select('client_id');
         $client->setLabel('Client');
+        $client->setLabelAttributes([
+            'class' => 'control-label col-xs-2',
+        ]);
         $dbAdapter = $options['adapter'];
         $sql = new Sql($dbAdapter);
         $select = $sql->select();
@@ -35,11 +40,15 @@ class ReservationForm extends Form
         }
         
         $client->setValueOptions($options);
-        $client->setAttribute('id', 'client_id');                
+        $client->setAttribute('id', 'client_id');      
+        $client->setAttribute('class', 'form-control');
         $this->add($client);
         
         $status = new \Zend\Form\Element\Select('status_id');
         $status->setLabel('Reservation Status');
+        $status->setLabelAttributes([
+            'class' => 'control-label col-xs-2',
+        ]);
         $select = $sql->select();
         $select->from('reservation_status');
         $statement = $sql->prepareStatementForSqlObject($select);
@@ -50,6 +59,7 @@ class ReservationForm extends Form
             $options[$row['id']] = $row['statustext'];
         }        
         $status->setAttribute('id', 'status_id');
+        $status->setAttribute('class', 'form-control');
         $status->setValueOptions($options);
 //        $status->setAttribute('style', [
 //            'width' => '100px',
@@ -81,7 +91,7 @@ class ReservationForm extends Form
                 'type' => 'Submit', 
                 'value' => 'Save',
                 'id' => 'submitbutton',
-                'class' => 'ui-button',
+                'class' => 'form-control',
             ],
         ]);
     }

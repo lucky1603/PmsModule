@@ -2,25 +2,25 @@
     <?php 
         $model = $this->model;
     ?>
-    <h2>Business Data</h2>
+    <h2 class='page-header'>Business Data</h2>
     <?php if(!$model->isInitialized()):?>
         <p class='error'>Model is still not initialized.
     <?php else:?>
         <dl>
             <dt>Name:</dt>
-            <dd><?php echo $model->name ?></dd>
+            <dd class='well'><?php echo $model->name ?></dd>
             <dt>Description:</dt>
-            <dd><?php echo $model->description ?></dd>
+            <dd class='well'><?php echo $model->description ?></dd>
             <dt>Company Name:</dt>
-            <dd><?php echo $model->company_name ?></dd>
+            <dd class='well'><?php echo $model->company_name ?></dd>
             <dt>Address:</dt>
-            <dd><?php echo $model->address ?></dd>
+            <dd class='well'><?php echo $model->address ?></dd>
             <dt>Phone:</dt>
-            <dd><?php echo $model->phone ?></dd>
+            <dd class='well'><?php echo $model->phone ?></dd>
             <dt>E Mail:</dt>
-            <dd><?php echo $model->email ?></dd>
+            <dd class='well'><?php echo $model->email ?></dd>
             <dt>Contact:</dt>
-            <dd><?php echo $model->contact_first_name ?> <?php echo $model->contact_last_name?></dd>            
+            <dd class='well'><?php echo $model->contact_first_name ?> <?php echo $model->contact_last_name?></dd>            
         </dl>
     <?php endif;?>
     <a href='/pms/business/edit'>Change data</a> | <a href='/'>Home</a>

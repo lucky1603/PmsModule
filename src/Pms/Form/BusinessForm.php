@@ -10,6 +10,8 @@ class BusinessForm extends Form
         parent::__construct('BusinessForm');
         $this->setAttribute('method', 'post');
         $this->setAttribute('enctype', 'multipart/form-data');
+        $this->setAttribute('class', 'form-horizontal');
+        $this->setAttribute('role', 'form');
         
         $this->add([
             'name' => 'name',
@@ -17,9 +19,13 @@ class BusinessForm extends Form
                 'type' => 'text',
                 'required' => 'required',
                 'value' => 'Enter text here...',
+                'class' => 'form-control'
             ],
             'options' => [
                 'label' => 'Business Name',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
             ],
         ]);
         
@@ -31,9 +37,13 @@ class BusinessForm extends Form
                 'COLS' => 80,
                 'ROWS' => 4,
                 'value' => 'Enter text here...',
+                'class' => 'form-control'
             ],
             'options' => [
                 'label' => 'Short Description',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
             ],
         ]);
         
@@ -43,10 +53,13 @@ class BusinessForm extends Form
                 'type' => 'text',
                 'required' => 'required',
                 'value' => 'Enter text here...',
-                
+                'class' => 'form-control'
             ],
             'options' => [
-                'label' => 'Company Name'
+                'label' => 'Company Name',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
             ],
         ]);
         
@@ -58,9 +71,13 @@ class BusinessForm extends Form
                 'ROWS' => 4,
                 'required' => 'required',
                 'value' => 'Enter text here...',
+                'class' => 'form-control'
             ],
             'options' => [
-                'label' => 'Address'
+                'label' => 'Address',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
             ],
         ]);
         
@@ -70,9 +87,13 @@ class BusinessForm extends Form
                 'type' => 'text',
                 'required' => 'required',
                 'value' => 'Enter text here...',
+                'class' => 'form-control'
             ],
             'options' => [
-                'label' => 'Phone'
+                'label' => 'Phone',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
             ],
         ]);
         
@@ -82,9 +103,13 @@ class BusinessForm extends Form
                 'type' => 'text',
                 'required' => 'required',
                 'value' => 'Enter text here...',
+                'class' => 'form-control'
             ],
             'options' => [
-                'label' => 'E-Mail'
+                'label' => 'E-Mail',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
             ],
         ]);
         
@@ -94,9 +119,13 @@ class BusinessForm extends Form
                 'type' => 'text',
                 'required' => 'required',
                 'value' => 'Enter text here...',
+                'class' => 'form-control'
             ],
             'options' => [
-                'label' => 'Contact First Name'
+                'label' => 'Contact First Name',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
             ],
         ]);
         
@@ -106,9 +135,13 @@ class BusinessForm extends Form
                 'type' => 'text',
                 'required' => 'required',
                 'value' => 'Enter text here...',
+                'class' => 'form-control'
             ],
             'options' => [
-                'label' => 'Contact Last Name'
+                'label' => 'Contact Last Name',
+                'label_attributes' => [
+                    'class' => 'control-label col-xs-2',
+                ]
             ],
         ]);
         
@@ -117,6 +150,7 @@ class BusinessForm extends Form
             'attributes' => [
                 'type' => 'submit',
                 'value' => 'Save',
+                'class' => 'form-control'
             ],            
         ]);
         

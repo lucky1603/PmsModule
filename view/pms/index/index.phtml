@@ -3,10 +3,27 @@
     $this->headLink()->appendStylesheet('/js/jquery-ui/jquery-ui.css');
     $this->headScript()->appendFile('/js/helper.js');
 ?>
-<h2>Welcome to PMS Manager</h2>
+<h2 class="page-header">Welcome to PMS Manager</h2>
 <p>Our application is used to handle the reservations
-    
+
 <p><a class='ui-button' href="/pms/login">Sign In</a> 
 <p> or <br>
 <a class='ui-button' href="/pms/register">Sign Up</a>
 
+<!--
+<form class="form-horizontal">
+    <div class="form-group">
+        <div class="col-xs-2">                        
+            <button class="form-control" id="in">Sign In</button>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label">Or</label>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-2">
+            <button class="form-control col-xs-2" id="in">Sign Up</button>
+        </div>
+    </div>
+</form>
+-->

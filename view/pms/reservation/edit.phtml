@@ -23,70 +23,78 @@
         }
         echo $this->form()->openTag($form);        
     ?>
-    <h2>Details <?php echo isset($id) ? 'Reservation ID: '. $model->reservation_id : 'New Reservation'?></h2>
-    <br>
-    <br>
+    <h2 class="page-header">Details <?php echo isset($id) ? 'Reservation ID: '. $model->reservation_id : 'New Reservation'?></h2>
     
-    <table class="table">
-        <tr>
-            <td style="width:100px"><?php echo $this->formLabel($form->get('client_id'))?></td>
-            <td>
-                <?php echo $this->formElement($form->get('client_id'))?>
-                <?php echo $this->formElementErrors($form->get('client_id'))?>
-                <a href='' class='ui-button' id='button'>New User</a>
-            </td>
-        </tr>
-        <tr>
-            <td colspan="2"> 
-                <div class="client-content">Here comes the client content.</div>
-            </td>            
-        </tr>
-        <tr>
-            <td><?php echo $this->formLabel($form->get('status_id'))?></td>
-            <td>
-                <?php echo $this->formElement($form->get('status_id'))?>
-                <?php echo $this->formElementErrors($form->get('status_id'))?>
-            </td>
-        </tr>
-    </table>
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('client_id'))?>
+        <div class="col-xs-4">
+           <?php echo $this->formElement($form->get('client_id'))?> 
+        </div>
+        <div class="col-xs-2">
+            <button class="form-control" id="new">New</button> 
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <?php echo $this->formLabel($form->get('status_id'))?>
+        <div class="col-xs-4">
+           <?php echo $this->formElement($form->get('status_id'))?> 
+        </div>
+    </div>
+    
     <?php echo $this->formElement($form->get('created_at'))?>
     <?php echo $this->formElement($form->get('modified_at'))?>
-    <h4>Reserved Entities</h4>
-    <?php
-        if(isset($model))
-        {
-            $entities = $model->getReservedEntities($id);
-        }
-    ?>
-    <?php if(!isset($entities) || count($entities) == 0):?>
-        <p class="error">There are no reserved entities associated with this reservation!
-    <?php else:?>
-        <table class="table">
-            <tr>
-                <th>Room</th>
-                <th>Type</th>
-                <th>Guest</th>
-                <th>Start</th>
-                <th>End</th>
-                <th>Duration</th>
-                <th>Action</th>
-            </tr>
-            <?php foreach($entities as $entity):?>
-            <tr>
-                <td><?php echo $entity->guid?></td>
-                <td><?php echo $entity->ed_name?></td>
-                <td><?php echo $entity->first_name. ' '.$entity->last_name; ?></td>
-                <td><?php echo $entity->date_from?></td>
-                <td><?php echo $entity->date_to?></td>
-                <?php $duration = $entity->getDuration()?>
-                <td><?php echo $duration['value'].' '. $duration['type']?></td>
-                <td><a href="/pms/reservation/entity/<?php echo $entity->internal_id?>">Edit</a> | <a href="/pms/reservation/deleteEntity/<?php echo $entity->internal_id?>">Delete</a>
-            </tr>
-            <?php endforeach;?>
-        </table>    
-    <?php endif;?>    
-    <p><a id='addbutton' href="/pms/reservation/entity">Add new entity</a><br>
-    <span><?php echo $this->formElement($form->get('submit'))?><a href="/pms/reservation/reset" class='ui-button' id="back_button">Back</a></span>
+
+    <div class="form-group">
+        <label class="control-label col-xs-2">Reserved Entities</label>
+        <div class="col-xs-10">
+            <?php
+                if(isset($model))
+                {
+                    $entities = $model->getReservedEntities($id);
+                }
+            ?>
+            <?php if(!isset($entities) || count($entities) == 0):?>
+                <p class="error">There are no reserved entities associated with this reservation!
+            <?php else:?>
+                <table class="table">
+                    <tr>
+                        <th>Room</th>
+                        <th>Type</th>
+                        <th>Guest</th>
+                        <th>Start</th>
+                        <th>End</th>
+                        <th>Duration</th>
+                        <th>Action</th>
+                    </tr>
+                    <?php foreach($entities as $entity):?>
+                    <tr>
+                        <td><?php echo $entity->guid?></td>
+                        <td><?php echo $entity->ed_name?></td>
+                        <td><?php echo $entity->first_name. ' '.$entity->last_name; ?></td>
+                        <td><?php echo $entity->date_from?></td>
+                        <td><?php echo $entity->date_to?></td>
+                        <?php $duration = $entity->getDuration()?>
+                        <td><?php echo $duration['value'].' '. $duration['type']?></td>
+                        <td><a href="/pms/reservation/entity/<?php echo $entity->internal_id?>">Edit</a> | <a href="/pms/reservation/deleteEntity/<?php echo $entity->internal_id?>">Delete</a>
+                    </tr>
+                    <?php endforeach;?>
+                </table>    
+            <?php endif;?> 
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-xs-offset-2 col-xs-2">
+            <?php echo $this->formElement($form->get('submit'))?>
+        </div>
+        <div class="col-xs-2">
+            <button class="form-control" id="back-button">Back</button>
+        </div>
+        <div class="col-xs-2">
+            <button class="form-control" id="addbutton">New Entity</button>
+        </div>
+    </div>
+    
     <?php echo $this->form()->closeTag()?>     
     <div id="dialog" class="ui-widget"></div>
     <div id="myModalDialog" class='modal fade' role='dialog'>
@@ -125,7 +133,6 @@
                 e.preventDefault();        
                 $.get('/pms/client/edit', function(data) {
                    formData = $(data).find('form');                         
-                    console.log(formData);
                     $(formData).find('div.buttons').attr('hidden', 'true');
                     $('div.modal-body').html(formData);
                     $("#myModalDialog").find('.modal-body').html(formData);
@@ -156,10 +163,9 @@
                 var client = $('#client_id').val();
                 var status = $('#status_id').val();
                 $.get('/pms/ajax/updateReservationModel?client_id=' + client + "&status_id=" + status);
-                var href = $(this).attr('href');
-                window.location.href = href;
+                window.location.href = '/pms/reservation/entity';
             });
-            
+                        
             $('form').on('submit', function(e) {
                 e.preventDefault();
                 var action = $('form').attr('action');
