@@ -1,4 +1,4 @@
-<sectio class="register">
+<section class="register">
     <h2>Register</h2>
     <?php if($this->error): ?>
         <p class="error">
@@ -13,39 +13,61 @@
         $form->setAttribute('method', 'post');
         echo $this->form()->openTag($form);
     ?>
-    <dl class='zend_form'>
-        <dt><?php echo $this->formLabel($form->get('role_id')); ?></dt>
-        <dd>
-            <?php
-                echo $this->formElement($form->get('role_id'));
-                echo $this->formElementErrors($form->get('role_id'));
-            ?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('username')) ?></dt>
-        <dd><?php
-            echo $this->formElement($form->get('username'));
-            echo $this->formElementErrors($form->get('username'));
-        ?></dd>
-        <dt><?php echo $this->formLabel($form->get('email')) ?></dt>
-        <dd><?php
-            echo $this->formElement($form->get('email'));
-            echo $this->formElementErrors($form->get('email'));
-        ?></dd>
-        <dt><?php echo $this->formLabel($form->get('password'));?></dt>
-        <dd><?php
-            echo $this->formElement($form->get('password'));
-            echo $this->formElementErrors($form->get('password'));
-        ?></dd>
-        <dt><?php echo $this->formLabel($form->get('confirm_password')); ?></dt>
-        <dd><?php
-            echo $this->formElement($form->get('confirm_password'));
-            echo $this->formElementErrors($form->get('confirm_password'));
-        ?></dd>
-        <dd><?php
-            echo $this->formElement($form->get('submit'));
-            echo $this->formElementErrors($form->get('submit'));
-        ?></dd>
-    </dl>
+        <div class="form-group">
+            <?php echo $this->formLabel($form->get('role_id')); ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('role_id'));?>
+                <?php echo $this->formElementErrors($form->get('role_id'));?>
+            </div>
+        </div>
+    
+        <div class="form-group">
+            <?php echo $this->formLabel($form->get('username')); ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('username'));?>
+                <?php echo $this->formElementErrors($form->get('username'));?>
+            </div>
+        </div>
+
+                <div class="form-group">
+            <?php echo $this->formLabel($form->get('email')); ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('email'));?>
+                <?php echo $this->formElementErrors($form->get('email'));?>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <?php echo $this->formLabel($form->get('password')); ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('password'));?>
+                <?php echo $this->formElementErrors($form->get('password'));?>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <?php echo $this->formLabel($form->get('confirm_password')); ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('confirm_password'));?>
+                <?php echo $this->formElementErrors($form->get('confirm_password'));?>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-offset-2 col-xs-4">
+                <?php echo $this->formElement($form->get('submit'));?>
+            </div>
+            <div class="col-xs-4">
+                <button class="form-control" id='back'>Back</button>
+            </div>
+        </div>
     <?php echo $this->form()->closeTag() ?>
 </section>
-
+<script>
+$(document).ready(function() {
+    $('#back').on('click', function(e) {
+        e.preventDefault();
+        window.location.href="/";
+    });    
+});  
+</script>

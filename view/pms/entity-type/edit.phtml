@@ -28,30 +28,6 @@
     <?php else:?>
     <h2 class='page-header'>Change '<?php echo $model->name?>' details</h2>
     <?php endif;?>
-    <!--
-    <div class="general-data">
-    <dl>
-        <dt><?php echo $this->formLabel($form->get('name')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('name')) ?>
-            <?php echo $this->formElementErrors($form->get('name'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('description')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('description')) ?>
-            <?php echo $this->formElementErrors($form->get('description'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('time_resolution')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('time_resolution')) ?>
-            <?php echo $this->formElementErrors($form->get('time_resolution'))?>
-        </dd>
-        <dd>
-            <?php echo $this->formElement($form->get('submit')) ?><a href="/pms/entity_type" class="ui-button">Back</a>
-        </dd>
-    </dl>
-    </div>
-    -->
     
     <div class="form-group">
         <?php echo $this->formLabel($form->get('name'))?>
@@ -111,40 +87,6 @@
             <button id='new' class='form-control'>New Parameter</button>
         </div>
     </div>
-    <!--
-    <div class='attribute-data'>
-        <h3>Parameters</h3>
-        <?php if (isset($model->attributes)):?>        
-        <table class='table'>
-            <tr>
-                <th>Parameter</th>
-                <th>Accessibility</th>
-                <th>Type</th>
-                <th>Action</th>
-            </tr>
-            <?php foreach($model->attributes as $attribute):?>
-            <tr>
-                <td><?php echo $attribute->label?></td>
-                <td><?php 
-                    $values = ['GLOBAL', 'DEFINITION', 'OBJECT'];
-                    echo $values[$attribute->scope];
-                ?></td>
-                <td><?php echo $attribute->type?></td>
-                <td>
-                    <a href='/pms/entity-type/editAttribute/<?php echo $attribute->internal_id?>'>Edit</a> 
-                    | 
-                    <a href='/pms/entity-type/deleteAttribute/<?php echo $attribute->internal_id?>'>Delete</a>
-                </td>
-            </tr>
-            <?php endforeach;?>
-        </table>   
-        <?php else:?>
-            <p class='error'>No defined parameters yet.
-        <?php endif;?>
-    </div>
-    <?php echo $this->form()->closeTag() ?>
-    <a href='/pms/entity-type/editAttribute'>Add new</a>
-    -->
 </section>
 <script>
 $(document).ready(function() {
