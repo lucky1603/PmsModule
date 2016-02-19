@@ -498,7 +498,7 @@ class EntityController extends AbstractActionController
      * Processes changes to entity object. 
      */
     public function processAction()
-    {
+    {       
         $post = $this->request->getPost();
         $id = $this->params()->fromRoute('id');
         $entityModel = $this->getServiceLocator()->get('EntityModel');        
@@ -554,16 +554,22 @@ class EntityController extends AbstractActionController
                     }
 
                     $attElement->setLabel($attribute->label);
+                    $attElement->setLabelAttributes([
+                        'class' => 'control-label col-xs-2',
+                    ]);
+                    $attElement->setAttribute('class', 'form-control');
                     $attElement->setValue($attribute->getValue());
                     $form->add($attElement);
                 }  
                 
                 $form->bind($entityModel);
                 $form->setData($post);
-                if($form->isValid())
-                {
-                    $entityModel->save();
-                }
+                $entityModl->save();
+//                if($form->isValid())
+//                {
+//                    $entityModel->save();
+//                }
+
             }
             else 
             {
@@ -625,6 +631,10 @@ class EntityController extends AbstractActionController
                     }
 
                     $attElement->setLabel($attribute->label);
+                    $attElement->setLabelAttributes([
+                        'class' => 'control-label col-xs-2',
+                    ]);
+                    $attElement->setAttribute('class', 'form-control');
                     $attElement->setValue($attribute->getValue());
                     $form->add($attElement);
                 }                
@@ -632,10 +642,12 @@ class EntityController extends AbstractActionController
             
             $form->bind($entityModel);
             $form->setData($post);
-            if($form->isValid())
-            {
-                $entityModel->save();
-            }
+            $entityModel->save();
+//            if($form->isValid())
+//            {
+//                $entityModel->save();
+//            }
+            
         }
         
         //return $this->redirect()->toRoute()

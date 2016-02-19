@@ -51,6 +51,7 @@
     <div class="form-group">
         <label class="control-label col-xs-2" for="myTable">Parameters</label>
         <div class="col-xs-10">
+            <?php if(isset($model->attributes)):?>
             <table id='myTable' class='table'>
                 <tr>
                     <th>Parameter</th>
@@ -74,7 +75,9 @@
                 </tr>
                 <?php endforeach;?>
             </table>  
-            <!-- <a href='/pms/entity-type/editAttribute' style='margin-top: 0px;margin-bottom: 10px;'>Add new</a> -->
+            <?php else:?>
+            <p>No defined parameters</p>
+            <?php endif;?>
         </div>
     <div class="form-group">
         <div class="col-xs-offset-2 col-xs-2">
