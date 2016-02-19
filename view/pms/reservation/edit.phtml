@@ -27,17 +27,22 @@
     
     <div class="form-group">
         <?php echo $this->formLabel($form->get('client_id'))?>
-        <div class="col-xs-4">
+        <div class="col-xs-8">
            <?php echo $this->formElement($form->get('client_id'))?> 
         </div>
         <div class="col-xs-2">
             <button class="form-control" id="new">New</button> 
         </div>
     </div>
-    
+    <div class='form-group'>
+        <label class='control-label col-xs-2'>Details</label>
+        <div class="col-xs-10">
+            <div class='well client-content'></div>
+        </div>
+    </div>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('status_id'))?>
-        <div class="col-xs-4">
+        <div class="col-xs-10">
            <?php echo $this->formElement($form->get('status_id'))?> 
         </div>
     </div>
@@ -84,13 +89,13 @@
         </div>
     </div>
     <div class="form-group">
-        <div class="col-xs-offset-2 col-xs-2">
+        <div class="col-xs-offset-2 col-xs-3">
             <?php echo $this->formElement($form->get('submit'))?>
         </div>
-        <div class="col-xs-2">
+        <div class="col-xs-3">
             <button class="form-control" id="back-button">Back</button>
         </div>
-        <div class="col-xs-2">
+        <div class="col-xs-3">
             <button class="form-control" id="addbutton">New Entity</button>
         </div>
     </div>
@@ -115,8 +120,9 @@
     <script type="text/javascript">
         $(function() {  
             var dialog, formData;
-            var fill = function(what) {
+            var fill = function(what) {                
                 var id = $('select#client_id option:selected').val();
+                console.log('entered fill for client ' + id);
                 if(id) 
                 {
                     $.get('/pms/client/preview/' + id, function(data) {
@@ -128,7 +134,7 @@
             
             fill();
                                     
-            $("#button").on("click", function(e){
+            $("button#new").on("click", function(e){
                 var fields;
                 e.preventDefault();        
                 $.get('/pms/client/edit', function(data) {
@@ -150,6 +156,7 @@
                     var name = client.first_name + ' ' + client.last_name;
                     $(document).find('#client_id').append('<option value="' + id + '">' + name + '</option>');
                     $(document).find('#client_id').val(id);
+                    console.log('about to be filled...');
                     fill();
                 }, "json");     
             });
