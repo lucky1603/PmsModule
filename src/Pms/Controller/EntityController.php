@@ -564,7 +564,7 @@ class EntityController extends AbstractActionController
                 
                 $form->bind($entityModel);
                 $form->setData($post);
-                $entityModl->save();
+                $entityModel->save();
 //                if($form->isValid())
 //                {
 //                    $entityModel->save();
@@ -580,10 +580,9 @@ class EntityController extends AbstractActionController
         else 
         {
             $session = new Container('models');
-//            Debug::dump($session->entityData);
-//            die();
             $entityModel->setData($session->entityData);
             $attributes = $entityModel->attributes;
+            \Zend\Debug\Debug::dump($attributes);
             if(isset($attributes))
             {
                 foreach($attributes as $attribute)
@@ -641,13 +640,12 @@ class EntityController extends AbstractActionController
             }
             
             $form->bind($entityModel);
-            $form->setData($post);
-            $entityModel->save();
-//            if($form->isValid())
-//            {
-//                $entityModel->save();
-//            }
+            $form->setData($post);            
             
+            if($form->isValid())                
+            {
+                $entityModel->save();
+            }            
         }
         
         //return $this->redirect()->toRoute()

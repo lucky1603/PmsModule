@@ -37,7 +37,7 @@ class EntityForm extends Form
         $select->setValueOptions($options);
         $select->setAttribute('id', 'definition_id');
         $select->setAttribute('class', 'form-control');
-        $select->setAttribute('disabled', 'true');
+        //$select->setAttribute('disabled', 'true');
         $this->add($select);
                 
 
