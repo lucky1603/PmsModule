@@ -582,7 +582,6 @@ class EntityController extends AbstractActionController
             $session = new Container('models');
             $entityModel->setData($session->entityData);
             $attributes = $entityModel->attributes;
-            \Zend\Debug\Debug::dump($attributes);
             if(isset($attributes))
             {
                 foreach($attributes as $attribute)
