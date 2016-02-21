@@ -23,6 +23,7 @@ class BusinessModel
     public $email;
     public $contact_first_name;
     public $contact_last_name;
+    public $user_id;
                 
     protected $dbAdapter;    
     protected $initialized = false;
