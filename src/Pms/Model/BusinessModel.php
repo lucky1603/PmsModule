@@ -34,7 +34,20 @@ class BusinessModel
      */
     public function __construct(Adapter $dbAdapter) {
         $this->dbAdapter = $dbAdapter;
-        $this->init();
+//        $this->init();
+    }
+    
+    public function setUserId($user_id)
+    {
+        $table = new \Zend\Db\TableGateway\TableGateway('business', $this->dbAdapter);
+        $results = $table->select(['user_id' => $user_id]);
+        if($results->count() > 0)
+        {
+
+            $this->setData($results->current());
+            $this->initialized = true;
+        } 
+
     }
     
     /**
@@ -79,7 +92,11 @@ class BusinessModel
         if(isset($data['contact_last_name']))
         {
             $this->contact_last_name = $data['contact_last_name'];
-        }                
+        }     
+        if(isset($data['user_id']))
+        {
+            $this->user_id = $data['user_id'];
+        }
     }
     
     /**
@@ -102,6 +119,10 @@ class BusinessModel
         if(isset($this->id))
         {
             $data['id'] = $this->id;
+        }
+        if(isset($this->user_id))
+        {
+            $data['user_id'] = $this->user_id;
         }
         return $data;
     }
@@ -132,11 +153,26 @@ class BusinessModel
     public function save()
     {
         $table = new \Zend\Db\TableGateway\TableGateway('business', $this->dbAdapter);
-        $results = $table->select();
-        if($results->count() > 0)
+        
+        if(isset($this->user_id))
         {
-            $table->update($this->getData());
-        }
+            $results = $table->select(['user_id' => $this->user_id]);
+            if($results->count() > 0)
+            {
+                $data = $this->getData();
+                if(isset($data['user_id']))
+                {
+                    unset($data['user_id']);
+                }
+                $table->update($this->getData(), ['user_id' => $this->user_id]);
+                $this->initialized = true;
+            }
+            else {
+                $table->insert($this->getData());
+                $this->initialized = true;    
+            }
+            
+        }               
         else 
         {
             $table->insert($this->getData());

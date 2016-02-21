@@ -17,10 +17,18 @@ class UserTable
     public function saveUser(User $user)
     {
         $data  = array(
-          'email' => $user->email,
-          'username' => $user->username,
-          'password' => $user->password, 
-          'role_id' => $user->role_id,
+            'email' => $user->email,
+            'username' => $user->username,
+            'password' => $user->password, 
+            'role_id' => $user->role_id,
+            'first_name' => $user->first_name,
+            'last_name' => $user->last_name,
+            'address' => $user->address,
+            'city' => $user->city,
+            'country' => $user->country,
+            'pcode' => $user->pcode,
+            'phone' => $user->phone,
+          
         );
         $id = (int) $user->id;
         if($id == 0) {

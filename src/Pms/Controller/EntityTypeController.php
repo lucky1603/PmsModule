@@ -129,7 +129,6 @@ class EntityTypeController extends AbstractActionController
     public function processAction()
     {
         $post = $this->request->getPost();
-        Debug::dump($post);
         $id = $this->params()->fromRoute('id');
         $form = $this->getServiceLocator()->get('EntityTypeForm');
         $table = $this->getServiceLocator()->get('EntityTypeTable');
@@ -140,6 +139,7 @@ class EntityTypeController extends AbstractActionController
         
         $form->bind($model);
         $form->setData($post);
+
         if($form->isValid())
         {          
             $model->save();

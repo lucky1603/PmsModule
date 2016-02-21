@@ -18,6 +18,13 @@ class User
     public $email;
     public $password;   
     public $role_id;
+    public $first_name;
+    public $last_name;
+    public $address;
+    public $city;
+    public $country;
+    public $pcode;
+    public $phone;
     
     /**
      * Sets the password using the md5 algorithm.
@@ -50,6 +57,14 @@ class User
         }
         
         $this->role_id = (isset($data['role_id'])) ? $data['role_id'] : null;
+        $this->first_name = (isset($data['first_name'])) ? $data['first_name'] : null;
+        $this->first_name = (isset($data['last_name'])) ? $data['last_name'] : null;
+        $this->first_name = (isset($data['address'])) ? $data['address'] : null;
+        $this->first_name = (isset($data['city'])) ? $data['city'] : null;
+        $this->first_name = (isset($data['country'])) ? $data['country'] : null;
+        $this->first_name = (isset($data['pcode'])) ? $data['pcode'] : null;
+        $this->first_name = (isset($data['phone'])) ? $data['phone'] : null;
+        
     }
     
     /**
@@ -64,6 +79,13 @@ class User
             'email' => $this->email,
             'password' => $this->password,
             'role_id' => $this->role_id,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'address' => $this->address,
+            'city' => $this->city,
+            'country' => $this->country,
+            'pcode' => $this->pcode,
+            'phone' => $this->phone,
         ];
     }
 }

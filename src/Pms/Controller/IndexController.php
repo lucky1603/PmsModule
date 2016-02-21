@@ -33,30 +33,30 @@ class IndexController extends AbstractActionController
        {
            $table = $this->getServiceLocator()->get('UserTable');
            $user = $table->getUserByEmail($mail);
-           if($user->role_id == 1)
-           {
+//           if($user->role_id == 1)
+//           {
                $viewModel = new ViewModel([
                    'username' => $user->username,
                ]);
                $viewModel->setTemplate('/pms/login/admin');
                return $viewModel;
-           }
-           if($user->role_id == 2)
-           {
-               $viewModel = new ViewModel([
-                   'username' => $user->username,
-               ]);
-               $viewModel->setTemplate('/pms/login/power-user');
-               return $viewModel;
-           }
-           if($user->role_id == 3)
-           {
-               $viewModel = new ViewModel([
-                   'username' => $user->username,
-               ]);
-               $viewModel->setTemplate('/pms/login/user');
-               return $viewModel;
-           }
+//           }
+//           if($user->role_id == 2)
+//           {
+//               $viewModel = new ViewModel([
+//                   'username' => $user->username,
+//               ]);
+//               $viewModel->setTemplate('/pms/login/power-user');
+//               return $viewModel;
+//           }
+//           if($user->role_id == 3)
+//           {
+//               $viewModel = new ViewModel([
+//                   'username' => $user->username,
+//               ]);
+//               $viewModel->setTemplate('/pms/login/user');
+//               return $viewModel;
+//           }
        }
             
        return new ViewModel();
