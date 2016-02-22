@@ -24,8 +24,13 @@ class ClientController extends AbstractActionController
      */
     public function indexAction()
     {
+        $service = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $service->getStorage()->read();
+        $users = $this->getServiceLocator()->get('UserTable');
+        $user = $users->getUserByEmail($mail);
+        
         $table = $this->getServiceLocator()->get('ClientTable');
-        $clients = $table->fetchAll()->toArray();
+        $clients = $table->fetchAll($user->id)->toArray();
         return new ViewModel([
             'clients' => $clients,
         ]);
@@ -37,8 +42,14 @@ class ClientController extends AbstractActionController
      */
     public function editAction()
     {
+        $service = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $service->getStorage()->read();
+        $users = $this->getServiceLocator()->get('UserTable');
+        $user = $users->getUserByEmail($mail);
+        
         $id = $this->params()->fromRoute('id');
         $form = $this->getServiceLocator()->get('ClientForm');
+        $form->get('user_id')->setValue($user->id);
         $clientTable = $this->getServiceLocator()->get('ClientTable');
         if(isset($id))
         {
@@ -52,7 +63,7 @@ class ClientController extends AbstractActionController
             
             return $viewModel;
         }
-        
+                
         return new ViewModel([
             'form' => $form,
         ]);        

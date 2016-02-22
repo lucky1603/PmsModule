@@ -26,6 +26,7 @@ class ReservationModel
     public $comment;
     public $clientName;
     public $reservedEntities;
+    public $user_id;
             
     protected $dbAdapter;
     protected $sql;
@@ -38,6 +39,15 @@ class ReservationModel
     public function __construct(Adapter $dbAdapter) {
         $this->dbAdapter = $dbAdapter;
         $this->sql = new Sql($dbAdapter);
+    }
+    
+    /**
+     * Sets the current user id.
+     * @param type $user_id
+     */
+    public function setUserId($user_id)
+    {
+        $this->user_id = $user_id;
     }
     
     /**
@@ -97,7 +107,12 @@ class ReservationModel
             $result = $tableGateway->select(['id' => $this->status_id]);
             $row = $result->current();
             $this->status = $row['statustext'];    
-                }
+        }
+        
+        if(isset($data['user_id']))
+        {
+            $this->user_id = $data['user_id'];
+        }
                 
         // set entities
         if(isset($data['reservedEntities']))
@@ -137,6 +152,11 @@ class ReservationModel
         if(isset($this->id))
         {
             $data['id'] = $this->id;
+        }
+        
+        if(isset($this->user_id))
+        {
+            $data['user_id'] = $this->user_id;
         }
         
         $data['reservedEntities'] = [];
@@ -367,6 +387,11 @@ class ReservationModel
                 ->join(['c' => 'clients'], 'r.client_id = c.id', ['first_name', 'last_name'])
                 ->join(['s' => 'reservation_status'], 'r.status_id = s.id', ['statustext'])
                 ->order(['reservation_id ASC']);
+        if($this->user_id)
+        {
+            $select->where(['r.user_id' => $this->user_id]);
+        }
+        
         $statement = $this->sql->prepareStatementForSqlObject($select);
         $results = $statement->execute(); 
         $rows = array();

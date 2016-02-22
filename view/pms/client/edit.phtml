@@ -20,6 +20,7 @@
         echo $this->form()->openTag($form);
         $this->headTitle("Client Details");
     ?>
+    <?php echo $this->formElement($form->get('user_id'))?>
     <div class='entry-content'>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('title_id'))?>

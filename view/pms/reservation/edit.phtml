@@ -24,7 +24,7 @@
         echo $this->form()->openTag($form);        
     ?>
     <h2 class="page-header">Details <?php echo isset($id) ? 'Reservation ID: '. $model->reservation_id : 'New Reservation'?></h2>
-    
+    <?php echo $this->formElement($form->get('user_id'))?>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('client_id'))?>
         <div class="col-xs-8">

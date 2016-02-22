@@ -15,6 +15,13 @@ class ClientForm extends Form
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('role' , 'form');
         
+        $this->add([
+            'name' => 'user_id', 
+            'attributes' => [
+                'type' => 'hidden'
+            ]
+        ]);
+        
         // First name.
         $this->add([
            'name' => 'first_name',

@@ -66,6 +66,8 @@ class EntityController extends AbstractActionController
         {
             return $this->redirect()->toUrl('/');
         }
+        $users = $this->getServiceLocator()->get('UserTable');
+        $user = $users->getUserByEmail($mail);
         
         if($this->request->isPost())
         {
@@ -82,25 +84,27 @@ class EntityController extends AbstractActionController
         // Prepare the form entries.
         // Get entity type. Find ACUNIT if exists. If not, take the first from the list of entities.
         $table = $this->getServiceLocator()->get('EntityTypeTable');
+        $types = $table->fetchForUser($user->id);
+        if($types->count() == 0)
+        {
+            // Currently returns to available objects list.
+            return $this->redirect()->toRoute(NULL);
+        }
         
         if(isset($entityTypeId))
         {
             $entityType = $table->getEntityType($entityTypeId);
         }
-        else 
-        {
-            $entityType = $table->getEntityTypeByName('ACUNIT');
-            $entityTypeId = $entityType->id;
-        }
         
         if(empty($entityType))
         {
-            $rows = $table->fetchAll();
-            if(count($rows) > 0)
+            $rows = $table->fetchForUser($user->id);
+            if($rows->count() > 0)
             {
-                $entityTypeId = $rows->current()[0]['id'];
-                $entityType = $table->getEntityType($entityTypeId);
+                $entityTypeId = $rows->current()->id;
+                $entityType = $table->getEntityType($entityTypeId);                
             }
+            
         }
         
         if(empty($entityType))

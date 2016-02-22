@@ -19,6 +19,13 @@ class ReservationForm extends Form
         $this->setAttribute('enctype', 'multipart/form-data');
         $this->setAttribute('class', 'form-horizontal');
         $this->setAttribute('role', 'form');
+        
+        $this->add([
+            'name' => 'user_id', 
+            'attributes' => [
+                'type' => 'hidden',
+            ]
+        ]);
                 
         // Initialize client field.
         $client = new \Zend\Form\Element\Select('client_id');

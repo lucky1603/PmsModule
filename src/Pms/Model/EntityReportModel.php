@@ -16,7 +16,7 @@ class EntityReportModel
         $this->sql = new Sql($this->dbAdapter);
     }
     
-    public function getCompleteEntityUsageData($type=null, $start = null, $end = null)
+    public function getCompleteEntityUsageData($type=null, $start = null, $end = null, $user_id = NULL)
     {
         $table = new \Zend\Db\TableGateway\TableGateway('reservation_status', $this->dbAdapter);
         $rows = $table->select(['statusvalue' => 'checkout']);
@@ -26,7 +26,7 @@ class EntityReportModel
         $select->from(['r' => 'reservation_entity'])
                 ->join(['e' => "entity"], 'r.entity_id=e.id', ['guid'])
                 ->join(['ed' => 'entity_definition'], 'e.definition_id=ed.id', ['code','name'])
-                ->join(['et' => 'entity_type'], 'ed.entity_type_id=et.id', ['time_resolution'])
+                ->join(['et' => 'entity_type'], 'ed.entity_type_id=et.id', ['time_resolution', 'user_id'])
                 ->join(['res' => 'reservations'], 'r.reservation_id=res.id', ['status_id']);
         $select->where->equalTo('res.status_id', $status_id);
         if($type)
@@ -40,6 +40,10 @@ class EntityReportModel
         if(!empty($end))
         {
             $select->where->lessThanOrEqualTo('date_to', $end);
+        }
+        if($user_id)
+        {
+            $select->where->equalTo('et.user_id', $user_id);
         }
         
         $statement = $this->sql->prepareStatementForSqlObject($select);

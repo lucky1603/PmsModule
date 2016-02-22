@@ -25,6 +25,7 @@ class Client
     public $email;
     public $title;
     public $guest_class;
+    public $user_id;
     
     /**
      * Sets the client data from outside.
@@ -49,7 +50,8 @@ class Client
         $this->fax = isset($data['fax']) ? $data['fax'] : null;
         $this->email = isset($data['email']) ? $data['email'] : null;
         $this->title = isset($data['title']) ? $data['title'] : null;
-        $this->guest_class = isset($data['guest_class']) ? $data['guest_class'] : null;                        
+        $this->guest_class = isset($data['guest_class']) ? $data['guest_class'] : null;       
+        $this->user_id = isset($data['user_id']) ? $data['user_id'] : null;
     }
     
     /**
@@ -73,6 +75,7 @@ class Client
             'email' => $this->email,
             'title' => $this->title,
             'guest_class' => $this->guest_class,
+            'user_id' => $this->user_id,
         ];
     }
 }

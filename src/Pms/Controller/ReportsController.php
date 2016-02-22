@@ -27,12 +27,17 @@ class ReportsController extends AbstractActionController
      */
     public function completeUsageAction()
     {                
+        $service = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $service->getStorage()->read();
+        $users = $this->getServiceLocator()->get('UserTable');
+        $user = $users->getUserByEmail($mail);
+        
         $adapter = $this->getServiceLocator()->get('Adapter');
         $model = new \Pms\Model\EntityReportModel($adapter);
         // Prepare form.
         $form = $this->getServiceLocator()->get('ReportFilterForm');
         $entityTypeTable = $this->getServiceLocator()->get('EntityTypeTable');
-        $types = $entityTypeTable->fetchAll()->toArray();
+        $types = $entityTypeTable->fetchForUser($user->id)->toArray();
         $valueOptions = array();
         foreach($types as $type)
         {
@@ -57,15 +62,15 @@ class ReportsController extends AbstractActionController
             $form->setData($post);
             if($form->isValid())
             {
-                $usageData = $model->getCompleteEntityUsageData($entityType, $start, $end);
+                $usageData = $model->getCompleteEntityUsageData($entityType, $start, $end, $user->id);
             }
             else if(isset($entityType) && isset($start))
             {
-                $usageData = $model->getCompleteEntityUsageData($entityType, $start); 
+                $usageData = $model->getCompleteEntityUsageData($entityType, $start, NULL, $user->id); 
             }                        
             else if (isset($entityType))
             {
-                $usageData = $model->getCompleteEntityUsageData($entityType); 
+                $usageData = $model->getCompleteEntityUsageData($entityType, NULL, NULL, $user->id); 
             }
         }
         else 

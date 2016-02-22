@@ -521,4 +521,35 @@ class AjaxController extends AbstractActionController
         $session->entityTypeData = $model->getData();
         return $this->viewModel->setVariable('response', json_encode($session->entityTypeData));
     }
+    
+    public function getClientsAction()
+    {
+        $service = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $service->getStorage()->read();
+        $users = $this->getServiceLocator()->get('UserTable');
+        $user = $users->getUserByEmail($mail);
+        
+        $clientTable = $this->getServiceLocator()->get('ClientTable');
+        $clients = $clientTable->fetchAll($user->id);
+        $options = array();
+        foreach($clients as $client)
+        {
+            $options[$client->id] = $client->first_name.' '.$client->last_name;
+        }
+        
+//        $dbAdapter = $options['adapter'];
+//        $sql = new Sql($dbAdapter);
+//        $select = $sql->select();
+//        $select->from('clients')
+//               ->columns(['id', 'first_name', 'last_name']);
+//        $statement = $sql->prepareStatementForSqlObject($select);
+//        $results = $statement->execute();
+//        $options = array();
+//        foreach($results as $row)
+//        {
+//            $options[$row['id']] = $row['first_name'] . ' ' . $row['last_name'];
+//        }
+        
+        return $this->viewModel->setVariable('response', json_encode($options));
+    }
 }

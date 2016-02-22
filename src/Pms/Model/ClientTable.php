@@ -46,6 +46,7 @@ class ClientTable
             'email' => $client->email,
             'title' => $client->title,
             'guest_class' => $client->guest_class,
+            'user_id' => $client->user_id,
         ];
         
         $id = (int) $client->id;
@@ -88,9 +89,17 @@ class ClientTable
      * Fetch all rows.
      * @return type
      */
-    public function fetchAll()
+    public function fetchAll($user_id=NULL)
     {
-        $resultset = $this->tableGateway->select();
+        if($user_id == NULL)
+        {
+            $resultset = $this->tableGateway->select();
+        }
+        else 
+        {
+            $resultset = $this->tableGateway->select(['user_id' => $user_id]);
+        }
+        
         return $resultset;
     }
     

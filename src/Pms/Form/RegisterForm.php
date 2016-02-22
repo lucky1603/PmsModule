@@ -48,6 +48,13 @@ class RegisterForm extends Form
         $this->add($select);
         
         $this->add([
+            'name' => 'user_id', 
+            'attributes' => [
+                'type' => 'hidden',
+            ]
+        ]);
+        
+        $this->add([
             'name' => 'username',
             'attributes' => [
                 'type' => 'text',

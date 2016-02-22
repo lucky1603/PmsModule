@@ -28,8 +28,11 @@ class ReservationController extends AbstractActionController
         {
             return $this->redirect()->toUrl('/');
         }
+        $users = $this->getServiceLocator()->get('UserTable');
+        $user = $users->getUserByEmail($mail);
         
         $model = $this->getServiceLocator()->get('ReservationModel');        
+        $model->setUserId($user->id);
         $reservations = $model->fetchAll();      
         $id = $this->params()->fromRoute('id');
         $viewModel = new ViewModel([
@@ -52,10 +55,26 @@ class ReservationController extends AbstractActionController
         {
             $session->direction = 'edit';
         }
+        
+        $authentication = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $authentication->getStorage()->read();
+        $users = $this->getServiceLocator()->get("UserTable");
+        $user = $users->getUserByEmail($mail);
                 
         $form = $this->getServiceLocator()->get('ReservationForm');
+        $dropdown = $form->get('client_id');
+        $clientTable = $this->getServiceLocator()->get('ClientTable');
+        $clients = $clientTable->fetchAll($user->id);
+        $options = array();
+        foreach($clients as $client)
+        {
+            $options[$client->id] = $client->first_name.' '.$client->last_name;
+        }
+        $dropdown->setValueOptions($options);
+        
         $id = $this->params()->fromRoute('id');     
         $model = $this->getServiceLocator()->get("ReservationModel");
+        $model->setUserId($user->id);
         $sessionModels = new Container('models');
         
         if(isset($sessionModels->reservationModel))
@@ -111,9 +130,9 @@ class ReservationController extends AbstractActionController
             ]);
             return $viewModel;
         }
-        
-        
+                
         $sessionModels->reservationModel = $model->getData();
+        $form->get('user_id')->setValue($user->id);
         return $viewModel = new ViewModel([
             'form' => $form,
             'model' => $model,
@@ -179,7 +198,22 @@ class ReservationController extends AbstractActionController
         $reservationModel = $this->getServiceLocator()->get('ReservationModel');
         $reservationModel->setData($reservationModelData);
         
+        $authentication = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $authentication->getStorage()->read();
+        $users = $this->getServiceLocator()->get("UserTable");
+        $user = $users->getUserByEmail($mail);
+        
         $form = $this->getServiceLocator()->get('ReservationEntityForm');
+        $dropdown = $form->get('guest_id');        
+        $clientTable = $this->getServiceLocator()->get('ClientTable');
+        $clients = $clientTable->fetchAll($user->id);
+        $options = array();
+        foreach($clients as $client)
+        {
+            $options[$client->id] = $client->first_name.' '.$client->last_name;
+        }
+        $dropdown->setValueOptions($options);
+        
         $id = $this->params()->fromRoute('id');
         if(isset($id))
         {
@@ -210,7 +244,12 @@ class ReservationController extends AbstractActionController
      * This action is called from avalability control.
      */
     public function newEntityAction()
-    {
+    {        
+        $authentication = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $authentication->getStorage()->read();
+        $users = $this->getServiceLocator()->get("UserTable");
+        $user = $users->getUserByEmail($mail);
+        
         $dbAdapter = $this->getServiceLocator()->get('Adapter');
         $reservationModel = new \Pms\Model\ReservationModel($dbAdapter);
         $session = new Container('models');
@@ -270,6 +309,15 @@ class ReservationController extends AbstractActionController
         $data['entity_id'] = $row['id'];
 
         $form = $this->getServiceLocator()->get('ReservationEntityForm');
+        $dropdown = $form->get('guest_id');        
+        $clientTable = $this->getServiceLocator()->get('ClientTable');
+        $clients = $clientTable->fetchAll($user->id);
+        $options = array();
+        foreach($clients as $client)
+        {
+            $options[$client->id] = $client->first_name.' '.$client->last_name;
+        }
+        $dropdown->setValueOptions($options);
         $form->setData($data);
         
         $viewModel = new ViewModel([
@@ -304,7 +352,23 @@ class ReservationController extends AbstractActionController
     {        
         $post = $this->request->getPost();
         $id = $this->params()->fromRoute('id');
+        
+        $authentication = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $authentication->getStorage()->read();
+        $users = $this->getServiceLocator()->get("UserTable");
+        $user = $users->getUserByEmail($mail);
+        
         $form = $this->getServiceLocator()->get("ReservationEntityForm");
+        $dropdown = $form->get('guest_id');        
+        $clientTable = $this->getServiceLocator()->get('ClientTable');
+        $clients = $clientTable->fetchAll($user->id);
+        $options = array();
+        foreach($clients as $client)
+        {
+            $options[$client->id] = $client->first_name.' '.$client->last_name;
+        }
+        $dropdown->setValueOptions($options);
+        
         $sessionModels = new Container('models');
         $reservationModelData = $sessionModels->reservationModel;
         $reservationModel = $this->getServiceLocator()->get('ReservationModel');
