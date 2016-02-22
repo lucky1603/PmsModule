@@ -80,6 +80,11 @@ class EntityController extends AbstractActionController
         // Prepare the form entries.
         // Get entity type. Find ACUNIT if exists. If not, take the first from the list of entities.
         $table = $this->getServiceLocator()->get('EntityTypeTable');
+        $rows = $table->fetchAll();   
+        if($rows->count() == 0 || $rows->current()->id == NULL)
+        {
+            return $this->redirect()->toUrl('/');
+        }
         
         if(isset($entityTypeId))
         {
@@ -87,8 +92,8 @@ class EntityController extends AbstractActionController
         }
         else 
         {
-            $entityType = $table->getEntityTypeByName('ACUNIT');
-            $entityTypeId = $entityType->id;
+            $entityType = $table->getEntityType($rows->current()->id);
+            $entityTypeId = $rows->current()->id;
         }
         
         if(empty($entityType))
