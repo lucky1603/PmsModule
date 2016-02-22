@@ -87,6 +87,17 @@ class EntityTypeTable
     }
     
     /**
+     * Fetch all entity types for the the given user.
+     * @param type $user_id
+     * @return type
+     */
+    public function fetchForUser($user_id)
+    {
+        $resultSet = $this->tableGateway->select(['user_id' => $user_id]);
+        return $resultSet;
+    }
+    
+    /**
      * 
      * @param type $userMail
      * @return type

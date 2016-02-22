@@ -90,18 +90,23 @@ class EntityDefinitionTable
         return $resultSet;
     }
     
-    public function fetchView($id=NULL)
+    public function fetchView($id=NULL, $user_id=NULL)
     {
         $dbAdapter = $this->tableGateway->getAdapter();        
         $sql = new \Zend\Db\Sql\Sql($dbAdapter);
         $select = $sql->select();
         $select->from(array('ed'  => 'entity_definition'))
                 ->columns(['id', 'name', 'code', 'description'])
-                ->join(array('et' => 'entity_type'), 'ed.entity_type_id = et.id', ['typename' => 'name']);
+                ->join(array('et' => 'entity_type'), 'ed.entity_type_id = et.id', ['typename' => 'name', "user_id"]);
         if($id != NULL)
         {
             $select->where(array('ed.id' => $id));
         }                
+        
+        if($user_id != NULL)
+        {
+            $select->where(array('et.user_id' => $user_id));
+        }
                                         
         $statement = $sql->prepareStatementForSqlObject($select);
         $results1 = $statement->execute();

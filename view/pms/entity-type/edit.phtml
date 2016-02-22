@@ -29,6 +29,7 @@
     <h2 class='page-header'>Change '<?php echo $model->name?>' details</h2>
     <?php endif;?>
     
+    <?php echo $this->formElement($form->get('user_id'))?>
     <div class="form-group">
         <?php echo $this->formLabel($form->get('name'))?>
         <div class="col-xs-5">
@@ -94,7 +95,13 @@
 <script>
 $(document).ready(function() {
     $('button#new').on('click', function(e) {
-        e.preventDefault(); 
+        e.preventDefault();         
+        var formData = $('form').serialize();
+        console.log(formData);
+        // remember first
+        $.post('/pms/ajax/rememberEntityType', formData, function(data) {
+            console.log(data);
+        });        
         window.location.href='/pms/entity-type/editAttribute';
     });
 });

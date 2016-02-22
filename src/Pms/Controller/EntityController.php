@@ -31,9 +31,11 @@ class EntityController extends AbstractActionController
         {
             return $this->redirect()->toUrl('/');
         }
+        $users = $this->getServiceLocator()->get('UserTable');
+        $user = $users->getUserByEmail($mail);
         
         $table = $this->getServiceLocator()->get('EntityTable');
-        $results = $table->fetchView();
+        $results = $table->fetchView(NULL, $user->id);
         
         $entities = [];
         do {
@@ -714,12 +716,20 @@ class EntityController extends AbstractActionController
     
     public function newAction()
     {
+        // Get User
+        $service = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $service->getStorage()->read();        
+        $users = $this->getServiceLocator()->get("UserTable");
+        $user = $users->getUserByEmail($mail);
+        // End get user
+        
         $dbAdapter = $this->getServiceLocator()->get('Adapter');
         $table = new \Zend\Db\TableGateway\TableGateway('entity_definition', $dbAdapter);
         $sql = new Sql($dbAdapter);
         $select = $sql->select();
         $select->from(['ed' => "entity_definition"])
-                ->join(['et' =>'entity_type'], 'ed.entity_type_id=et.id', ['type' => 'name']);
+                ->join(['et' =>'entity_type'], 'ed.entity_type_id=et.id', ['type' => 'name', 'user_id'])
+                ->where(['et.user_id' => $user->id]);
         $statement = $sql->prepareStatementForSqlObject($select);
         $entity_definitions = $statement->execute();
 

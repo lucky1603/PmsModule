@@ -509,4 +509,16 @@ class AjaxController extends AbstractActionController
         }
         die($mark);
     }
+    
+    public function rememberEntityTypeAction()
+    {
+        $post = $this->request->getPost();
+        $session = new \Zend\Session\Container('models');
+        $entityTypeData = $session->entityTypeData;
+        $model = $this->getServiceLocator()->get("EntityTypeModel");
+        $model->setData($entityTypeData);
+        $model->setData($post);
+        $session->entityTypeData = $model->getData();
+        return $this->viewModel->setVariable('response', json_encode($session->entityTypeData));
+    }
 }

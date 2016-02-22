@@ -15,6 +15,13 @@ class EntityTypeForm extends Form
         $this->setAttribute('role', 'form');
         
         $this->add([
+            'name' => 'user_id',
+            'attributes' => [
+                'type' => 'hidden',
+            ]
+        ]);
+        
+        $this->add([
             'name' => 'name',
             'attributes' => [
                 'type' => 'text',

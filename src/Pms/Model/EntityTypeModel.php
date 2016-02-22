@@ -10,7 +10,6 @@ namespace Pms\Model;
 
 use Zend\Db\Adapter\Adapter;
 use Zend\Db\Sql\Sql;
-use Zend\Db\Sql\Delete;
 
 /**
  * EntityTypeModel class.
@@ -22,6 +21,7 @@ class EntityTypeModel
     public $description;
     public $time_resolution;
     public $attributes;
+    public $user_id;
     
     protected $sql;   
     protected $dbAdapter;
@@ -36,7 +36,7 @@ class EntityTypeModel
         $this->dbAdapter = $dbAdapter;
         $this->sql = new Sql($dbAdapter);
     }
-    
+        
     /**
      * Initializes entity type model with entity type id.
      * @param type $id
@@ -100,6 +100,11 @@ class EntityTypeModel
             $this->time_resolution = $data['time_resolution'];
         }
         
+        if(!empty($data['user_id']))
+        {
+            $this->user_id = $data['user_id'];
+        }
+        
         if(!empty($data['attributes']))
         {
             $this->attributes = array();
@@ -136,6 +141,11 @@ class EntityTypeModel
         if(isset($this->id))
         {
             $data['id'] = $this->id;
+        }
+        
+        if(isset($this->user_id))
+        {
+            $data['user_id'] = $this->user_id;
         }
         
         if(isset($this->attributes))

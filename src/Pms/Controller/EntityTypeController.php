@@ -29,8 +29,11 @@ class EntityTypeController extends AbstractActionController
         $mail = $service->getStorage()->read();
         if(!isset($mail))
         {
-            return $this->redirect()->toUrl('/');
+            return $this->redirect()->toUrl('/');            
         }
+        
+        $users = $this->getServiceLocator()->get("UserTable");
+        $user = $users->getUserByEmail($mail);
        
         // Reset session data.
         $session = new Container('models');
@@ -38,7 +41,8 @@ class EntityTypeController extends AbstractActionController
         
         // Now get types.
         $table = $this->getServiceLocator()->get('EntityTypeTable');
-        $types = $table->fetchAll()->toArray();
+        //$types = $table->fetchAll()->toArray();
+        $types = $table->fetchForUser($user->id)->toArray();
         return $viewModel = new ViewModel([
             'types' => $types,
         ]);
@@ -54,6 +58,14 @@ class EntityTypeController extends AbstractActionController
         $form = $this->getServiceLocator()->get('EntityTypeForm');
         $entityTypeModel = $this->getServiceLocator()->get('EntityTypeModel');
         $session = new Container('models');        
+        
+        // Get the current user id
+        $authService = $this->getServiceLocator()->get('AuthenticationService');
+        $user_email = $authService->getStorage()->read();
+        $userTable = $this->getServiceLocator()->get('UserTable');
+        $user = $userTable->getUserByEMail($user_email);
+        $entityTypeModel->user_id = $user->id;
+        
         
         if(isset($session->entityTypeData))
         {
@@ -83,7 +95,7 @@ class EntityTypeController extends AbstractActionController
                 ]);
             }
             else 
-            {
+            {                
                 if(empty($entityTypeData['id']))
                 {
                     $entityTypeModel->setData($entityTypeData);
@@ -115,6 +127,7 @@ class EntityTypeController extends AbstractActionController
         }
         
         $session->entityTypeData = $entityTypeModel->getData();
+        $form->get('user_id')->setValue($user->id);
         return new ViewModel([
             'form' => $form,
             'model' => $entityTypeModel,

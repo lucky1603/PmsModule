@@ -24,9 +24,11 @@ class EntityDefinitionController extends AbstractActionController
         {
             return $this->redirect()->toUrl('/');
         }
-        
+        $users = $this->getServiceLocator()->get('UserTable');
+        $user = $users->getUserByEmail($mail);
+                
         $table = $this->getServiceLocator()->get('EntityDefinitionTable');
-        $entityDefinitions = $table->fetchView();
+        $entityDefinitions = $table->fetchView(NULL, $user->id);
         return $viewModel = new ViewModel([
             'entityDefinitions' => $entityDefinitions,
         ]);
@@ -264,14 +266,26 @@ class EntityDefinitionController extends AbstractActionController
      * Adds the new type.
      */
     public function newAction()
-    {        
-        //$this->redirect()->toRoute('pms/entity-definition', ['action' => 'edit']);
-        $dbAdapter = $this->getServiceLocator()->get('Adapter');
-        $table = new \Zend\Db\TableGateway\TableGateway('entity_type', $dbAdapter);
-        $entity_types = $table->select();
+    {
+        // Get User
+        $service = $this->getServiceLocator()->get('AuthenticationService');
+        $mail = $service->getStorage()->read();        
+        $users = $this->getServiceLocator()->get("UserTable");
+        $user = $users->getUserByEmail($mail);
+                
+//        $dbAdapter = $this->getServiceLocator()->get('Adapter');
+//        $table = new \Zend\Db\TableGateway\TableGateway('entity_type', $dbAdapter);
+//        $entity_types = $table->select();
+//        return new ViewModel([
+//            'entity_types' => $entity_types,
+//        ]);
+        
+        $table = $this->getServiceLocator()->get("EntityTypeTable");
+        $entity_types = $table->fetchForUser($user->id);
         return new ViewModel([
             'entity_types' => $entity_types,
         ]);
+        
     }
     
     /**
