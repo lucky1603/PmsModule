@@ -95,6 +95,10 @@
 $(document).ready(function() {
     $('button#new').on('click', function(e) {
         e.preventDefault(); 
+        var formData = $('form').serialize();
+        $.post('/pms/ajax/rememberEntityType', formData, function(data) {
+            console.log(data);
+        });        
         window.location.href='/pms/entity-type/editAttribute';
     });
 });

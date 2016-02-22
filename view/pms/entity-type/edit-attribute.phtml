@@ -97,8 +97,7 @@
 $(document).ready(function() {
     $('button#back').on('click', function(e) {
         e.preventDefault();
-        var loc = '/pms/entity-type/edit/' + <?php echo $typeId ?>;
-        console.log(loc);
+        var loc = '/pms/entity-type/edit/' + <?php echo json_encode(isset($typeId) ? $typeId : '')?>;
         window.location.href = loc;
     });
 });
