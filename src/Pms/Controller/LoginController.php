@@ -38,21 +38,46 @@ class LoginController extends AbstractActionController
      * @return ViewModel
      */
     public function processAction()
-    {               
-        $authService = $this->getAuthService();
-        $adapter = $authService->getAdapter();        
-        $adapter->setIdentity($this->request->getPost('email'));
-        $adapter->setCredential($this->request->getPost('password'));               
-        $result = $authService->authenticate();
-        
-        if($result->isValid()) {
-            $authService->getStorage()->write($this->request->getPost('email'));
-            return $this->redirect()->toRoute(NULL);
+    {     
+        $user_data = $this->request->getPost('email');
+        if(!$this->isMail($user_data))
+        {
+            $userTable = $this->getServiceLocator()->get('UserTable');
+            $user = $userTable->getUserByName($user_data);
+            if($user)
+            {
+                $mail = $user->email;
+            }            
+        }
+        else 
+        {
+            $mail = $user_data;
+        }
+         
+        if(isset($mail)) 
+        {
+            $authService = $this->getAuthService();
+            $adapter = $authService->getAdapter();        
+    //        $adapter->setIdentity($this->request->getPost('email'));
+            $adapter->setIdentity($mail);
+            $adapter->setCredential($this->request->getPost('password'));               
+            $result = $authService->authenticate();
+
+            if($result->isValid()) {
+                //$authService->getStorage()->write($this->request->getPost('email'));
+                $authService->getStorage()->write($mail);
+                return $this->redirect()->toRoute(NULL);
+            }
+
+            return new ViewModel([
+                'mail' => $this->request->getPost('email'),
+            ]);
         }
         
         return new ViewModel([
-            'mail' => $this->request->getPost('email'),
+            'mail' => $user_data,
         ]);
+        
     }
     
     /**
@@ -85,6 +110,16 @@ class LoginController extends AbstractActionController
             $this->authService = $this->getServiceLocator()->get('AuthenticationService');
         }
         return $this->authService;
+    }
+    
+    private function isMail($user)
+    {
+        if(strpos($user, '@') != false)                
+        {
+            return true;
+        }
+        
+        return false;
     }
 }
 

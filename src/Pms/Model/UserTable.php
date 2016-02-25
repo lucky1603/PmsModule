@@ -89,7 +89,7 @@ class UserTable
     {
         // Daj user-a po mail-u
         $resultSet = $this->tableGateway->select(['email' => $userMail]);
-        $row = $resultSet->current();
+        return $resultSet->current();
         if(! $row) {
             throw new Exception("Couldn't find row with " . $userMail . " mail.");
         }
@@ -104,6 +104,12 @@ class UserTable
             throw new Exception("Couldn't find user with role " . $role_id . ".");
         }
         return $resultSet->toArray();
+    }
+    
+    public function getUserByName($name)
+    {
+        $resultSet = $this->tableGateway->select(['username' => $name]);
+        return $resultSet->current();
     }
     
     public function deleteUser($id)

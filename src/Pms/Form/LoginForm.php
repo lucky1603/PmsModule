@@ -16,7 +16,7 @@ class LoginForm extends Form
                 'type' => 'text',
             ),
             'options' => array (
-                'label' => 'Username',
+                'label' => 'E-Mail or Username',
             )
         ]);
         
