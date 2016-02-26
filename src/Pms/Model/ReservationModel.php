@@ -325,12 +325,13 @@ class ReservationModel
                 $rEntity->setReservationId($this->id);
                 if($this->status_id == 4)
                 {
+                    
                     $entityModel = new \Pms\Model\EntityModel($this->dbAdapter);
                     $entityModel->setId($rEntity->entity_id);
                     $entityModel->status_id = 2;
                     $entityModel->save();
                 }
-                else if($this->status_id == 1) 
+                else if($this->status_id == 1 || $this->status_id == 6) 
                 {
                     $entityModel = new \Pms\Model\EntityModel($this->dbAdapter);
                     $entityModel->setId($rEntity->entity_id);
