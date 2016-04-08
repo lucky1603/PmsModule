@@ -110,5 +110,15 @@ class LoginController extends AbstractActionController
         }
         return $this->authService;
     }
+    
+    private function isMail($user)
+    {
+        if(strpos($user, '@') != false)                
+        {
+            return true;
+        }
+        
+        return false;
+    }
 }
 
