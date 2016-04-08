@@ -114,6 +114,12 @@ class UserTable
         return $resultSet->toArray();
     }
     
+    public function getUserByName($name)
+    {
+        $resultSet = $this->tableGateway->select(['username' => $name]);
+        return $resultSet->current();
+    }
+    
     public function deleteUser($id)
     {
         // izbrisi user-a
