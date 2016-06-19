@@ -47,50 +47,70 @@
     <h2>Change '<?php echo $model->label?>' details</h2>
     <?php endif;?>
     <dl>
-        <dt><?php echo $this->formLabel($form->get('code')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('code')) ?>
-            <?php echo $this->formElementErrors($form->get('code'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('scope')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('scope')) ?>
-            <?php echo $this->formElementErrors($form->get('scope'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('label')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('label')) ?>
-            <?php echo $this->formElementErrors($form->get('label'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('type')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('type')) ?>
-            <?php echo $this->formElementErrors($form->get('type'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('unit')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('unit')) ?>
-            <?php echo $this->formElementErrors($form->get('unit'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('sort_order')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('sort_order')) ?>
-            <?php echo $this->formElementErrors($form->get('sort_order'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('unique')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('unique')) ?>
-            <?php echo $this->formElementErrors($form->get('unique'))?>
-        </dd>
-        <dt><?php echo $this->formLabel($form->get('nullable')) ?></dt>
-        <dd>
-            <?php echo $this->formElement($form->get('nullable')) ?>
-            <?php echo $this->formElementErrors($form->get('nullable'))?>
-        </dd>                
-        <dd>
-            <?php echo $this->formElement($form->get('submit')) ?>
-            <button id='back'>Back</button>
-        </dd>
+        <div class='form-group'>
+            <?php echo $this->formLabel($form->get('code')) ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('code')) ?>
+                <?php echo $this->formElementErrors($form->get('code'))?>
+            </div>
+        </div>
+        <div class="form-group">
+            <?php echo $this->formLabel($form->get('scope')) ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('scope')) ?>
+                <?php echo $this->formElementErrors($form->get('scope'))?>
+            </div>
+        </div>
+        <div class="form-group">
+            <?php echo $this->formLabel($form->get('label')) ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('label')) ?>
+                <?php echo $this->formElementErrors($form->get('label'))?>
+            </div>
+        </div>
+        <div class="form-group">
+            <?php echo $this->formLabel($form->get('type')) ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('type')) ?>
+                <?php echo $this->formElementErrors($form->get('type'))?>
+            </div>
+        </div>
+        <div class="form-group">
+            <?php echo $this->formLabel($form->get('unit')) ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('unit')) ?>
+                <?php echo $this->formElementErrors($form->get('unit'))?>
+            </div>
+        </div>
+        <div class="form-group">
+            <?php echo $this->formLabel($form->get('sort_order')) ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('sort_order')) ?>
+                <?php echo $this->formElementErrors($form->get('sort_order'))?>
+            </div>
+        </div>
+        <div class="form-group">
+            <?php echo $this->formLabel($form->get('unique')) ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('unique')) ?>
+                <?php echo $this->formElementErrors($form->get('unique'))?>
+            </div>
+        </div>
+        <div class="form-group">
+            <?php echo $this->formLabel($form->get('nullable')) ?>
+            <div class="col-xs-10">
+                <?php echo $this->formElement($form->get('nullable')) ?>
+                <?php echo $this->formElementErrors($form->get('nullable'))?>
+            </div>      
+        </div>
+        <div class="form-group">
+            <div class="col-xs-offset-2 col-xs-2">
+                <?php echo $this->formElement($form->get('submit')) ?>                               
+            </div>
+            <div class="col-xs-2">
+                <button type="button" id='back' class="btn btn-default form-control">Back</button>
+            </div> 
+        </div>
     </dl>
     <?php echo $this->form()->closeTag() ?>
 </section>
