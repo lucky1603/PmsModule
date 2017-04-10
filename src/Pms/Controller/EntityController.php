@@ -569,11 +569,10 @@ class EntityController extends AbstractActionController
                 
                 $form->bind($entityModel);
                 $form->setData($post);
-                $entityModel->save();
-//                if($form->isValid())
-//                {
-//                    $entityModel->save();
-//                }
+                if($form->isValid())
+                {
+                    $entityModel->save();
+                }
 
             }
             else 
